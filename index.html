@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asami Sushi — Restaurante Japonês e Rodízio em Santo André</title>
+  <meta name="description" content="Rodízio completo de sushis e sashimis nobres com bebidas e sobremesas inclusas por R$ 130 no Jardim Bela Vista em Santo André.">
+  
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="restaurant">
+  <meta property="og:title" content="Asami Sushi — Restaurante Japonês e Rodízio em Santo André">
+  <meta property="og:description" content="Rodízio completo com peixes nobres, chapas quentes, bebidas e sobremesas inclusas por R$ 130 em Santo André.">
+  <meta property="og:image" content="imagens/imgi_38_724123427_122178278036615421_2497840779835415252_n.jpg">
+  <meta name="theme-color" content="#090D14">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Asami Sushi",
+    "image": "imagens/imgi_38_724123427_122178278036615421_2497840779835415252_n.jpg",
+    "telephone": "+55-11-4427-8202",
+    "priceRange": "R$ 120–140",
+    "servesCuisine": "Japonesa",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Lino Jardim, 912",
+      "addressLocality": "Santo André",
+      "addressRegion": "SP",
+      "postalCode": "09041-031",
+      "addressCountry": "BR"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "12:00",
+        "closes": "23:00"
+      }
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.6",
+      "reviewCount": "3907"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-abyss: #090D14;
+      --bg-card: rgba(14, 20, 31, 0.72);
+      --text-bone: #F4EFEA;
+      --text-muted: #A1AEC0;
+      --accent-cobalt: #1842B8;
+      --accent-cobalt-light: #2C5AE8;
+      --accent-massago: #FF4D36;
+      --accent-gold: #D4AF37;
+      --border-subtle: rgba(244, 239, 234, 0.1);
+      --border-focus: rgba(24, 66, 184, 0.6);
+      --ease-director: cubic-bezier(0.16, 1, 0.3, 1);
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --tshadow: 0 2px 4px rgba(5,7,12,0.95), 0 6px 20px rgba(5,7,12,0.8), 0 16px 50px rgba(5,7,12,0.85);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background-color: var(--bg-abyss);
+      color: var(--text-bone);
+      font-family: var(--font-body);
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: auto;
+    }
+
+    /* Custom browser surfaces styling */
+    ::selection {
+      background-color: var(--accent-cobalt);
+      color: #fff;
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent-massago);
+      outline-offset: 3px;
+    }
+
+    /* Ambient base backdrop */
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 80% 20%, rgba(24, 66, 184, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(255, 77, 54, 0.04) 0%, transparent 50%),
+        #090D14;
+    }
+
+    /* Header & Navigation */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      z-index: 100;
+      transition: background-color 0.4s var(--ease-director), backdrop-filter 0.4s var(--ease-director), border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+    .top-nav.scrolled {
+      background-color: rgba(9, 13, 20, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand-mark {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-bone);
+      z-index: 102;
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-massago);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .nav-center-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(14, 20, 31, 0.75);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-bone);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #10B981;
+      box-shadow: 0 0 10px #10B981;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-nav {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 44px;
+      background: var(--accent-cobalt);
+      color: #fff;
+      padding: 0 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.3s var(--ease-director), background-color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-nav:hover {
+      background: var(--accent-cobalt-light);
+      transform: translateY(-2px);
+    }
+
+    /* Mobile Drawer Toggle */
+    .nav-hamburger {
+      display: none;
+      width: 44px;
+      height: 44px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 102;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background-color: var(--text-bone);
+      transition: transform 0.3s var(--ease-director), opacity 0.3s;
+    }
+    .nav-drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 13, 20, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 101;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-director);
+    }
+    .nav-drawer a {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-bone);
+      text-decoration: none;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .nav-open .nav-drawer {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .nav-open .nav-hamburger span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .nav-open .nav-hamburger span:nth-child(2) {
+      opacity: 0;
+    }
+    .nav-open .nav-hamburger span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* SECTION 1: HERO PIN (250vh) */
+    #hero-pin {
+      position: relative;
+      height: 250vh;
+      width: 100%;
+      overflow: clip;
+    }
+    .hero-stage {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-bg-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+      transform: translateY(0);
+    }
+    .hero-img {
+      position: absolute;
+      inset: -6%;
+      width: 112%;
+      height: 112%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.8) contrast(1.08);
+      will-change: transform;
+    }
+    .hero-scrim-radial {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 90% 75% at 50% 50%, rgba(9,13,20,0.15) 0%, rgba(9,13,20,0.85) 100%);
+    }
+    .hero-scrim-dynamic {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-color: var(--bg-abyss);
+      opacity: 0;
+      will-change: opacity;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 1120px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-shadow: var(--tshadow);
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(48px, 12vw, 192px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--text-bone);
+      margin-bottom: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0 16px;
+    }
+    .sw {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+    }
+    .swi {
+      display: inline-block;
+      transform: translateY(0%);
+      will-change: transform;
+      transition: transform 0.8s var(--ease-director);
+    }
+    .hero-sub {
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      color: rgba(244, 239, 234, 0.9);
+      max-width: 680px;
+      line-height: 1.5;
+      font-weight: 400;
+      margin-bottom: 36px;
+    }
+    .hero-midbeat {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 820px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity, transform;
+      z-index: 12;
+      text-shadow: var(--tshadow);
+    }
+    .hero-midbeat h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero-midbeat p {
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+      font-family: var(--font-mono);
+      letter-spacing: 0.05em;
+    }
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      z-index: 10;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+    .cue-line {
+      width: 1px;
+      height: 38px;
+      background: linear-gradient(to bottom, var(--accent-cobalt), transparent);
+      animation: cuePulse 2s infinite ease-in-out;
+    }
+    @keyframes cuePulse {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      50.1% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* Common Section Wrapper */
+    .section-stage {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 5vw;
+      z-index: 10;
+      overflow: hidden;
+    }
+    .section-bg-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .section-bg-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.4) contrast(1.15);
+    }
+    .section-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: 
+        linear-gradient(to bottom, var(--bg-abyss) 0%, transparent 25%, transparent 75%, var(--bg-abyss) 100%),
+        radial-gradient(circle at center, rgba(9, 13, 20, 0.4) 0%, rgba(9, 13, 20, 0.92) 100%);
+    }
+    .section-inner {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* SECTION 2: RITUAL DA NÉVOA */
+    #ritual {
+      background: #06090F;
+    }
+    .ritual-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      background: rgba(10, 15, 24, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 48px;
+      backdrop-filter: blur(20px);
+    }
+    .ritual-interactive-zone {
+      position: relative;
+      height: 440px;
+      background: radial-gradient(circle at center, #151D2A 0%, #080C14 100%);
+      border-radius: 14px;
+      border: 1px solid rgba(244, 239, 234, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 30px 20px;
+      overflow: hidden;
+      user-select: none;
+      touch-action: none;
+    }
+    .kettle-handle {
+      width: 110px;
+      height: 90px;
+      cursor: grab;
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      transition: transform 0.08s ease-out;
+    }
+    .kettle-handle:active {
+      cursor: grabbing;
+    }
+    .kettle-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+    }
+    .smoke-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 15;
+    }
+    .ritual-dish {
+      width: 220px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, #1E2736 0%, #0F1520 70%, #070A0F 100%);
+      border: 3px solid #2B374A;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 8px 16px rgba(0,0,0,0.7);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ritual-dish-content {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-gold);
+      text-align: center;
+      transition: opacity 0.5s ease;
+      opacity: 0.4;
+    }
+    .ritual-dish-content.revealed {
+      opacity: 1;
+    }
+    .drag-instruction {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      color: var(--accent-massago);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* SECTION 3: COLISÃO TÉRMICA (O Fogo e o Ferro) */
+    #termica {
+      min-height: 110vh;
+    }
+    .thermal-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 50px;
+      align-items: center;
+    }
+    .thermal-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.8vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .thermal-desc {
+      font-size: 1.12rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .quote-box {
+      border-left: 1px solid var(--accent-massago);
+      padding: 16px 24px;
+      background: rgba(255, 77, 54, 0.05);
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      color: var(--text-bone);
+      margin-bottom: 28px;
+      font-size: 1.05rem;
+    }
+    .thermal-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .spec-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .spec-card h4 {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+    }
+    .spec-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* SECTION 4: COMANDA DA DESPREOCUPAÇÃO (Risco Estrutural) */
+    #comanda {
+      background: #070B12;
+    }
+    .comanda-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #0E1420;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 16px;
+      padding: 44px;
+      position: relative;
+    }
+    .comanda-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px dashed rgba(244, 239, 234, 0.2);
+      padding-bottom: 24px;
+      margin-bottom: 30px;
+    }
+    .comanda-stamp {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--accent-massago);
+      letter-spacing: 0.1em;
+    }
+    .receipt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.05rem;
+      color: var(--text-bone);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(244, 239, 234, 0.05);
+    }
+    .receipt-item span:first-child {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .receipt-item .tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: rgba(24, 66, 184, 0.2);
+      border: 1px solid var(--accent-cobalt);
+      color: #79A0FF;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .receipt-item .fake-price {
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+    .comanda-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(24, 66, 184, 0.12);
+      border: 1px solid var(--border-focus);
+      border-radius: 12px;
+      padding: 24px 30px;
+      margin-top: 20px;
+    }
+    .total-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .total-sub {
+      font-size: 0.88rem;
+      color: var(--accent-gold);
+      font-family: var(--font-mono);
+    }
+    .total-price-box {
+      text-align: right;
+    }
+    .price-value {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+    .price-sub {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-massago);
+      letter-spacing: 0.1em;
+    }
+
+    /* SECTION 5: HOSPITALIDADE NOMINAL */
+    #hospitalidade {
+      min-height: 100vh;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 40px;
+    }
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 32px 28px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.4s var(--ease-director), border-color 0.4s;
+    }
+    .team-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-focus);
+    }
+    .team-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-cobalt-light);
+      background: rgba(24, 66, 184, 0.15);
+      border: 1px solid rgba(24, 66, 184, 0.3);
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+    .team-quote {
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: var(--text-bone);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+    .team-author {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid rgba(244, 239, 234, 0.08);
+      padding-top: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .team-stars {
+      color: var(--accent-gold);
+    }
+
+    /* SECTION 6: ESTEIRA DA AFLUÊNCIA (Virtual Scroll Horizontal) */
+    #esteira {
+      padding: 100px 0;
+      overflow: hidden;
+    }
+    .esteira-header {
+      padding: 0 5vw;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .gallery-viewport {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      cursor: grab;
+      user-select: none;
+      touch-action: pan-y;
+    }
+    .gallery-viewport:active {
+      cursor: grabbing;
+    }
+    .gallery-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      gap: 30px;
+      padding-left: 5vw;
+      will-change: transform;
+    }
+    .gallery-card {
+      width: clamp(220px, 38vw, 560px);
+      height: 480px;
+      flex-shrink: 0;
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #111724;
+      border: 1px solid var(--border-subtle);
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease-director);
+    }
+    .gallery-card:hover img {
+      transform: scale(1.04);
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(9,13,20,0.92) 0%, rgba(9,13,20,0.2) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px;
+    }
+    .gallery-category {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--accent-massago);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .gallery-card-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .gallery-bar-wrapper {
+      width: 90vw;
+      max-width: 400px;
+      height: 3px;
+      background: rgba(244, 239, 234, 0.1);
+      border-radius: 999px;
+      margin: 40px auto 0 auto;
+      overflow: hidden;
+    }
+    .gallery-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-cobalt);
+      border-radius: 999px;
+      will-change: width;
+    }
+
+    /* SECTION 7: CONVITE & FECHAMENTO */
+    #convite {
+      min-height: 90vh;
+      background: radial-gradient(circle at center, #101928 0%, #070A10 100%);
+      border-top: 1px solid var(--border-subtle);
+    }
+    .invite-card {
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .invite-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .invite-price-box {
+      margin: 30px 0 40px 0;
+      padding: 24px;
+      background: rgba(14, 20, 31, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .invite-price {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .invite-inclusions {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      letter-spacing: 0.08em;
+    }
+    .invite-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .btn-cta-large {
+      background: var(--accent-cobalt);
+      color: #fff;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1.12rem;
+      min-height: 52px;
+      padding: 0 38px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: transform 0.3s var(--ease-director), background-color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-cta-large:hover {
+      background: var(--accent-cobalt-light);
+      transform: translateY(-2px);
+    }
+    .btn-route {
+      background: transparent;
+      color: var(--text-bone);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1.02rem;
+      min-height: 52px;
+      padding: 0 30px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 1px solid var(--border-subtle);
+      transition: background-color 0.3s, border-color 0.3s;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-route:hover {
+      background: rgba(244, 239, 234, 0.06);
+      border-color: rgba(244, 239, 234, 0.3);
+    }
+    .location-info {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Stagger reveal animations */
+    .reveal-elem {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s var(--ease-director), transform 0.8s var(--ease-director);
+      will-change: opacity, transform;
+    }
+    .reveal-elem.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .ritual-box {
+        grid-template-columns: 1fr;
+        padding: 30px 20px;
+      }
+      .thermal-grid {
+        grid-template-columns: 1fr;
+      }
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+      footer {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .thermal-specs {
+        grid-template-columns: 1fr;
+      }
+      .nav-center-status {
+        display: none;
+      }
+      .nav-hamburger {
+        display: flex;
+      }
+      .nav-drawer {
+        display: flex;
+      }
+      .btn-nav {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-card {
+        width: 78vw;
+        height: 420px;
+      }
+      .comanda-wrapper {
+        padding: 24px 18px;
+      }
+      .comanda-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .comanda-total-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .total-price-box {
+        text-align: left;
+      }
+    }
+
+    /* PREFERS-REDUCED-MOTION */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .swi {
+        transform: translateY(0%) !important;
+      }
+      .hero-img {
+        transform: translateY(0) !important;
+      }
+      .reveal-elem {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Backdrop -->
+  <div class="ambient-bg"></div>
+
+  <!-- Header & Navigation -->
+  <nav class="top-nav" id="topNav">
+    <a href="#" class="brand-mark">
+      <span class="brand-name">Asami</span>
+      <span class="brand-sub">Santo André</span>
+    </a>
+
+    <div class="nav-center-status">
+      <span class="status-dot"></span>
+      <span>Almoço & Jantar • Abre 12:00</span>
+    </div>
+
+    <div class="nav-actions">
+      <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi" target="_blank" rel="noopener" class="btn-nav">Reservar Mesa</a>
+      
+      <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menu de navegação">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="nav-drawer" id="navDrawer">
+      <a href="#ritual" class="drawer-link">O Ritual</a>
+      <a href="#termica" class="drawer-link">Chapas Quentes</a>
+      <a href="#comanda" class="drawer-link">Preço Fixo</a>
+      <a href="#hospitalidade" class="drawer-link">Atendimento</a>
+      <a href="#esteira" class="drawer-link">Cardápio</a>
+      <a href="#convite" class="drawer-link">Reservar Mesa</a>
+    </div>
+  </nav>
+
+  <!-- SEÇÃO 1: HERO PIN 250vh -->
+  <section id="hero-pin">
+    <div class="hero-stage" id="heroStage">
+      <div class="hero-bg-wrap" id="heroBgWrap">
+        <img src="imagens/imgi_58_702320151_18322161253280812_4768258708712824851_n.jpg" alt="Banquete de rodízio na mesa do Asami Sushi" class="hero-img" id="heroImg" fetchpriority="high">
+        <div class="hero-scrim-radial"></div>
+        <div class="hero-scrim-dynamic" id="heroScrim"></div>
+      </div>
+
+      <div class="hero-content" id="heroContent">
+        <h1 class="hero-title" id="heroTitle">
+          <span class="sw"><span class="swi">Tudo</span></span>
+          <span class="sw"><span class="swi">muito</span></span>
+          <span class="sw"><span class="swi">fresco,</span></span>
+          <span class="sw"><span class="swi">extremamente</span></span>
+          <span class="sw"><span class="swi">saboroso.</span></span>
+        </h1>
+        <p class="hero-sub" id="heroSub">
+          Rodízio com sashimis nobres, pratos quentes na chapa, sobremesa e bebidas inclusas por preço fixo. Simplesmente espetacular.
+        </p>
+      </div>
+
+      <!-- Midbeat sincronizado -->
+      <div class="hero-midbeat" id="heroMidbeat">
+        <h3>"Comi a melhor chapa de frutos do mar da minha vida."</h3>
+        <p>— Avaliação de cliente real no Google Maps</p>
+      </div>
+
+      <div class="hero-scroll-cue" id="heroCue">
+        <span>Afluência contínua</span>
+        <div class="cue-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2: O RITUAL DA AFLUÊNCIA -->
+  <section class="section-stage" id="ritual">
+    <div class="section-inner">
+      <div class="ritual-box">
+        <div class="ritual-text-side">
+          <h2 style="font-family:var(--font-display);font-size:clamp(2rem,3.2vw,3rem);font-weight:800;line-height:1.15;margin-bottom:20px;">
+            A névoa fria que acorda os sentidos.
+          </h2>
+          <p style="font-size:1.08rem;color:var(--text-muted);line-height:1.6;margin-bottom:24px;">
+            No Asami, o ritual começa quando a água viva toca o gelo seco. Uma cascata de vapor gelado transborda da cumbuca negra de cerâmica e bambu, preservando o frescor cristalino dos peixes nobres repousados sobre o bloco de sal rosa do Himalaia.
+          </p>
+          <div class="quote-box">
+            "Um banquete que começa pelos olhos e não tem pressa para acabar."
+          </div>
+        </div>
+
+        <div class="ritual-interactive-zone" id="ritualZone">
+          <div class="kettle-handle" id="kettleHandle">
+            <svg class="kettle-svg" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25 45 C25 25, 75 25, 75 45 C75 65, 25 65, 25 45 Z" fill="#9BA3AF" stroke="#D1D5DB" stroke-width="2"/>
+              <path d="M40 25 C40 10, 60 10, 60 25" stroke="#4B5563" stroke-width="5" stroke-linecap="round"/>
+              <path d="M72 40 C85 35, 88 20, 80 15 C75 12, 70 20, 72 32" stroke="#9BA3AF" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="50" cy="22" r="5" fill="#374151"/>
+            </svg>
+          </div>
+
+          <canvas class="smoke-canvas" id="smokeCanvas"></canvas>
+
+          <div style="flex-grow:1;"></div>
+
+          <div class="ritual-dish">
+            <div class="ritual-dish-content" id="dishContent">
+              <span>SASHIMIS NOBRES<br>SOBRE BLOCO DE SAL</span>
+            </div>
+          </div>
+
+          <div class="drag-instruction" id="dragPrompt">
+            <span>↓</span> Puxe a chaleira para baixo
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3: A COLISÃO TÉRMICA (O Fogo e o Ferro) -->
+  <section class="section-stage" id="termica">
+    <div class="section-bg-image">
+      <img src="imagens/imgi_44_715464125_122177674058615421_855993563562005619_n.jpg" alt="Chapa quente fumegante com camarões" loading="lazy">
+      <div class="section-vignette"></div>
+    </div>
+    <div class="section-inner">
+      <div class="thermal-grid">
+        <div class="thermal-info">
+          <h2 class="thermal-title reveal-elem">O ferro incandescente e o frescor da brasa.</h2>
+          <p class="thermal-desc reveal-elem">
+            A Afluência não se limita ao peixe cru. Na mesma mesa em que a névoa gelada descansa, rechauds de ferro fundido chegam borbulhando com lulas, camarões tenros na manteiga e tiras de carne macia salpicadas de cebolinha e limão fresco.
+          </p>
+          <div class="quote-box reveal-elem">
+            "Comi a melhor chapa de frutos do mar (camarão e lula) da minha vida."
+          </div>
+        </div>
+
+        <div class="thermal-specs">
+          <div class="spec-card reveal-elem">
+            <h4>Chapa de Frutos do Mar</h4>
+            <p>Camarões e anéis de lula frescos salteados no ferro fundido com manteiga artesanal e ervas.</p>
+          </div>
+          <div class="spec-card reveal-elem">
+            <h4>Entradas Crocantes</h4>
+            <p>Guiozas dourados, trouxinhas orientais e camarões empanados sequinhos servidos sem intervalo.</p>
+          </div>
+          <div class="spec-card reveal-elem">
+            <h4>Coquetéis Especiais</h4>
+            <p>Drinks refrescantes em camadas coloridas inclusos no rodízio para acompanhar cada prato.</p>
+          </div>
+          <div class="spec-card reveal-elem">
+            <h4>Sobremesas Inclusas</h4>
+            <p>Doces finalizados à perfeição para encerrar o festival com chave de ouro sem custo extra.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4: A COMANDA DA DESPREOCUPAÇÃO (Risco Estrutural) -->
+  <section class="section-stage" id="comanda">
+    <div class="section-inner">
+      <div class="comanda-wrapper reveal-elem">
+        <div class="comanda-header">
+          <div>
+            <div class="comanda-stamp">ASAMI SUSHI • SANTO ANDRÉ</div>
+            <h3 style="font-family:var(--font-display);font-size:2rem;font-weight:800;margin-top:4px;">A Comanda da Despreocupação</h3>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">MODALIDADE</div>
+            <div style="font-family:var(--font-mono);font-size:0.95rem;color:var(--accent-gold);font-weight:600;">RODÍZIO SEM LIMITES</div>
+          </div>
+        </div>
+
+        <div class="receipt-list">
+          <div class="receipt-item">
+            <span><span class="tag">INCLUSO</span> Entradas quentes, guiozas e camarões crocantes</span>
+            <span class="fake-price">R$ 58,00</span>
+          </div>
+          <div class="receipt-item">
+            <span><span class="tag">INCLUSO</span> Chapa fumegante de frutos do mar (camarão e lula)</span>
+            <span class="fake-price">R$ 84,00</span>
+          </div>
+          <div class="receipt-item">
+            <span><span class="tag">INCLUSO</span> Barcas de sashimis e sushis nobres no bloco de sal</span>
+            <span class="fake-price">R$ 125,00</span>
+          </div>
+          <div class="receipt-item">
+            <span><span class="tag">INCLUSO</span> Bebidas e coquetéis inclusos durante todo o rodízio</span>
+            <span class="fake-price">R$ 38,00</span>
+          </div>
+          <div class="receipt-item">
+            <span><span class="tag">INCLUSO</span> Sobremesas artesanais inclusas</span>
+            <span class="fake-price">R$ 26,00</span>
+          </div>
+        </div>
+
+        <div class="comanda-total-row">
+          <div>
+            <div class="total-title">Total Por Pessoa</div>
+            <div class="total-sub">Sem cobranças surpresa ao final. Uma conta só.</div>
+          </div>
+          <div class="total-price-box">
+            <div class="price-value">R$ 130</div>
+            <div class="price-sub">PREÇO FIXO INTEGRAL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5: HOSPITALIDADE NOMINAL -->
+  <section class="section-stage" id="hospitalidade">
+    <div class="section-bg-image">
+      <img src="imagens/imgi_22_736759874_122179741736615421_6925371358894874330_n.jpg" alt="Atendimento acolhedor no salão do Asami" loading="lazy">
+      <div class="section-vignette"></div>
+    </div>
+    <div class="section-inner">
+      <div style="text-align:center;max-width:760px;margin:0 auto;">
+        <h2 style="font-family:var(--font-display);font-size:clamp(2rem,3.8vw,3.4rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:16px;" class="reveal-elem">
+          Quem serve pelo nome nunca esquece o seu.
+        </h2>
+        <p style="color:var(--text-muted);font-size:1.1rem;line-height:1.5;" class="reveal-elem">
+          Em quase 4 mil avaliações, um detalhe se repete espontaneamente: os clientes citam com carinho quem os acolheu à mesa.
+        </p>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card reveal-elem">
+          <div class="team-badge">Atendimento Andreza</div>
+          <div class="team-quote">
+            "Experiência ótima, ambiente agradável, comida muito boa. Andreza muito gente boa, me atendeu super bem!"
+          </div>
+          <div class="team-author">
+            <span>Livia Silva Barros</span>
+            <span class="team-stars">★★★★★</span>
+          </div>
+        </div>
+
+        <div class="team-card reveal-elem">
+          <div class="team-badge">Atendimento Ana</div>
+          <div class="team-quote">
+            "Conheci hoje e amei. O rodízio está R$130 incluso bebidas e sobremesas. Fui muito bem atendida pela Ana, o local é aconchegante e a comida é maravilhosa! Voltarei mais vezes 💕"
+          </div>
+          <div class="team-author">
+            <span>Yasmin Sakamoto</span>
+            <span class="team-stars">★★★★★</span>
+          </div>
+        </div>
+
+        <div class="team-card reveal-elem">
+          <div class="team-badge">Daiene, Tiago & Mateus</div>
+          <div class="team-quote">
+            "Simplesmente espetacular!! A Daiene nos atendeu super bem, além dos meninos, Tiago e Mateus!! Tudo muito fresco e extremamente saboroso!! Voltaremos mais vezes!!"
+          </div>
+          <div class="team-author">
+            <span>Collab Soluções</span>
+            <span class="team-stars">★★★★★</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 6: ESTEIRA DA AFLUÊNCIA (Virtual Scroll Horizontal) -->
+  <section id="esteira">
+    <div class="esteira-header">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:clamp(2rem,3.4vw,3.2rem);font-weight:800;letter-spacing:-0.03em;">
+          O fluxo que nunca se esgota.
+        </h2>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);" id="dragHint">
+        <span>Arraste horizontalmente ← →</span>
+      </div>
+    </div>
+
+    <div class="gallery-viewport" id="galViewport">
+      <div class="gallery-track" id="galTrack">
+        <div class="gallery-card">
+          <img src="imagens/imgi_31_724216260_122178432812615421_3129834278107533504_n.jpg" alt="Sashimis nobres esculpidos artesanalmente" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-category">Sashimis Nobres</span>
+            <div class="gallery-card-title">Cortes espessos com leques artesanais</div>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imagens/imgi_38_724123427_122178278036615421_2497840779835415252_n.jpg" alt="Grande Barco no Bloco de Sal Rosa" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-category">Especiais do Chef</span>
+            <div class="gallery-card-title">Barco imperial repousado no sal rosa</div>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imagens/imgi_57_701651680_122176096436615421_5059748525586450490_n.jpg" alt="Carpaccio de salmão com flor e limão siciliano" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-category">Carpaccios & Entradas</span>
+            <div class="gallery-card-title">Lâminas puras com raspas e azeite trufado</div>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imagens/imgi_62_701206201_122175948872615421_3821277191237529001_n.jpg" alt="Peixe branco e salmão na cerâmica azul" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-category">Cerâmicas Azuis</span>
+            <div class="gallery-card-title">Peixe branco fresco com pesto oriental</div>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imagens/imgi_35_723931126_18326382091280812_5073002082453478320_n.jpg" alt="Temakis crocantes e combinados completos" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-category">Variedade Ilimitada</span>
+            <div class="gallery-card-title">Temakis quentinhos e sushis maçaricados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery-bar-wrapper">
+      <div class="gallery-bar-fill" id="galBarFill"></div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 7: CONVITE & FECHAMENTO -->
+  <section class="section-stage" id="convite">
+    <div class="section-inner">
+      <div class="invite-card reveal-elem">
+        <h2 class="invite-title">Sua mesa no Asami está pronta.</h2>
+        <p style="font-size:1.15rem;color:var(--text-muted);max-width:620px;margin:0 auto;line-height:1.6;">
+          Venha viver a experiência do rodízio mais completo de Santo André. Sem filas desnecessárias, com todo o acolhimento que você merece.
+        </p>
+
+        <div class="invite-price-box">
+          <div class="invite-price">R$ 130</div>
+          <div class="invite-inclusions">RODÍZIO COMPLETO + BEBIDAS + SOBREMESA</div>
+        </div>
+
+        <div class="invite-actions">
+          <a href="https://wa.me/551144278202?text=Ol%C3%A1%2C%20gostaria%20de%20reservar%20uma%20mesa%20no%20Asami%20Sushi!" target="_blank" rel="noopener" class="btn-cta-large">
+            <span>Garantir Mesa pelo WhatsApp</span>
+            <span>→</span>
+          </a>
+          <a href="https://maps.google.com/?q=Av.+Lino+Jardim,+912+-+Jardim+Bela+Vista,+Santo+Andr%C3%A9+-+SP,+09041-031" target="_blank" rel="noopener" class="btn-route">
+            Ver Trajeto no Google Maps
+          </a>
+        </div>
+
+        <div class="location-info">
+          <div>Av. Lino Jardim, 912 — Jardim Bela Vista, Santo André - SP</div>
+          <div>Telefone: (11) 4427-8202 • Almoço e Jantar • Terça a Domingo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div>© Asami Sushi Santo André. Todos os direitos reservados.</div>
+    <div>Afluência • Frescor • Hospitalidade</div>
+  </footer>
+
+  <!-- SCRIPT ENGINE: LERP dt-normalizado + rAF + Virtual Horizontal + Ritual Smoke -->
+  <script>
+    (function() {
+      // 1. MOBILE DRAWER OVERLAY
+      const hamburger = document.getElementById('navHamburger');
+      const drawer = document.getElementById('navDrawer');
+      const drawerLinks = document.querySelectorAll('.drawer-link');
+
+      function toggleDrawer() {
+        document.body.classList.toggle('nav-open');
+      }
+      function closeDrawer() {
+        document.body.classList.remove('nav-open');
+      }
+
+      hamburger.addEventListener('click', toggleDrawer);
+      drawerLinks.forEach(link => link.addEventListener('click', closeDrawer));
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDrawer();
+      });
+
+      // 2. HERO PIN & PROGRESS SCRUB (Lerp dt-normalizado)
+      const heroPin = document.getElementById('hero-pin');
+      const heroImg = document.getElementById('heroImg');
+      const heroScrim = document.getElementById('heroScrim');
+      const heroContent = document.getElementById('heroContent');
+      const heroMidbeat = document.getElementById('heroMidbeat');
+      const heroCue = document.getElementById('heroCue');
+      const topNav = document.getElementById('topNav');
+
+      let heroTargetP = 0;
+      let heroCurrentP = 0;
+      let heroRaf = null;
+      let heroLastTick = performance.now();
+      let heroInView = true;
+
+      const heroObserver = new IntersectionObserver((entries) => {
+        heroInView = entries[0].isIntersecting;
+        if (heroInView && !heroRaf) {
+          heroLastTick = performance.now();
+          heroRaf = requestAnimationFrame(tickHero);
+        }
+      }, { threshold: 0 });
+      heroObserver.observe(heroPin);
+
+      function calcHeroProgress() {
+        const rect = heroPin.getBoundingClientRect();
+        const total = heroPin.offsetHeight - window.innerHeight;
+        if (total <= 0) return 0;
+        const progress = -rect.top / total;
+        return Math.min(1, Math.max(0, progress));
+      }
+
+      function tickHero(now) {
+        const dt = Math.min(100, now - heroLastTick);
+        heroLastTick = now;
+        const K = 0.10;
+        const f = 1 - Math.pow(1 - K, dt / 16.667);
+        heroCurrentP += (heroTargetP - heroCurrentP) * f;
+
+        if (Math.abs(heroTargetP - heroCurrentP) < 0.0004) {
+          heroCurrentP = heroTargetP;
+        }
+
+        renderHero(heroCurrentP);
+
+        if (heroInView && (Math.abs(heroTargetP - heroCurrentP) >= 0.0004 || heroCurrentP !== heroTargetP)) {
+          heroRaf = requestAnimationFrame(tickHero);
+        } else {
+          heroRaf = null;
+        }
+      }
+
+      function renderHero(p) {
+        // Parallax image translateY(-4% to +4%)
+        const imgY = (p * 8) - 4;
+        heroImg.style.transform = 'translateY(' + imgY.toFixed(2) + '%)';
+
+        // Scrim scroll rgba(0 to 0.65)
+        const scrimAlpha = Math.min(0.7, p * 0.75);
+        heroScrim.style.opacity = scrimAlpha.toFixed(3);
+
+        // Content fade out & scale
+        if (p < 0.35) {
+          const out = 1 - (p / 0.32);
+          heroContent.style.opacity = Math.max(0, out).toFixed(3);
+          heroContent.style.transform = 'translateY(' + (-p * 60).toFixed(1) + 'px)';
+        } else {
+          heroContent.style.opacity = '0';
+        }
+
+        // Midbeat appears p=0.28->0.50, hides p=0.55->0.76
+        if (p >= 0.25 && p <= 0.78) {
+          let mbOpacity = 0;
+          if (p < 0.45) {
+            mbOpacity = (p - 0.25) / 0.18;
+          } else if (p > 0.58) {
+            mbOpacity = 1 - ((p - 0.58) / 0.18);
+          } else {
+            mbOpacity = 1;
+          }
+          mbOpacity = Math.min(1, Math.max(0, mbOpacity));
+          heroMidbeat.style.opacity = mbOpacity.toFixed(3);
+          heroMidbeat.style.transform = 'translate(-50%, calc(-50% + ' + ((0.5 - p) * 50).toFixed(1) + 'px))';
+        } else {
+          heroMidbeat.style.opacity = '0';
+        }
+
+        // Cue line disappears at p=0.20
+        if (p > 0.15) {
+          heroCue.style.opacity = '0';
+          heroCue.style.pointerEvents = 'none';
+        } else {
+          heroCue.style.opacity = (1 - (p / 0.15)).toFixed(3);
+        }
+      }
+
+      window.addEventListener('scroll', () => {
+        heroTargetP = calcHeroProgress();
+        if (heroInView && !heroRaf) {
+          heroLastTick = performance.now();
+          heroRaf = requestAnimationFrame(tickHero);
+        }
+        if (window.scrollY > 60) {
+          topNav.classList.add('scrolled');
+        } else {
+          topNav.classList.remove('scrolled');
+        }
+      }, { passive: true });
+
+      // Split words intro on load
+      window.addEventListener('DOMContentLoaded', () => {
+        const swis = document.querySelectorAll('.swi');
+        swis.forEach((sw, i) => {
+          setTimeout(() => {
+            sw.style.transform = 'translateY(0%)';
+          }, 150 + i * 90);
+        });
+      });
+
+      // 3. REVEAL OBSERVER (rootMargin: 0px 0px -8% 0px, stagger: i*0.07s)
+      const revealElems = document.querySelectorAll('.reveal-elem');
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const parent = el.parentElement;
+            const siblings = parent ? Array.from(parent.querySelectorAll('.reveal-elem')) : [];
+            const index = siblings.indexOf(el);
+            const delay = index >= 0 ? index * 0.07 : 0;
+            el.style.transitionDelay = delay.toFixed(2) + 's';
+            el.classList.add('in');
+            sectionObserver.unobserve(el);
+          }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+
+      revealElems.forEach(el => sectionObserver.observe(el));
+
+      // 4. SEÇÃO 2: RITUAL DA NÉVOA (Drag & Smoke Canvas)
+      const kettle = document.getElementById('kettleHandle');
+      const ritualZone = document.getElementById('ritualZone');
+      const smokeCanvas = document.getElementById('smokeCanvas');
+      const dishContent = document.getElementById('dishContent');
+      const dragPrompt = document.getElementById('dragPrompt');
+      const ctx = smokeCanvas.getContext('2d');
+
+      let isDragging = false;
+      let startY = 0;
+      let currentKettleY = 0;
+      let maxDragY = 160;
+      let smokeProgress = 0;
+      let particles = [];
+
+      function resizeCanvas() {
+        smokeCanvas.width = ritualZone.offsetWidth;
+        smokeCanvas.height = ritualZone.offsetHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      function createParticle(x, y) {
+        return {
+          x: x + (Math.random() - 0.5) * 40,
+          y: y + (Math.random() - 0.5) * 20,
+          vx: (Math.random() - 0.5) * 2.5,
+          vy: (Math.random() * 2) + 0.8,
+          radius: Math.random() * 24 + 18,
+          alpha: Math.random() * 0.5 + 0.3,
+          growth: 0.4
+        };
+      }
+
+      function updateSmoke() {
+        ctx.clearRect(0, 0, smokeCanvas.width, smokeCanvas.height);
+
+        if (smokeProgress > 0.05) {
+          const spawnCount = Math.floor(smokeProgress * 5);
+          const kRect = kettle.getBoundingClientRect();
+          const zRect = ritualZone.getBoundingClientRect();
+          const spawnX = (kRect.left - zRect.left) + kRect.width / 2;
+          const spawnY = (kRect.top - zRect.top) + kRect.height - 10;
+
+          for (let i = 0; i < spawnCount; i++) {
+            particles.push(createParticle(spawnX, spawnY));
+          }
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.radius += p.growth;
+          p.alpha -= 0.008;
+
+          if (p.alpha <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+
+          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+          grad.addColorStop(0, 'rgba(230, 240, 255, ' + p.alpha.toFixed(2) + ')');
+          grad.addColorStop(0.7, 'rgba(180, 205, 235, ' + (p.alpha * 0.4).toFixed(2) + ')');
+          grad.addColorStop(1, 'rgba(180, 205, 235, 0)');
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(updateSmoke);
+      }
+      requestAnimationFrame(updateSmoke);
+
+      function onDragStart(y) {
+        isDragging = true;
+        startY = y - currentKettleY;
+      }
+      function onDragMove(y) {
+        if (!isDragging) return;
+        let delta = y - startY;
+        currentKettleY = Math.max(0, Math.min(maxDragY, delta));
+        kettle.style.transform = 'translate(-50%, ' + currentKettleY + 'px) rotate(' + (currentKettleY * 0.15) + 'deg)';
+        smokeProgress = currentKettleY / maxDragY;
+        if (smokeProgress > 0.6) {
+          dishContent.classList.add('revealed');
+          dragPrompt.innerHTML = '✨ Névoa em Afluência Total';
+        } else {
+          dishContent.classList.remove('revealed');
+          dragPrompt.innerHTML = '↓ Puxe a chaleira para baixo';
+        }
+      }
+      function onDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        const returnInterval = setInterval(() => {
+          if (isDragging) { clearInterval(returnInterval); return; }
+          currentKettleY *= 0.85;
+          if (currentKettleY < 1) {
+            currentKettleY = 0;
+            kettle.style.transform = 'translate(-50%, 0px) rotate(0deg)';
+            smokeProgress = 0;
+            clearInterval(returnInterval);
+          } else {
+            kettle.style.transform = 'translate(-50%, ' + currentKettleY + 'px) rotate(' + (currentKettleY * 0.15) + 'deg)';
+            smokeProgress = currentKettleY / maxDragY;
+          }
+        }, 16);
+      }
+
+      kettle.addEventListener('mousedown', (e) => onDragStart(e.clientY));
+      window.addEventListener('mousemove', (e) => onDragMove(e.clientY));
+      window.addEventListener('mouseup', onDragEnd);
+
+      kettle.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientY), { passive: true });
+      window.addEventListener('touchmove', (e) => onDragMove(e.touches[0].clientY), { passive: true });
+      window.addEventListener('touchend', onDragEnd);
+
+      // 5. SEÇÃO 6: VIRTUAL SCROLL HORIZONTAL (transform: translateX, momentum decay 0.90)
+      const galViewport = document.getElementById('galViewport');
+      const galTrack = document.getElementById('galTrack');
+      const galBarFill = document.getElementById('galBarFill');
+
+      let galX = 0;
+      let galTargetX = 0;
+      let galMaxX = 0;
+      let galVx = 0;
+      let isGalDown = false;
+      let galStartX = 0;
+      let galLastX = 0;
+      let galInView = true;
+
+      const galObserver = new IntersectionObserver((entries) => {
+        galInView = entries[0].isIntersecting;
+      }, { threshold: 0 });
+      galObserver.observe(galViewport);
+
+      function updateGalBounds() {
+        const trackWidth = galTrack.scrollWidth;
+        const viewWidth = galViewport.offsetWidth;
+        galMaxX = Math.max(0, trackWidth - viewWidth + 40);
+      }
+      updateGalBounds();
+      window.addEventListener('resize', updateGalBounds);
+
+      function tickGallery() {
+        if (galInView) {
+          if (!isGalDown && Math.abs(galVx) > 0.2) {
+            galTargetX += galVx;
+            galVx *= 0.90;
+          } else if (!isGalDown) {
+            galVx = 0;
+          }
+
+          galTargetX = Math.max(0, Math.min(galMaxX, galTargetX));
+
+          const K = 0.12;
+          galX += (galTargetX - galX) * K;
+
+          galTrack.style.transform = 'translateX(-' + galX.toFixed(2) + 'px)';
+
+          if (galMaxX > 0) {
+            const ratio = (galX / galMaxX) * 100;
+            galBarFill.style.width = Math.min(100, Math.max(0, ratio)).toFixed(1) + '%';
+          }
+        }
+
+        requestAnimationFrame(tickGallery);
+      }
+      requestAnimationFrame(tickGallery);
+
+      // Wheel Guard
+      galViewport.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+          galTargetX += e.deltaX;
+          e.preventDefault();
+          return;
+        }
+        const atStart = galTargetX <= 0 && e.deltaY < 0;
+        const atEnd = galTargetX >= galMaxX && e.deltaY > 0;
+        if (!atStart && !atEnd) {
+          galTargetX += e.deltaY * 0.9;
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Drag Mouse
+      galViewport.addEventListener('mousedown', (e) => {
+        isGalDown = true;
+        galStartX = e.clientX;
+        galLastX = e.clientX;
+        galVx = 0;
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!isGalDown) return;
+        const delta = e.clientX - galLastX;
+        galLastX = e.clientX;
+        galTargetX -= delta;
+        galVx = -delta;
+      });
+      window.addEventListener('mouseup', () => {
+        if (!isGalDown) return;
+        isGalDown = false;
+      });
+
+      // Drag Touch
+      galViewport.addEventListener('touchstart', (e) => {
+        isGalDown = true;
+        galStartX = e.touches[0].clientX;
+        galLastX = e.touches[0].clientX;
+        galVx = 0;
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (!isGalDown) return;
+        const delta = e.touches[0].clientX - galLastX;
+        galLastX = e.touches[0].clientX;
+        galTargetX -= delta;
+        galVx = -delta;
+      }, { passive: true });
+      window.addEventListener('touchend', () => {
+        if (!isGalDown) return;
+        isGalDown = false;
+      });
+
+    })();
+  </script>
+</body>
+</html>
