@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asami Sushi — Hospitalidade com Rosto e Rodízio Completo em Santo André</title>
-  <meta name="description" content="No Asami Sushi, hospitalidade tem nome: Andreza, Ana, Daiene, Tiago e Mateus. Rodízio completo com bebidas e sobremesas inclusas por R$ 130 em Santo André.">
+  <title>Asami Sushi — Hospitalidade com Nome Próprio em Santo André</title>
+  <meta name="description" content="No Asami Sushi, a hospitalidade tem nome: Andreza, Ana, Daiene, Tiago e Mateus. Rodízio farto com bebidas e sobremesas inclusas por R$ 130 no Jardim Bela Vista.">
   
   <!-- Open Graph -->
   <meta property="og:type" content="restaurant">
-  <meta property="og:title" content="Asami Sushi — Hospitalidade com Rosto em Santo André">
-  <meta property="og:description" content="Rodízio completo de sushis e sashimis nobres com bebidas e sobremesas inclusas por R$ 130.">
+  <meta property="og:title" content="Asami Sushi — Aqui tem gente de verdade esperando por você">
+  <meta property="og:description" content="Rodízio completo com peixes nobres, chapas na brasa, bebidas e sobremesas inclusas por R$ 130 em Santo André.">
   <meta property="og:image" content="imagens/imgi_22_736759874_122179741736615421_6925371358894874330_n.jpg">
-  <meta name="theme-color" content="#12161F">
+  <meta name="theme-color" content="#F9F6F0">
 
   <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
@@ -53,17 +53,20 @@
 
   <style>
     :root {
-      --bg-warm: #11151E;
-      --bg-surface: #171D28;
-      --bg-card: #1D2433;
-      --text-main: #F7F5F0;
-      --text-muted: #9BA7B7;
+      /* Warm, inviting palette extracted from restaurant's wood and linen */
+      --bg-light: #FAF7F2;
+      --bg-card: #FFFFFF;
+      --bg-warm-tint: #F3ECE1;
+      --bg-slate: #1D232E;
+      --text-main: #242426;
+      --text-muted: #5C626D;
       --accent-cobalt: #1D4ED8;
-      --accent-cobalt-light: #3B82F6;
-      --accent-coral: #E65A45;
-      --accent-gold: #D9A036;
-      --border-warm: rgba(247, 245, 240, 0.1);
-      --border-focus: rgba(59, 130, 246, 0.5);
+      --accent-cobalt-light: #2563EB;
+      --accent-coral: #E0533C;
+      --accent-terracotta: #C44536;
+      --accent-gold: #B48424;
+      --border-warm: rgba(36, 36, 38, 0.08);
+      --border-focus: rgba(29, 78, 216, 0.4);
       --ease-director: cubic-bezier(0.16, 1, 0.3, 1);
       --font-display: 'Syne', sans-serif;
       --font-body: 'Plus Jakarta Sans', sans-serif;
@@ -77,7 +80,7 @@
     }
 
     html, body {
-      background-color: var(--bg-warm);
+      background-color: var(--bg-light);
       color: var(--text-main);
       font-family: var(--font-body);
       overflow-x: clip;
@@ -95,20 +98,8 @@
       outline-offset: 3px;
     }
 
-    /* Fixed warm ambient */
-    .ambient-atmosphere {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background: 
-        radial-gradient(circle at 75% 15%, rgba(29, 78, 216, 0.08) 0%, transparent 55%),
-        radial-gradient(circle at 25% 85%, rgba(230, 90, 69, 0.05) 0%, transparent 60%),
-        #11151E;
-    }
-
-    /* Header Navigation */
-    .site-nav {
+    /* Top Navigation */
+    .top-nav {
       position: fixed;
       top: 0;
       left: 0;
@@ -122,59 +113,61 @@
       transition: background-color 0.4s var(--ease-director), border-color 0.4s, backdrop-filter 0.4s;
       border-bottom: 1px solid transparent;
     }
-    .site-nav.scrolled {
-      background-color: rgba(17, 21, 30, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+    .top-nav.scrolled {
+      background-color: rgba(250, 247, 242, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-warm);
     }
-    .brand-logo {
+    .brand-mark {
       display: flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 8px;
       text-decoration: none;
       color: var(--text-main);
       z-index: 102;
     }
-    .brand-logo h1 {
+    .brand-title {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       letter-spacing: -0.02em;
     }
-    .brand-logo span {
+    .brand-city {
       font-family: var(--font-mono);
       font-size: 0.72rem;
       color: var(--accent-coral);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
-    .nav-live-notice {
+    .nav-status-badge {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(23, 29, 40, 0.8);
+      gap: 8px;
+      background: var(--bg-card);
       border: 1px solid var(--border-warm);
-      padding: 8px 18px;
+      padding: 6px 16px;
       border-radius: 999px;
       font-family: var(--font-mono);
       font-size: 0.78rem;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
-    .live-dot {
+    .status-dot-pulse {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: #10B981;
-      box-shadow: 0 0 10px #10B981;
+      box-shadow: 0 0 8px #10B981;
     }
 
-    .nav-buttons {
+    .nav-actions-wrap {
       display: flex;
       align-items: center;
       gap: 16px;
     }
-    .btn-nav-reserve {
+    .btn-nav-book {
       font-family: var(--font-body);
       font-weight: 600;
       font-size: 0.92rem;
@@ -189,13 +182,13 @@
       align-items: center;
       justify-content: center;
     }
-    .btn-nav-reserve:hover {
+    .btn-nav-book:hover {
       background: var(--accent-cobalt-light);
       transform: translateY(-2px);
     }
 
-    /* Mobile Navigation */
-    .hamburger-btn {
+    /* Mobile Drawer Toggle */
+    .btn-hamburger {
       display: none;
       width: 44px;
       height: 44px;
@@ -208,29 +201,29 @@
       justify-content: center;
       gap: 6px;
     }
-    .hamburger-btn span {
+    .btn-hamburger span {
       display: block;
       width: 24px;
       height: 2px;
       background: var(--text-main);
       transition: transform 0.3s var(--ease-director), opacity 0.3s;
     }
-    .mobile-drawer {
+    .drawer-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(17, 21, 30, 0.98);
+      background: rgba(250, 247, 242, 0.98);
       backdrop-filter: blur(20px);
       z-index: 101;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 28px;
+      gap: 24px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s var(--ease-director);
     }
-    .mobile-drawer a {
+    .drawer-overlay a {
       font-family: var(--font-display);
       font-size: 1.8rem;
       font-weight: 700;
@@ -240,76 +233,73 @@
       display: inline-flex;
       align-items: center;
     }
-    .nav-open .mobile-drawer {
+    .nav-open .drawer-overlay {
       opacity: 1;
       pointer-events: auto;
     }
-    .nav-open .hamburger-btn span:nth-child(1) {
+    .nav-open .btn-hamburger span:nth-child(1) {
       transform: translateY(8px) rotate(45deg);
     }
-    .nav-open .hamburger-btn span:nth-child(2) {
+    .nav-open .btn-hamburger span:nth-child(2) {
       opacity: 0;
     }
-    .nav-open .hamburger-btn span:nth-child(3) {
+    .nav-open .btn-hamburger span:nth-child(3) {
       transform: translateY(-8px) rotate(-45deg);
     }
 
     /* SEÇÃO 1: HERO DAS PORTAS ABERTAS */
-    .hero-hospitality {
+    .section-hero {
       position: relative;
-      min-height: 100vh;
-      padding: 130px 6vw 70px 6vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      z-index: 10;
+      padding: 140px 6vw 80px 6vw;
+      background: linear-gradient(180deg, #FBF8F4 0%, #F5EFE6 100%);
+      border-bottom: 1px solid var(--border-warm);
     }
-    .hero-split-layout {
+    .hero-container {
+      max-width: 1240px;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 60px;
       align-items: center;
-      max-width: 1300px;
-      margin: 0 auto;
-      width: 100%;
     }
-    .hero-statement {
-      max-width: 720px;
-    }
-    .hero-rating-pill {
+    .hero-trust-tag {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(29, 78, 216, 0.12);
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      padding: 6px 16px;
+      gap: 8px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-warm);
+      padding: 6px 14px;
       border-radius: 999px;
       font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: #93C5FD;
-      margin-bottom: 24px;
+      font-size: 0.8rem;
+      color: var(--accent-gold);
+      font-weight: 500;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
-    .hero-heading {
+    .hero-title-main {
       font-family: var(--font-display);
+      font-size: clamp(48px, 5.5vw, 76px);
       font-weight: 800;
-      font-size: clamp(48px, 6.2vw, 84px);
-      line-height: 1.02;
+      line-height: 1.05;
       letter-spacing: -0.03em;
+      color: var(--text-main);
       margin-bottom: 24px;
     }
-    .hero-paragraph {
-      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    .hero-description {
+      font-size: clamp(1.08rem, 1.35vw, 1.25rem);
       color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 36px;
+      line-height: 1.65;
+      margin-bottom: 34px;
+      max-width: 620px;
     }
-    .hero-actions {
+    .hero-buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
       align-items: center;
     }
-    .btn-primary {
+    .btn-main-action {
       background: var(--accent-cobalt);
       color: #fff;
       font-weight: 700;
@@ -321,14 +311,16 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      transition: background-color 0.3s, transform 0.3s var(--ease-director);
+      transition: background-color 0.3s, transform 0.3s var(--ease-director), box-shadow 0.3s;
+      box-shadow: 0 8px 24px rgba(29, 78, 216, 0.25);
     }
-    .btn-primary:hover {
+    .btn-main-action:hover {
       background: var(--accent-cobalt-light);
       transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(29, 78, 216, 0.35);
     }
-    .btn-secondary {
-      background: transparent;
+    .btn-outline-action {
+      background: #FFFFFF;
       color: var(--text-main);
       font-weight: 600;
       font-size: 1.02rem;
@@ -341,440 +333,514 @@
       align-items: center;
       transition: background-color 0.3s, border-color 0.3s;
     }
-    .btn-secondary:hover {
-      background: rgba(247, 245, 240, 0.05);
-      border-color: rgba(247, 245, 240, 0.3);
+    .btn-outline-action:hover {
+      background: #F9F7F3;
+      border-color: rgba(36, 36, 38, 0.2);
     }
 
-    .hero-media-window {
+    .hero-visual-frame {
       position: relative;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-      border: 1px solid var(--border-warm);
+      box-shadow: 0 20px 50px rgba(45, 35, 20, 0.12);
+      border: 1px solid rgba(36, 36, 38, 0.08);
+      background: #FFFFFF;
       aspect-ratio: 4 / 5;
-      background: #19202D;
     }
-    .hero-media-window img {
+    .hero-visual-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-    .hero-media-caption {
+    .visual-caption-card {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(17, 21, 30, 0.95) 0%, rgba(17, 21, 30, 0.4) 70%, transparent 100%);
-      padding: 30px 24px 20px 24px;
+      bottom: 18px;
+      left: 18px;
+      right: 18px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(36, 36, 38, 0.06);
     }
-    .hero-media-caption h4 {
+    .visual-caption-card h4 {
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
-    .hero-media-caption p {
+    .visual-caption-card p {
       font-family: var(--font-mono);
       font-size: 0.78rem;
-      color: var(--accent-gold);
+      color: var(--accent-coral);
     }
 
-    /* COMMON SECTION STRUCTURE */
+    /* COMMON SECTION WRAPPERS */
     .hospitality-section {
+      padding: 110px 6vw;
       position: relative;
-      padding: 120px 6vw;
-      z-index: 10;
     }
-    .section-container {
-      max-width: 1240px;
+    .section-inner-wrap {
+      max-width: 1200px;
       margin: 0 auto;
     }
-    .section-header-centered {
-      text-align: center;
-      max-width: 780px;
+    .section-heading-block {
+      max-width: 740px;
       margin: 0 auto 60px auto;
+      text-align: center;
     }
     .section-title {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: clamp(2rem, 3.8vw, 3.4rem);
-      line-height: 1.1;
+      font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+      line-height: 1.12;
       letter-spacing: -0.025em;
       margin-bottom: 18px;
+      color: var(--text-main);
     }
-    .section-subtitle {
+    .section-lede {
       font-size: 1.12rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
-    /* SEÇÃO 2: A BRIGADA DA CASA */
-    .brigada-grid {
+    /* SEÇÃO 2: ANDREZA E ANA (O CUMPRIMENTO) */
+    .welcome-hosts-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
     }
-    .brigada-card {
+    .host-card {
       background: var(--bg-card);
       border: 1px solid var(--border-warm);
-      border-radius: 16px;
-      padding: 32px 28px;
+      border-radius: 18px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.3s var(--ease-director), border-color 0.3s;
+      transition: transform 0.3s var(--ease-director);
     }
-    .brigada-card:hover {
+    .host-card:hover {
       transform: translateY(-4px);
-      border-color: var(--border-focus);
     }
-    .staff-profile {
+    .host-identity {
       display: flex;
       align-items: center;
       gap: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
-    .staff-avatar {
-      width: 52px;
-      height: 52px;
+    .host-badge-avatar {
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
-      background: rgba(29, 78, 216, 0.2);
-      border: 1px solid var(--accent-cobalt);
+      background: var(--bg-warm-tint);
+      border: 2px solid var(--accent-cobalt);
+      color: var(--accent-cobalt);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1.25rem;
-      color: #93C5FD;
+      font-size: 1.35rem;
     }
-    .staff-info h3 {
+    .host-meta h3 {
       font-family: var(--font-display);
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 700;
       margin-bottom: 2px;
     }
-    .staff-info span {
+    .host-meta span {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--accent-coral);
     }
-    .staff-quote {
-      font-size: 1.05rem;
+    .host-review-quote {
+      font-size: 1.12rem;
+      line-height: 1.6;
       color: var(--text-main);
       font-style: italic;
-      line-height: 1.6;
-      margin-bottom: 24px;
-      border-left: 1px solid var(--accent-coral);
-      padding-left: 18px;
+      margin-bottom: 28px;
+      border-left: 2px solid var(--accent-coral);
+      padding-left: 20px;
     }
-    .staff-client {
+    .host-client-tag {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
       display: flex;
       justify-content: space-between;
-      border-top: 1px solid rgba(247, 245, 240, 0.08);
-      padding-top: 14px;
-    }
-    .stars-badge {
-      color: var(--accent-gold);
+      border-top: 1px solid var(--border-warm);
+      padding-top: 16px;
     }
 
-    /* SEÇÃO 3: A MESA DA ABUNDÂNCIA (OMOTENASHI) */
-    .abundance-showcase {
+    /* SEÇÃO 3: DAIENE, TIAGO E MATEUS (O SERVIÇO FARTO) */
+    .lunch-service-box {
+      background: var(--bg-warm-tint);
+      border-radius: 24px;
+      padding: 50px;
+      border: 1px solid rgba(36, 36, 38, 0.06);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 50px;
+      align-items: center;
+    }
+    .lunch-text-side h3 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .lunch-text-side p {
+      font-size: 1.08rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+    .lunch-quote-box {
+      background: #FFFFFF;
+      padding: 24px;
+      border-radius: 14px;
+      border: 1px solid var(--border-warm);
+      font-style: italic;
+      font-size: 1.05rem;
+      margin-bottom: 24px;
+    }
+    .lunch-quote-author {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-gold);
+      margin-top: 8px;
+      display: block;
+    }
+    .lunch-photo-side {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+      aspect-ratio: 4 / 3;
+    }
+    .lunch-photo-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* SEÇÃO 4: O CALOR DA GRELHA E O FRESCOR DO SAL */
+    .dishes-split-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
+      gap: 36px;
     }
-    .abundance-card {
-      background: var(--bg-surface);
+    .dish-hero-card {
+      background: var(--bg-card);
       border: 1px solid var(--border-warm);
-      border-radius: 18px;
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.04);
       display: flex;
       flex-direction: column;
     }
-    .abundance-img-wrapper {
+    .dish-img-box {
       height: 340px;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
     }
-    .abundance-img-wrapper img {
+    .dish-img-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.6s var(--ease-director);
     }
-    .abundance-card:hover .abundance-img-wrapper img {
+    .dish-hero-card:hover .dish-img-box img {
       transform: scale(1.03);
     }
-    .abundance-content {
-      padding: 34px 30px;
+    .dish-desc-box {
+      padding: 36px;
       flex-grow: 1;
     }
-    .abundance-content h3 {
+    .dish-desc-box h3 {
       font-family: var(--font-display);
-      font-size: 1.8rem;
+      font-size: 1.85rem;
       font-weight: 800;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       letter-spacing: -0.02em;
     }
-    .abundance-content p {
+    .dish-desc-box p {
+      font-size: 1.05rem;
       color: var(--text-muted);
-      font-size: 1.02rem;
       line-height: 1.6;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
-    .dish-tag-list {
+    .dish-badge-row {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
-    .dish-tag {
+    .dish-badge {
       font-family: var(--font-mono);
       font-size: 0.75rem;
-      background: rgba(247, 245, 240, 0.06);
-      border: 1px solid var(--border-warm);
-      padding: 4px 10px;
+      background: var(--bg-warm-tint);
+      padding: 6px 12px;
       border-radius: 6px;
       color: var(--text-main);
+      font-weight: 500;
     }
 
-    /* SEÇÃO 4: A CONTA TRANSPARENTE */
-    .transparency-box {
-      max-width: 900px;
+    /* SEÇÃO 5: HOSPITALIDADE SEM LETRAS MIÚDAS (R$ 130) */
+    .pricing-table-card {
+      max-width: 860px;
       margin: 0 auto;
-      background: #18202D;
-      border: 1px solid rgba(217, 160, 54, 0.3);
-      border-radius: 20px;
+      background: #FFFFFF;
+      border: 2px solid var(--accent-gold);
+      border-radius: 22px;
       padding: 48px;
+      box-shadow: 0 16px 50px rgba(180, 132, 36, 0.08);
     }
-    .transparency-header {
+    .pricing-header-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      border-bottom: 1px dashed rgba(247, 245, 240, 0.15);
+      border-bottom: 1px dashed rgba(36, 36, 38, 0.15);
       padding-bottom: 24px;
-      margin-bottom: 32px;
+      margin-bottom: 30px;
     }
-    .transparency-header h3 {
+    .pricing-header-row h3 {
       font-family: var(--font-display);
       font-size: 2rem;
       font-weight: 800;
     }
-    .transparency-stamp {
+    .pricing-stamp {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--accent-coral);
+      font-weight: 600;
     }
-    .inclusions-list {
+    .pricing-items-list {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin-bottom: 36px;
+      margin-bottom: 34px;
     }
-    .inclusion-row {
+    .pricing-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1.05rem;
+      font-size: 1.08rem;
       padding-bottom: 12px;
-      border-bottom: 1px solid rgba(247, 245, 240, 0.06);
+      border-bottom: 1px solid var(--border-warm);
     }
-    .inclusion-tag {
+    .item-tag {
       font-family: var(--font-mono);
       font-size: 0.72rem;
-      background: rgba(29, 78, 216, 0.2);
+      background: rgba(29, 78, 216, 0.1);
       border: 1px solid var(--accent-cobalt);
-      color: #93C5FD;
+      color: var(--accent-cobalt);
       padding: 2px 8px;
       border-radius: 4px;
       margin-right: 12px;
+      font-weight: 600;
     }
-    .inclusion-status {
+    .item-highlight {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--accent-gold);
+      font-weight: 500;
     }
-    .transparency-total {
+    .pricing-final-box {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(29, 78, 216, 0.12);
-      border: 1px solid var(--border-focus);
+      background: var(--bg-warm-tint);
       border-radius: 14px;
       padding: 26px 32px;
     }
-    .total-label {
+    .final-label {
       font-family: var(--font-display);
       font-size: 1.4rem;
       font-weight: 700;
     }
-    .total-explanation {
-      font-size: 0.88rem;
+    .final-sub {
+      font-size: 0.9rem;
       color: var(--text-muted);
     }
-    .total-amount {
+    .final-amount {
       font-family: var(--font-display);
-      font-size: 3rem;
+      font-size: 3.2rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--text-main);
       line-height: 1;
     }
-    .total-amount-sub {
+    .final-per-person {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--accent-coral);
       text-align: right;
     }
 
-    /* SEÇÃO 5: O SALÃO VIVO */
-    .salon-routine-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-    }
-    .routine-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-warm);
-      border-radius: 16px;
-      padding: 36px 32px;
-    }
-    .routine-card h3 {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-    .routine-hours {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--accent-gold);
-      margin-bottom: 16px;
-      display: block;
-    }
-    .routine-card p {
-      color: var(--text-muted);
-      font-size: 1.02rem;
-      line-height: 1.6;
-    }
-
-    /* SEÇÃO 6: O CONVITE DIRETO */
-    .invitation-card {
-      background: linear-gradient(to bottom, #19212F 0%, #10151F 100%);
-      border: 1px solid var(--border-warm);
+    /* SEÇÃO 6: SUA MESA ESTÁ PRONTA */
+    .booking-callout-card {
+      background: var(--bg-slate);
+      color: #FFFFFF;
       border-radius: 24px;
-      padding: 60px 40px;
+      padding: 64px 44px;
       text-align: center;
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
+      box-shadow: 0 24px 60px rgba(29, 35, 46, 0.2);
     }
-    .invitation-card h2 {
+    .booking-callout-card h2 {
       font-family: var(--font-display);
-      font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+      font-size: clamp(2.2rem, 4.4vw, 3.8rem);
       font-weight: 800;
       line-height: 1.1;
       margin-bottom: 20px;
+      color: #FFFFFF;
     }
-    .invitation-card p {
-      color: var(--text-muted);
+    .booking-callout-card p {
+      color: #A3ABB7;
       font-size: 1.15rem;
       line-height: 1.6;
-      max-width: 640px;
+      max-width: 660px;
       margin: 0 auto 36px auto;
     }
-    .invitation-actions {
+    .booking-actions-row {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
       justify-content: center;
       margin-bottom: 40px;
     }
-    .address-details {
+    .btn-whatsapp-direct {
+      background: #10B981;
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1.1rem;
+      min-height: 52px;
+      padding: 0 34px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: background-color 0.3s, transform 0.3s var(--ease-director);
+    }
+    .btn-whatsapp-direct:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+    .btn-maps-direct {
+      background: transparent;
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1.02rem;
+      min-height: 52px;
+      padding: 0 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: inline-flex;
+      align-items: center;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .btn-maps-direct:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    .location-details-footer {
       font-family: var(--font-mono);
       font-size: 0.88rem;
-      color: var(--text-muted);
+      color: #8C95A3;
       line-height: 1.6;
-      border-top: 1px solid rgba(247, 245, 240, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding-top: 28px;
     }
 
     /* Footer */
     footer {
       border-top: 1px solid var(--border-warm);
-      padding: 40px 6vw;
+      padding: 36px 6vw;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-family: var(--font-mono);
       font-size: 0.85rem;
       color: var(--text-muted);
+      background: var(--bg-light);
     }
 
-    /* Entry animations */
-    .fade-up-elem {
+    /* Scroll reveal transitions */
+    .reveal-item {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.8s var(--ease-director), transform 0.8s var(--ease-director);
+      transform: translateY(20px);
+      transition: opacity 0.7s var(--ease-director), transform 0.7s var(--ease-director);
       will-change: opacity, transform;
     }
-    .fade-up-elem.in {
+    .reveal-item.in {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .hero-split-layout {
+    /* Responsiveness */
+    @media (max-width: 960px) {
+      .hero-container {
         grid-template-columns: 1fr;
       }
-      .brigada-grid {
+      .welcome-hosts-grid {
         grid-template-columns: 1fr;
       }
-      .abundance-showcase {
+      .lunch-service-box {
         grid-template-columns: 1fr;
       }
-      .salon-routine-grid {
+      .dishes-split-grid {
         grid-template-columns: 1fr;
       }
       footer {
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
         text-align: center;
       }
     }
 
     @media (max-width: 760px) {
-      .nav-live-notice {
+      .nav-status-badge {
         display: none;
       }
-      .btn-nav-reserve {
+      .btn-nav-book {
         display: none;
       }
-      .hamburger-btn {
+      .btn-hamburger {
         display: flex;
       }
-      .mobile-drawer {
+      .drawer-overlay {
         display: flex;
       }
-      .transparency-box {
-        padding: 28px 20px;
+      .lunch-service-box {
+        padding: 30px 20px;
       }
-      .transparency-header {
+      .pricing-table-card {
+        padding: 28px 18px;
+      }
+      .pricing-header-row {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
       }
-      .transparency-total {
+      .pricing-final-box {
         flex-direction: column;
         align-items: flex-start;
         gap: 14px;
       }
-      .total-amount-sub {
+      .final-per-person {
         text-align: left;
+      }
+      .booking-callout-card {
+        padding: 44px 20px;
       }
     }
 
@@ -785,7 +851,7 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      .fade-up-elem {
+      .reveal-item {
         opacity: 1 !important;
         transform: translateY(0) !important;
       }
@@ -794,68 +860,65 @@
 </head>
 <body>
 
-  <!-- Ambient Backdrop -->
-  <div class="ambient-atmosphere"></div>
-
-  <!-- Header Navigation -->
-  <nav class="site-nav" id="siteNav">
-    <a href="#" class="brand-logo">
-      <h1>Asami</h1>
-      <span>Santo André</span>
+  <!-- Top Navigation -->
+  <nav class="top-nav" id="mainNav">
+    <a href="#" class="brand-mark">
+      <span class="brand-title">Asami</span>
+      <span class="brand-city">Santo André</span>
     </a>
 
-    <div class="nav-live-notice">
-      <span class="live-dot"></span>
+    <div class="nav-status-badge">
+      <span class="status-dot-pulse"></span>
       <span>Salão Aberto a partir das 12:00</span>
     </div>
 
-    <div class="nav-buttons">
-      <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi" target="_blank" rel="noopener" class="btn-nav-reserve">Reservar Mesa</a>
+    <div class="nav-actions-wrap">
+      <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi" target="_blank" rel="noopener" class="btn-nav-book">Reservar Mesa</a>
       
-      <button class="hamburger-btn" id="navToggle" aria-label="Menu de navegação">
+      <button class="btn-hamburger" id="hamburgerBtn" aria-label="Abrir menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
     </div>
 
-    <!-- Mobile Drawer -->
-    <div class="mobile-drawer" id="mobileDrawer">
-      <a href="#brigada" class="drawer-item">A Equipe</a>
-      <a href="#abundancia" class="drawer-item">A Mesa Completa</a>
-      <a href="#preco" class="drawer-item">Preço Fixo</a>
-      <a href="#rotina" class="drawer-item">Horários</a>
-      <a href="#convite" class="drawer-item">Falar no WhatsApp</a>
+    <!-- Mobile Drawer Overlay -->
+    <div class="drawer-overlay" id="mobileDrawer">
+      <a href="#hosts" class="drawer-link">Quem te Recebe</a>
+      <a href="#almoco" class="drawer-link">Almoço com os Meninos</a>
+      <a href="#pratos" class="drawer-link">Grelha & Sashimi</a>
+      <a href="#preco" class="drawer-link">Preço Fixo R$ 130</a>
+      <a href="#chegada" class="drawer-link">Como Chegar</a>
     </div>
   </nav>
 
-  <!-- SEÇÃO 1: HERO DAS PORTAS ABERTAS -->
-  <header class="hero-hospitality">
-    <div class="hero-split-layout">
-      <div class="hero-statement">
-        <div class="hero-rating-pill">
+  <!-- SEÇÃO 1: HERO DAS PORTAS ABERTAS (A CHEGADA) -->
+  <header class="section-hero">
+    <div class="hero-container">
+      <div class="hero-text-wrap">
+        <div class="hero-trust-tag">
           <span>★ 4,6</span> • 3.907 Avaliações Reais de Santo André
         </div>
-        <h2 class="hero-heading">
-          Aqui, você é recebido por pessoas que conhecem você pelo nome.
-        </h2>
-        <p class="hero-paragraph">
-          Tudo muito fresco, extremamente saboroso. A proposta de rodízio farto com pratos quentes na chapa, sashimis nobres, bebidas e sobremesas inclusas por preço fixo.
+        <h1 class="hero-title-main">
+          Aqui tem gente de verdade esperando por você.
+        </h1>
+        <p class="hero-description">
+          No Asami Sushi, o rodízio é completo, farto e servido com a atenção de quem conhece você pelo nome. Da recepção calorosa ao festival sem limites de repetição.
         </p>
-        <div class="hero-actions">
-          <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi" target="_blank" rel="noopener" class="btn-primary">
+        <div class="hero-buttons">
+          <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi" target="_blank" rel="noopener" class="btn-main-action">
             <span>Garantir Minha Mesa</span>
             <span>→</span>
           </a>
-          <a href="#brigada" class="btn-secondary">
-            Conhecer Quem Cuida de Você
+          <a href="#hosts" class="btn-outline-action">
+            Conhecer a Equipe
           </a>
         </div>
       </div>
 
-      <div class="hero-media-window">
-        <img src="imagens/imgi_22_736759874_122179741736615421_6925371358894874330_n.jpg" alt="Mesa de rodízio acolhedora no Asami Sushi" fetchpriority="high">
-        <div class="hero-media-caption">
+      <div class="hero-visual-frame">
+        <img src="imagens/imgi_22_736759874_122179741736615421_6925371358894874330_n.jpg" alt="Mesa de almoço farta e acolhedora no Asami Sushi" fetchpriority="high">
+        <div class="visual-caption-card">
           <h4>O Salão Pronto Para Te Acolher</h4>
           <p>Av. Lino Jardim, 912 — Santo André</p>
         </div>
@@ -863,233 +926,204 @@
     </div>
   </header>
 
-  <!-- SEÇÃO 2: A BRIGADA DA CASA -->
-  <section class="hospitality-section" id="brigada">
-    <div class="section-container">
-      <div class="section-header-centered">
-        <h2 class="section-title fade-up-elem">O atendimento que tem nome, sobrenome e carinho.</h2>
-        <p class="section-subtitle fade-up-elem">
-          Em quase 4 mil avaliações, nossos frequentadores não elogiam um serviço abstrato: eles chamam pelos nomes de quem faz a casa pulsar todos os dias.
+  <!-- SEÇÃO 2: QUEM TE RECEBE À PORTA (ANDREZA E ANA) -->
+  <section class="hospitality-section" id="hosts">
+    <div class="section-inner-wrap">
+      <div class="section-heading-block">
+        <h2 class="section-title reveal-item">O atendimento que começa com um sorriso e vira amizade.</h2>
+        <p class="section-lede reveal-item">
+          Você entra e não encontra um totem frio nem pressa. Encontra quem cuida do salão com atenção genuína e faz questão de te deixar à vontade.
         </p>
       </div>
 
-      <div class="brigada-grid">
-        <div class="brigada-card fade-up-elem">
+      <div class="welcome-hosts-grid">
+        <div class="host-card reveal-item">
           <div>
-            <div class="staff-profile">
-              <div class="staff-avatar">A</div>
-              <div class="staff-info">
+            <div class="host-identity">
+              <div class="host-badge-avatar">A</div>
+              <div class="host-meta">
                 <h3>Andreza</h3>
-                <span>Acolhimento no Salão</span>
+                <span>Recepção & Atenção no Salão</span>
               </div>
             </div>
-            <div class="staff-quote">
+            <div class="host-review-quote">
               "Experiência ótima, ambiente agradável, comida muito boa. Andreza muito gente boa, me atendeu super bem!"
             </div>
           </div>
-          <div class="staff-client">
-            <span>Livia Silva Barros</span>
-            <span class="stars-badge">★★★★★</span>
+          <div class="host-client-tag">
+            <span>Avaliação por Livia Silva Barros</span>
+            <span style="color:var(--accent-gold);">★★★★★</span>
           </div>
         </div>
 
-        <div class="brigada-card fade-up-elem">
+        <div class="host-card reveal-item">
           <div>
-            <div class="staff-profile">
-              <div class="staff-avatar">A</div>
-              <div class="staff-info">
+            <div class="host-identity">
+              <div class="host-badge-avatar">A</div>
+              <div class="host-meta">
                 <h3>Ana</h3>
-                <span>Atenção & Cuidado</span>
+                <span>Acolhimento & Cuidado com a Mesa</span>
               </div>
             </div>
-            <div class="staff-quote">
+            <div class="host-review-quote">
               "Conheci hoje e amei. O rodízio está R$130 incluso bebidas e sobremesas. Fui muito bem atendida pela Ana, o local é aconchegante e a comida é maravilhosa! Voltarei mais vezes 💕"
             </div>
           </div>
-          <div class="staff-client">
-            <span>Yasmin Sakamoto</span>
-            <span class="stars-badge">★★★★★</span>
-          </div>
-        </div>
-
-        <div class="brigada-card fade-up-elem">
-          <div>
-            <div class="staff-profile">
-              <div class="staff-avatar">D</div>
-              <div class="staff-info">
-                <h3>Daiene, Tiago & Mateus</h3>
-                <span>Sintonia & Agilidade no Almoço</span>
-              </div>
-            </div>
-            <div class="staff-quote">
-              "Simplesmente espetacular!! A Daiene nos atendeu super bem, além dos meninos, Tiago e Mateus!! Fomos no almoço e estava tudo muito fresco e extremamente saboroso!!"
-            </div>
-          </div>
-          <div class="staff-client">
-            <span>Collab Soluções</span>
-            <span class="stars-badge">★★★★★</span>
+          <div class="host-client-tag">
+            <span>Avaliação por Yasmin Sakamoto</span>
+            <span style="color:var(--accent-gold);">★★★★★</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SEÇÃO 3: A MESA DA ABUNDÂNCIA -->
-  <section class="hospitality-section" id="abundancia" style="background: rgba(23, 29, 40, 0.4);">
-    <div class="section-container">
-      <div class="section-header-centered">
-        <h2 class="section-title fade-up-elem">Da delicadeza do corte ao estalo da chapa quente.</h2>
-        <p class="section-subtitle fade-up-elem">
-          Hospitalidade japonesa é nunca fazer o convidado escolher entre o cru e o quente. No rodízio do Asami, os dois convivem na mesma mesa com fartura irrestrita.
-        </p>
-      </div>
-
-      <div class="abundance-showcase">
-        <div class="abundance-card fade-up-elem">
-          <div class="abundance-img-wrapper">
-            <img src="imagens/imgi_31_724216260_122178432812615421_3129834278107533504_n.jpg" alt="Sashimis nobres esculpidos artesanalmente" loading="lazy">
-          </div>
-          <div class="abundance-content">
-            <h3>Sashimis & Especiais do Chef</h3>
-            <p>Cortes espessos e tenros de salmão, peixe branco, polvo e atum, servidos sobre bloco esculpido de sal rosa do Himalaia e adornados com leques artesanais de pepino.</p>
-            <div class="dish-tag-list">
-              <span class="dish-tag">Salmão Fresco</span>
-              <span class="dish-tag">Polvo Fatiado</span>
-              <span class="dish-tag">Carpaccios Trufados</span>
-              <span class="dish-tag">Barca Imperial</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="abundance-card fade-up-elem">
-          <div class="abundance-img-wrapper">
-            <img src="imagens/imgi_44_715464125_122177674058615421_855993563562005619_n.jpg" alt="Chapa de ferro quente com camarão e lula" loading="lazy">
-          </div>
-          <div class="abundance-content">
-            <h3>O Conforto da Grelha Fumegante</h3>
-            <p>"Comi a melhor chapa de frutos do mar da minha vida." Rechauds de ferro fundido chegam crepitando com camarões, lula, tiras nobres de carne e guiozas dourados crocantes.</p>
-            <div class="dish-tag-list">
-              <span class="dish-tag">Camarão & Lula na Manteiga</span>
-              <span class="dish-tag">Grelhados com Limão</span>
-              <span class="dish-tag">Guiozas Dourados</span>
-              <span class="dish-tag">Trouxinhas Crocantes</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEÇÃO 4: A CONTA TRANSPARENTE -->
-  <section class="hospitality-section" id="preco">
-    <div class="section-container">
-      <div class="section-header-centered">
-        <h2 class="section-title fade-up-elem">Comer bem também é a paz de saber quanto custa.</h2>
-        <p class="section-subtitle fade-up-elem">
-          Nenhuma taxa surpresa de desperdício. Nenhum refrigerante cobrado à parte. Uma única conta justa onde tudo o que você consome já está acolhido.
-        </p>
-      </div>
-
-      <div class="transparency-box fade-up-elem">
-        <div class="transparency-header">
-          <div>
-            <div class="transparency-stamp">ASAMI SUSHI • SANTO ANDRÉ</div>
-            <h3>O Compromisso de Preço Fixo</h3>
-          </div>
-          <div style="font-family:var(--font-mono);font-size:0.9rem;color:var(--accent-gold);">
-            SEM TAXAS OCULTAS
-          </div>
-        </div>
-
-        <div class="inclusions-list">
-          <div class="inclusion-row">
-            <span><span class="inclusion-tag">INCLUSO</span> Entradas quentes, guiozas e camarões crocantes</span>
-            <span class="inclusion-status">Sem limites de repetição</span>
-          </div>
-          <div class="inclusion-row">
-            <span><span class="inclusion-tag">INCLUSO</span> Chapas de frutos do mar (camarão e lula na manteiga)</span>
-            <span class="inclusion-status">Sem limites de repetição</span>
-          </div>
-          <div class="inclusion-row">
-            <span><span class="inclusion-tag">INCLUSO</span> Sashimis variados e combinados especiais no bloco de sal</span>
-            <span class="inclusion-status">Sem limites de repetição</span>
-          </div>
-          <div class="inclusion-row">
-            <span><span class="inclusion-tag">INCLUSO</span> Bebidas e coquetéis inclusos durante todo o rodízio</span>
-            <span class="inclusion-status">Livre consumo</span>
-          </div>
-          <div class="inclusion-row">
-            <span><span class="inclusion-tag">INCLUSO</span> Sobremesas finalizadas da casa</span>
-            <span class="inclusion-status">Inclusas no rodízio</span>
-          </div>
-        </div>
-
-        <div class="transparency-total">
-          <div>
-            <div class="total-label">Preço Por Pessoa</div>
-            <div class="total-explanation">Rodízio completo + bebidas + sobremesa por valor fechado.</div>
-          </div>
-          <div>
-            <div class="total-amount">R$ 130</div>
-            <div class="total-amount-sub">VALOR INTEGRAL</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEÇÃO 5: O SALÃO VIVO -->
-  <section class="hospitality-section" id="rotina" style="background: rgba(23, 29, 40, 0.4);">
-    <div class="section-container">
-      <div class="section-header-centered">
-        <h2 class="section-title fade-up-elem">Do almoço de terça ao jantar sem pressa de sábado.</h2>
-        <p class="section-subtitle fade-up-elem">
-          A casa foi desenhada para acolher quem precisa de agilidade na pausa de trabalho e quem deseja estender a noite em família ou a dois.
-        </p>
-      </div>
-
-      <div class="salon-routine-grid">
-        <div class="routine-card fade-up-elem">
-          <h3>Almoço Durante a Semana</h3>
-          <span class="routine-hours">Terça a Sexta • das 12:00 às 15:00</span>
+  <!-- SEÇÃO 3: A MESA DOS MENINOS (DAIENE, TIAGO E MATEUS) -->
+  <section class="hospitality-section" id="almoco" style="background:#FBF8F4;">
+    <div class="section-inner-wrap">
+      <div class="lunch-service-box reveal-item">
+        <div class="lunch-text-side">
+          <h3>Rapidez e comida fresca na hora do almoço de semana.</h3>
           <p>
-            O ritmo perfeito para quem trabalha em Santo André e no ABC. Os meninos, Tiago e Mateus, garantem que as chapas e barcas cheguem imediatamente à mesa para você aproveitar seu tempo com calma e comida fresca.
+            No ritmo dinâmico do ABC, você precisa de um almoço que chegue rápido, mas sem perder o capricho artesanal. A Daiene e os meninos — Tiago e Mateus — orquestram o serviço para que você aproveite sua pausa com comida fresca e sem espera.
           </p>
+          <div class="lunch-quote-box">
+            "A Daiene nos atendeu super bem, além dos meninos, Tiago e Mateus!! Eu e minha esposa fomos na hora do almoço em um dia de semana, e estava tudo muito fresco e extremamente saboroso!! Com certeza voltaremos mais vezes!!"
+            <span class="lunch-quote-author">— Collab Soluções em Cilindros e Roscas (Google Maps)</span>
+          </div>
         </div>
 
-        <div class="routine-card fade-up-elem">
-          <h3>Jantar & Fins de Semana</h3>
-          <span class="routine-hours">Terça a Domingo • das 19:00 às 23:00</span>
-          <p>
-            A atmosfera se transforma: iluminação acolhedora, taças e coquetéis coloridos para brindar, e o rodízio que desfila sem pressa enquanto você comemora com amigos ou família.
-          </p>
+        <div class="lunch-photo-side">
+          <img src="imagens/imgi_58_702320151_18322161253280812_4768258708712824851_n.jpg" alt="Mesa de almoço farta com travessas cerâmicas azuis" loading="lazy">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SEÇÃO 6: SEU LUGAR RESERVADO -->
-  <section class="hospitality-section" id="convite">
-    <div class="section-container">
-      <div class="invitation-card fade-up-elem">
-        <h2>Pode vir. A mesa do Asami já está posta para você.</h2>
+  <!-- SEÇÃO 4: O CALOR DA GRELHA E O FRESCOR DO SAL -->
+  <section class="hospitality-section" id="pratos">
+    <div class="section-inner-wrap">
+      <div class="section-heading-block">
+        <h2 class="section-title reveal-item">O cru mais nobre e a chapa mais elogiada de Santo André.</h2>
+        <p class="section-lede reveal-item">
+          Hospitalidade japonesa é nunca fazer o convidado ter que escolher entre um sashimi delicado e um prato quente reconfortante. Ambos desfilam juntos pela sua mesa.
+        </p>
+      </div>
+
+      <div class="dishes-split-grid">
+        <div class="dish-hero-card reveal-item">
+          <div class="dish-img-box">
+            <img src="imagens/imgi_44_715464125_122177674058615421_855993563562005619_n.jpg" alt="Chapa quente de camarão e lula" loading="lazy">
+          </div>
+          <div class="dish-desc-box">
+            <h3>A Famosa Chapa de Frutos do Mar</h3>
+            <p>"Comi a melhor chapa de frutos do mar (camarão e lula) da minha vida." Ferro fundido crepitando na mesa com manteiga de ervas, anéis de lula tenros e camarões frescos.</p>
+            <div class="dish-badge-row">
+              <span class="dish-badge">Camarão & Lula na Manteiga</span>
+              <span class="dish-badge">Carnes Grelhadas</span>
+              <span class="dish-badge">Guiozas Dourados</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dish-hero-card reveal-item">
+          <div class="dish-img-box">
+            <img src="imagens/imgi_38_724123427_122178278036615421_2497840779835415252_n.jpg" alt="Barco imperial com sashimis no bloco de sal rosa" loading="lazy">
+          </div>
+          <div class="dish-desc-box">
+            <h3>Barcas Nobres no Bloco de Sal Rosa</h3>
+            <p>Sashimis espessos de salmão, peixe branco e polvo repousados sobre rocha maciça de sal do Himalaia, preservando a pureza mineral e a textura sedosa do corte.</p>
+            <div class="dish-badge-row">
+              <span class="dish-badge">Sal Rosa do Himalaia</span>
+              <span class="dish-badge">Carpaccios Trufados</span>
+              <span class="dish-badge">Temakis na Hora</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5: HOSPITALIDADE SEM LETRAS MIÚDAS (A CONTA DE R$ 130) -->
+  <section class="hospitality-section" id="preco" style="background:#F7F4EE;">
+    <div class="section-inner-wrap">
+      <div class="section-heading-block">
+        <h2 class="section-title reveal-item">Comer bem sem ficar fazendo contas à mesa.</h2>
+        <p class="section-lede reveal-item">
+          "A proposta deles com rodízio + sobremesa + bebidas por preço fixo é boa demais." Quando você senta com a gente, o compromisso é claro do início ao fim.
+        </p>
+      </div>
+
+      <div class="pricing-table-card reveal-item">
+        <div class="pricing-header-row">
+          <div>
+            <div class="pricing-stamp">ASAMI SUSHI • SANTO ANDRÉ</div>
+            <h3>O Compromisso de Preço Fechado</h3>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--accent-gold);font-weight:600;">
+            SEM TAXAS SURPRESA
+          </div>
+        </div>
+
+        <div class="pricing-items-list">
+          <div class="pricing-item">
+            <span><span class="item-tag">INCLUSO</span> Entradas quentes, guiozas e camarões crocantes</span>
+            <span class="item-highlight">À vontade</span>
+          </div>
+          <div class="pricing-item">
+            <span><span class="item-tag">INCLUSO</span> Chapas fumegantes de frutos do mar (camarão e lula)</span>
+            <span class="item-highlight">À vontade</span>
+          </div>
+          <div class="pricing-item">
+            <span><span class="item-tag">INCLUSO</span> Sashimis nobres e combinados especiais no bloco de sal</span>
+            <span class="item-highlight">À vontade</span>
+          </div>
+          <div class="pricing-item">
+            <span><span class="item-tag">INCLUSO</span> Bebidas e coquetéis inclusos durante todo o rodízio</span>
+            <span class="item-highlight">Livre consumo</span>
+          </div>
+          <div class="pricing-item">
+            <span><span class="item-tag">INCLUSO</span> Sobremesas artesanais inclusas</span>
+            <span class="item-highlight">Sem custo extra</span>
+          </div>
+        </div>
+
+        <div class="pricing-final-box">
+          <div>
+            <div class="final-label">Preço Fixo Por Pessoa</div>
+            <div class="final-sub">Rodízio integral + bebidas + sobremesas inclusas.</div>
+          </div>
+          <div>
+            <div class="final-amount">R$ 130</div>
+            <div class="final-per-person">VALOR TOTAL FECHADO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 6: SUA MESA ESTÁ PRONTA (O CONVITE FINAL) -->
+  <section class="hospitality-section" id="chegada">
+    <div class="section-inner-wrap">
+      <div class="booking-callout-card reveal-item">
+        <h2>Pode vir. A Andreza, a Ana e toda a equipe estão te esperando.</h2>
         <p>
-          Seja para o almoço de hoje ou para um jantar especial esta noite. Nossa equipe está pronta na Av. Lino Jardim para te receber com a atenção que você merece.
+          Seja para a pausa do almoço no meio da semana ou para um jantar comemorativo especial. Nossa casa na Av. Lino Jardim, 912 está de portas abertas.
         </p>
 
-        <div class="invitation-actions">
-          <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20reservar%20uma%20mesa%20no%20Asami%20Sushi!" target="_blank" rel="noopener" class="btn-primary">
+        <div class="booking-actions-row">
+          <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi!" target="_blank" rel="noopener" class="btn-whatsapp-direct">
             <span>Falar com a Equipe no WhatsApp</span>
             <span>→</span>
           </a>
-          <a href="https://maps.google.com/?q=Av.+Lino+Jardim,+912+-+Jardim+Bela+Vista,+Santo+Andr%C3%A9+-+SP,+09041-031" target="_blank" rel="noopener" class="btn-secondary">
-            Como Chegar (Google Maps)
+          <a href="https://maps.google.com/?q=Av.+Lino+Jardim,+912+-+Jardim+Bela+Vista,+Santo+Andr%C3%A9+-+SP,+09041-031" target="_blank" rel="noopener" class="btn-maps-direct">
+            Ver Rota no Google Maps
           </a>
         </div>
 
-        <div class="address-details">
+        <div class="location-details-footer">
           <div>Av. Lino Jardim, 912 — Jardim Bela Vista, Santo André - SP</div>
-          <div>Telefone Direto: (11) 4427-8202 • Almoço e Jantar • Terça a Domingo</div>
+          <div>Telefone: (11) 4427-8202 • Almoço e Jantar • Terça a Domingo a partir das 12:00</div>
         </div>
       </div>
     </div>
@@ -1098,22 +1132,21 @@
   <!-- Rodapé -->
   <footer>
     <div>© Asami Sushi Santo André. Todos os direitos reservados.</div>
-    <div>Hospitalidade com Rosto • Frescor • Abundância</div>
+    <div>Hospitalidade com Nome Próprio • Santo André - SP</div>
   </footer>
 
-  <!-- SCRIPT ENGINE LEVE E EFICIENTE -->
+  <!-- SCRIPT LEVE DE NAVEGAÇÃO E REVEAL -->
   <script>
     (function() {
       // 1. Mobile Drawer
-      const toggle = document.getElementById('navToggle');
-      const drawer = document.getElementById('mobileDrawer');
-      const drawerItems = document.querySelectorAll('.drawer-item');
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawerLinks = document.querySelectorAll('.drawer-link');
 
-      toggle.addEventListener('click', () => {
+      hamburger.addEventListener('click', () => {
         document.body.classList.toggle('nav-open');
       });
-      drawerItems.forEach(item => {
-        item.addEventListener('click', () => {
+      drawerLinks.forEach(link => {
+        link.addEventListener('click', () => {
           document.body.classList.remove('nav-open');
         });
       });
@@ -1122,7 +1155,7 @@
       });
 
       // 2. Navbar on scroll
-      const nav = document.getElementById('siteNav');
+      const nav = document.getElementById('mainNav');
       window.addEventListener('scroll', () => {
         if (window.scrollY > 40) {
           nav.classList.add('scrolled');
@@ -1131,14 +1164,14 @@
         }
       }, { passive: true });
 
-      // 3. Stagger Reveal with IntersectionObserver
-      const elems = document.querySelectorAll('.fade-up-elem');
+      // 3. Staggered Scroll Reveal
+      const revealItems = document.querySelectorAll('.reveal-item');
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const el = entry.target;
             const parent = el.parentElement;
-            const siblings = parent ? Array.from(parent.querySelectorAll('.fade-up-elem')) : [];
+            const siblings = parent ? Array.from(parent.querySelectorAll('.reveal-item')) : [];
             const idx = siblings.indexOf(el);
             const delay = idx >= 0 ? idx * 0.08 : 0;
             el.style.transitionDelay = delay.toFixed(2) + 's';
@@ -1148,7 +1181,7 @@
         });
       }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
 
-      elems.forEach(el => observer.observe(el));
+      revealItems.forEach(el => observer.observe(el));
     })();
   </script>
 </body>
