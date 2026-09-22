@@ -1,1188 +1,797 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asami Sushi — Hospitalidade com Nome Próprio em Santo André</title>
-  <meta name="description" content="No Asami Sushi, a hospitalidade tem nome: Andreza, Ana, Daiene, Tiago e Mateus. Rodízio farto com bebidas e sobremesas inclusas por R$ 130 no Jardim Bela Vista.">
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="restaurant">
-  <meta property="og:title" content="Asami Sushi — Aqui tem gente de verdade esperando por você">
-  <meta property="og:description" content="Rodízio completo com peixes nobres, chapas na brasa, bebidas e sobremesas inclusas por R$ 130 em Santo André.">
-  <meta property="og:image" content="imagens/imgi_22_736759874_122179741736615421_6925371358894874330_n.jpg">
-  <meta name="theme-color" content="#F9F6F0">
-
-  <!-- Schema.org JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Restaurant",
-    "name": "Asami Sushi",
-    "image": "imagens/imgi_22_736759874_122179741736615421_6925371358894874330_n.jpg",
-    "telephone": "+55-11-4427-8202",
-    "priceRange": "R$ 120–140",
-    "servesCuisine": "Japonesa",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Av. Lino Jardim, 912",
-      "addressLocality": "Santo André",
-      "addressRegion": "SP",
-      "postalCode": "09041-031",
-      "addressCountry": "BR"
-    },
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        "opens": "12:00",
-        "closes": "23:00"
-      }
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.6",
-      "reviewCount": "3907"
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Asami Sushi — Rodízio em Santo André</title>
+<meta name="description" content="Asami Sushi, Santo André. Rodízio de sushi e sashimi com bebidas e sobremesa inclusas, R$120–140 por pessoa. Avaliação 4,6 em 3.907 avaliações.">
+<meta name="theme-color" content="#12253d">
+<link rel="icon" type="image/jpeg" href="imagens/imgi_2_412624567_893134862433209_6900609809336659314_n.jpg">
+<!-- DEPLOY STEP: patch og:url and og:image with the live absolute URL at deploy time -->
+<meta property="og:type" content="restaurant">
+<meta property="og:title" content="Asami Sushi — Santo André">
+<meta property="og:description" content="Rodízio de sushi e sashimi com bebidas e sobremesa inclusas. R$120–140 por pessoa.">
+<meta property="og:image" content="imagens/imgi_46_717129275_18324794560280812_8244691056684878461_n.jpg">
+<meta property="og:url" content="">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Asami Sushi",
+  "servesCuisine": "Japonesa",
+  "priceRange": "R$ 120–140",
+  "telephone": "+551144278202",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Av. Lino Jardim, 912",
+    "addressLocality": "Santo André",
+    "addressRegion": "SP",
+    "postalCode": "09041-031",
+    "addressCountry": "BR"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.6",
+    "reviewCount": "3907",
+    "bestRating": "5"
   }
-  </script>
+}
+</script>
+<!-- openingHours omitido: CLIENTE.md confirma apenas "abre às 12:00", sem horário de fechamento nem grade semanal completa. Preencher com o horário real antes de publicar rich results de horário. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12253d;
+  --bg-deep:#0c1a2c;
+  --cream:#f4ede2;
+  --accent:#e8622f;
+  --wine:#57121f;
+  --wine-deep:#3c0c15;
+  --cream-rgb:244,237,226;
+  --accent-rgb:232,98,47;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --tshadow:0 1px 2px rgba(5,5,10,.95),0 3px 12px rgba(5,5,10,.78),0 10px 44px rgba(5,5,10,.8);
+  --font-display:'Fraunces',serif;
+  --font-body:'Work Sans',sans-serif;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{overflow-x:hidden;overflow-x:clip}
+html{scroll-behavior:auto}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--cream);
+  font-family:var(--font-body);
+  font-size:clamp(1rem,0.4vw + 0.9rem,1.125rem);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+h1,h2{font-family:var(--font-display);font-weight:600;margin:0;letter-spacing:-0.01em}
+p,blockquote,dl{margin:0}
+a{color:inherit}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.visually-hidden-focusable:not(:focus){position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:fixed;top:-100px;left:1rem;z-index:1000;background:var(--accent);color:var(--cream);padding:.75rem 1.25rem;border-radius:8px;font-family:var(--font-body);font-weight:600;transition:top .25s var(--ease)}
+.skip-link:focus{top:1rem}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+button{font-family:inherit;cursor:pointer}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + .9rem) 1.25rem .9rem;
+  transition:background-color .4s var(--ease),backdrop-filter .4s var(--ease);
+}
+.nav.nav-solid{background:rgba(12,26,44,.72);backdrop-filter:blur(14px)}
+.nav-mark{display:flex;align-items:center;gap:.6rem;text-decoration:none;min-height:44px;min-width:44px;padding:.4rem}
+.nav-mark img{width:34px;height:34px;border-radius:50%;object-fit:cover;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.nav-cta{
+  font-family:var(--font-body);font-weight:600;font-size:.85rem;letter-spacing:.02em;
+  color:var(--cream);text-decoration:none;
+  background:rgba(8,8,15,.4);border:1px solid rgba(var(--cream-rgb),.35);
+  padding:.6rem 1.1rem;border-radius:100px;backdrop-filter:blur(10px);
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  transition:background-color .3s var(--ease),border-color .3s var(--ease);
+}
+.nav-cta:hover{background:var(--accent);border-color:var(--accent)}
 
-  <style>
-    :root {
-      /* Warm, inviting palette extracted from restaurant's wood and linen */
-      --bg-light: #FAF7F2;
-      --bg-card: #FFFFFF;
-      --bg-warm-tint: #F3ECE1;
-      --bg-slate: #1D232E;
-      --text-main: #242426;
-      --text-muted: #5C626D;
-      --accent-cobalt: #1D4ED8;
-      --accent-cobalt-light: #2563EB;
-      --accent-coral: #E0533C;
-      --accent-terracotta: #C44536;
-      --accent-gold: #B48424;
-      --border-warm: rgba(36, 36, 38, 0.08);
-      --border-focus: rgba(29, 78, 216, 0.4);
-      --ease-director: cubic-bezier(0.16, 1, 0.3, 1);
-      --font-display: 'Syne', sans-serif;
-      --font-body: 'Plus Jakarta Sans', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-    }
+/* ---------- hero ---------- */
+#hero-pin{position:relative;height:250vh;overflow:clip}
+.hero-stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.hero-media{position:absolute;inset:-4% -2%;will-change:transform}
+.hero-media img{width:100%;height:100%;object-fit:cover;transform:scale(1.06)}
+.hero-scrim{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 120% 90% at 50% 55%,rgba(10,10,18,0) 30%,rgba(10,10,18,.62) 100%);
+}
+.hero-scrim::after{
+  content:"";position:absolute;inset:0;
+  background:rgba(8,14,24,0);
+}
+.hero-text-scrim{
+  position:absolute;inset:-4%;pointer-events:none;
+  background:radial-gradient(ellipse 64% 58% at 50% 50%,rgba(5,5,10,.6) 0%,rgba(5,5,10,.38) 46%,rgba(5,5,10,0) 78%);
+}
+.hero-content{
+  position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:0 1.25rem;gap:1.1rem;
+}
+.hero-glow{
+  position:absolute;top:38%;left:50%;width:60vmax;height:60vmax;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(var(--accent-rgb),.16) 0%,rgba(var(--accent-rgb),0) 70%);
+  pointer-events:none;animation:glowpulse 9s ease-in-out infinite;animation-delay:-3s;
+}
+@keyframes glowpulse{0%,100%{opacity:.5}50%{opacity:1}}
+.hero-title{
+  font-size:clamp(2.1rem,5.6vw + 1rem,4.8rem);
+  font-weight:600;color:var(--cream);text-shadow:var(--tshadow);max-width:16ch;
+}
+.hero-title .sw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em}
+.hero-title .swi{display:inline-block;transform:translateY(108%);will-change:transform}
+.hero-attrib{
+  font-family:var(--font-display);font-style:italic;font-size:clamp(.95rem,.4vw + .85rem,1.15rem);
+  color:rgba(var(--cream-rgb),.82);text-shadow:var(--tshadow);
+}
+.hero-mid{
+  position:absolute;bottom:16%;left:50%;transform:translateX(-50%);
+  max-width:26ch;opacity:0;
+}
+.hero-mid p{
+  font-family:var(--font-body);font-weight:500;font-size:clamp(.95rem,.4vw + .85rem,1.15rem);
+  background:rgba(8,8,15,.5);border:1px solid rgba(var(--cream-rgb),.25);border-radius:14px;
+  padding:.85rem 1.4rem;backdrop-filter:blur(10px);text-shadow:0 1px 3px rgba(5,5,10,.85);
+}
+.hero-cue{
+  position:absolute;bottom:6%;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  font-family:var(--font-body);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(var(--cream-rgb),.75);text-shadow:0 1px 3px rgba(5,5,10,.85);
+}
+.hero-cue svg{opacity:.85;animation:cuebob 2.2s ease-in-out infinite}
+@keyframes cuebob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+/* ---------- oferece ---------- */
+.oferece{position:relative}
+.deliver{position:relative;min-height:92vh;display:flex;align-items:flex-end;overflow:hidden}
+.deliver-media{position:absolute;inset:0}
+.deliver-media img{width:100%;height:100%;object-fit:cover}
+.deliver-scrim{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,14,20,.15) 0%,rgba(8,12,18,.35) 55%,rgba(6,10,16,.86) 100%);
+}
+.deliver-content{position:relative;padding:0 1.5rem clamp(3rem,8vh,5.5rem);width:100%;max-width:64rem;margin:0 auto}
+.deliver-eyebrow{
+  font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(var(--cream-rgb),.7);
+  text-shadow:var(--tshadow);margin-bottom:.5rem;
+}
+.deliver-name{
+  font-family:var(--font-display);font-weight:700;font-size:clamp(2rem,4.4vw + .5rem,3.6rem);
+  color:var(--cream);text-shadow:var(--tshadow);margin-bottom:.9rem;
+}
+.deliver-quote{
+  font-family:var(--font-body);font-size:clamp(1rem,.5vw + .9rem,1.3rem);max-width:38ch;
+  color:rgba(var(--cream-rgb),.94);text-shadow:0 1px 3px rgba(5,5,10,.85);
+}
+.deliver-quote cite{display:block;font-style:normal;font-size:.8rem;color:var(--accent);margin-top:.6rem;letter-spacing:.03em}
 
-    html, body {
-      background-color: var(--bg-light);
-      color: var(--text-main);
-      font-family: var(--font-body);
-      overflow-x: clip;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      line-height: 1.6;
-    }
+/* reveal (generic entrance) */
+.reveal-item{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal-item.in{opacity:1;transform:translateY(0)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:translateY(0)}
 
-    ::selection {
-      background-color: var(--accent-cobalt);
-      color: #fff;
-    }
-    :focus-visible {
-      outline: 2px solid var(--accent-coral);
-      outline-offset: 3px;
-    }
+/* ---------- ritual ---------- */
+.ritual{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ritual-media{position:absolute;inset:0}
+.ritual-media img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) brightness(.62)}
+.ritual-scrim{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(6,8,14,.55) 0%,rgba(4,6,10,.88) 100%)}
+.ritual-fog{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.puff{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(var(--cream-rgb),.55) 0%,rgba(var(--cream-rgb),0) 72%);
+  filter:blur(6px);opacity:0;will-change:transform,opacity;
+}
+.puff1{width:34vmax;height:34vmax;left:20%;top:55%}
+.puff2{width:26vmax;height:26vmax;left:55%;top:42%}
+.puff3{width:22vmax;height:22vmax;left:38%;top:30%}
+.puff4{width:30vmax;height:30vmax;left:60%;top:64%}
+.ritual-content{position:relative;text-align:center;padding:0 1.25rem;max-width:34rem}
+.ritual-title{
+  font-size:clamp(1.5rem,3vw + .9rem,2.5rem);font-weight:500;font-style:italic;
+  color:var(--cream);text-shadow:var(--tshadow);margin-bottom:2.4rem;
+}
+.ritual-btn{
+  position:relative;width:104px;height:104px;border-radius:50%;
+  background:rgba(8,8,15,.45);border:1.5px solid rgba(var(--cream-rgb),.4);
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);
+  transition:border-color .3s var(--ease),background-color .3s var(--ease);
+  touch-action:none;
+}
+.ritual-btn::before{
+  content:"";position:absolute;inset:-6px;border-radius:50%;
+  border:2px solid var(--accent);opacity:var(--fill,0);transform:scale(calc(0.86 + 0.14 * var(--fill,0)));
+}
+.ritual-btn:hover{border-color:rgba(var(--cream-rgb),.7)}
+.ritual-btn.done{border-color:var(--accent);background:rgba(var(--accent-rgb),.18)}
+.kettle{width:40px;height:40px;color:var(--cream)}
+.ritual-hint{
+  margin-top:1.1rem;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(var(--cream-rgb),.68);
+}
+.ritual-skip{margin-top:1.6rem}
 
-    /* Top Navigation */
-    .top-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 6vw;
-      z-index: 100;
-      transition: background-color 0.4s var(--ease-director), border-color 0.4s, backdrop-filter 0.4s;
-      border-bottom: 1px solid transparent;
-    }
-    .top-nav.scrolled {
-      background-color: rgba(250, 247, 242, 0.94);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-warm);
-    }
-    .brand-mark {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text-main);
-      z-index: 102;
-    }
-    .brand-title {
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1.65rem;
-      letter-spacing: -0.02em;
-    }
-    .brand-city {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--accent-coral);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
+/* ---------- vozes ---------- */
+.vozes{position:relative;background:var(--wine);padding:clamp(4rem,10vh,7rem) 1.25rem;overflow:hidden}
+.vozes::before{
+  content:"";position:absolute;top:20%;left:50%;width:70vmax;height:70vmax;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(var(--accent-rgb),.14) 0%,rgba(var(--accent-rgb),0) 65%);
+  animation:glowpulse 11s ease-in-out infinite;animation-delay:-4s;pointer-events:none;
+}
+.vozes-title{
+  position:relative;text-align:center;font-size:clamp(1.8rem,3.6vw + 1rem,3.2rem);
+  color:var(--cream);margin-bottom:clamp(2.5rem,6vh,4rem);
+}
+.notes{position:relative;display:grid;gap:1.6rem;max-width:64rem;margin:0 auto;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.note{
+  background:rgba(var(--cream-rgb),.06);border:1px solid rgba(var(--cream-rgb),.16);border-radius:4px 14px 14px 4px;
+  padding:1.6rem 1.5rem;transform:rotate(var(--r,0deg));
+}
+.note:nth-child(1){--r:-0.6deg}
+.note:nth-child(2){--r:0.5deg}
+.note:nth-child(3){--r:-0.3deg}
+.note-text{font-family:var(--font-display);font-style:italic;font-size:1.05rem;line-height:1.5;color:var(--cream)}
+.note-author{margin-top:1rem;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(var(--cream-rgb),.7)}
+.note-reply{margin-top:.9rem;padding-top:.9rem;border-top:1px solid rgba(var(--cream-rgb),.16);font-size:.85rem;color:rgba(var(--cream-rgb),.85)}
+.note-reply span{display:block;margin-top:.3rem;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.vozes-meta{position:relative;text-align:center;margin-top:clamp(2.5rem,6vh,3.5rem);font-size:.85rem;color:rgba(var(--cream-rgb),.7)}
 
-    .nav-status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-warm);
-      padding: 6px 16px;
-      border-radius: 999px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--text-main);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    }
-    .status-dot-pulse {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 8px #10B981;
-    }
+/* ---------- venha ---------- */
+.venha{background:var(--bg-deep);padding:clamp(4.5rem,12vh,8rem) 1.25rem;position:relative;overflow:hidden}
+.venha::before{
+  content:"";position:absolute;bottom:-10%;left:50%;width:80vmax;height:80vmax;transform:translate(-50%,0);
+  background:radial-gradient(circle,rgba(18,37,61,.9) 0%,rgba(18,37,61,0) 60%);pointer-events:none;
+}
+.venha-inner{position:relative;max-width:44rem;margin:0 auto;text-align:center}
+.venha h2{font-size:clamp(2.4rem,6vw + 1rem,4.4rem);color:var(--cream);margin-bottom:clamp(2.5rem,6vh,3.5rem)}
+.venha-facts{display:grid;gap:1.4rem;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));text-align:left;margin-bottom:clamp(2.5rem,6vh,3.5rem)}
+.venha-facts dt{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.3rem}
+.venha-facts dd{margin:0;font-size:1rem;color:var(--cream)}
+.venha-facts a{text-decoration:underline;text-decoration-color:rgba(var(--cream-rgb),.4);text-underline-offset:3px}
+.venha-cta{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
+.btn{
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  padding:.9rem 1.8rem;border-radius:100px;text-decoration:none;font-weight:600;font-size:.95rem;
+  transition:transform .3s var(--ease),background-color .3s var(--ease),border-color .3s var(--ease);
+}
+.btn-accent{background:var(--accent);color:var(--cream)}
+.btn-accent:hover{transform:translateY(-2px)}
+.btn-ghost{border:1px solid rgba(var(--cream-rgb),.4);color:var(--cream);background:transparent}
+.btn-ghost:hover{border-color:var(--cream)}
 
-    .nav-actions-wrap {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .btn-nav-book {
-      font-family: var(--font-body);
-      font-weight: 600;
-      font-size: 0.92rem;
-      min-height: 44px;
-      background: var(--accent-cobalt);
-      color: #fff;
-      padding: 0 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background-color 0.3s, transform 0.3s var(--ease-director);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-nav-book:hover {
-      background: var(--accent-cobalt-light);
-      transform: translateY(-2px);
-    }
+/* ---------- footer ---------- */
+.footer{
+  background:var(--bg-deep);border-top:1px solid rgba(var(--cream-rgb),.12);
+  padding:2.5rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom,0px));
+  text-align:center;color:rgba(var(--cream-rgb),.65);font-size:.85rem;
+}
+.footer-mark{width:36px;height:36px;border-radius:50%;object-fit:cover;margin:0 auto 1rem}
+.footer p{margin:.25rem 0}
 
-    /* Mobile Drawer Toggle */
-    .btn-hamburger {
-      display: none;
-      width: 44px;
-      height: 44px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      z-index: 102;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .btn-hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: var(--text-main);
-      transition: transform 0.3s var(--ease-director), opacity 0.3s;
-    }
-    .drawer-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(250, 247, 242, 0.98);
-      backdrop-filter: blur(20px);
-      z-index: 101;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 24px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s var(--ease-director);
-    }
-    .drawer-overlay a {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--text-main);
-      text-decoration: none;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-    }
-    .nav-open .drawer-overlay {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .nav-open .btn-hamburger span:nth-child(1) {
-      transform: translateY(8px) rotate(45deg);
-    }
-    .nav-open .btn-hamburger span:nth-child(2) {
-      opacity: 0;
-    }
-    .nav-open .btn-hamburger span:nth-child(3) {
-      transform: translateY(-8px) rotate(-45deg);
-    }
+/* ---------- static hero fallback (5 gates) ---------- */
+@media (max-width:720px),
+       (orientation:portrait) and (max-width:1024px),
+       (orientation:portrait) and (pointer:coarse),
+       (orientation:landscape) and (pointer:coarse) and (max-height:560px){
+  #hero-pin{height:100vh}
+  .hero-stage{position:relative}
+  .hero-media{position:absolute;inset:0;transform:none!important}
+  .hero-scrim{background:radial-gradient(ellipse 120% 90% at 50% 55%,rgba(10,10,18,.2) 0%,rgba(10,10,18,.68) 100%)}
+  .hero-mid{opacity:1!important;position:static;transform:none;margin-top:1.2rem}
+  .hero-cue{display:none}
+  .hero-title .swi{transform:translateY(0)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .hero-title .swi{transform:translateY(0)!important}
+  .hero-media{transform:none!important}
+  .reveal,.reveal-item{opacity:1!important;transform:none!important}
+  .hero-mid{opacity:1!important}
+  .puff{display:none}
+}
+@media (max-width:760px){
+  .venha-facts{grid-template-columns:1fr}
+}
+body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused!important}
 
-    /* SEÇÃO 1: HERO DAS PORTAS ABERTAS */
-    .section-hero {
-      position: relative;
-      padding: 140px 6vw 80px 6vw;
-      background: linear-gradient(180deg, #FBF8F4 0%, #F5EFE6 100%);
-      border-bottom: 1px solid var(--border-warm);
-    }
-    .hero-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 60px;
-      align-items: center;
-    }
-    .hero-trust-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #FFFFFF;
-      border: 1px solid var(--border-warm);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--accent-gold);
-      font-weight: 500;
-      margin-bottom: 22px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-    .hero-title-main {
-      font-family: var(--font-display);
-      font-size: clamp(48px, 5.5vw, 76px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      color: var(--text-main);
-      margin-bottom: 24px;
-    }
-    .hero-description {
-      font-size: clamp(1.08rem, 1.35vw, 1.25rem);
-      color: var(--text-muted);
-      line-height: 1.65;
-      margin-bottom: 34px;
-      max-width: 620px;
-    }
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: center;
-    }
-    .btn-main-action {
-      background: var(--accent-cobalt);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.05rem;
-      min-height: 52px;
-      padding: 0 32px;
-      border-radius: 10px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      transition: background-color 0.3s, transform 0.3s var(--ease-director), box-shadow 0.3s;
-      box-shadow: 0 8px 24px rgba(29, 78, 216, 0.25);
-    }
-    .btn-main-action:hover {
-      background: var(--accent-cobalt-light);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(29, 78, 216, 0.35);
-    }
-    .btn-outline-action {
-      background: #FFFFFF;
-      color: var(--text-main);
-      font-weight: 600;
-      font-size: 1.02rem;
-      min-height: 52px;
-      padding: 0 28px;
-      border-radius: 10px;
-      text-decoration: none;
-      border: 1px solid var(--border-warm);
-      display: inline-flex;
-      align-items: center;
-      transition: background-color 0.3s, border-color 0.3s;
-    }
-    .btn-outline-action:hover {
-      background: #F9F7F3;
-      border-color: rgba(36, 36, 38, 0.2);
-    }
-
-    .hero-visual-frame {
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(45, 35, 20, 0.12);
-      border: 1px solid rgba(36, 36, 38, 0.08);
-      background: #FFFFFF;
-      aspect-ratio: 4 / 5;
-    }
-    .hero-visual-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .visual-caption-card {
-      position: absolute;
-      bottom: 18px;
-      left: 18px;
-      right: 18px;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(10px);
-      padding: 16px 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(36, 36, 38, 0.06);
-    }
-    .visual-caption-card h4 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .visual-caption-card p {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--accent-coral);
-    }
-
-    /* COMMON SECTION WRAPPERS */
-    .hospitality-section {
-      padding: 110px 6vw;
-      position: relative;
-    }
-    .section-inner-wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .section-heading-block {
-      max-width: 740px;
-      margin: 0 auto 60px auto;
-      text-align: center;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: clamp(2.2rem, 3.6vw, 3.2rem);
-      line-height: 1.12;
-      letter-spacing: -0.025em;
-      margin-bottom: 18px;
-      color: var(--text-main);
-    }
-    .section-lede {
-      font-size: 1.12rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
-
-    /* SEÇÃO 2: ANDREZA E ANA (O CUMPRIMENTO) */
-    .welcome-hosts-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 36px;
-    }
-    .host-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-warm);
-      border-radius: 18px;
-      padding: 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.3s var(--ease-director);
-    }
-    .host-card:hover {
-      transform: translateY(-4px);
-    }
-    .host-identity {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .host-badge-avatar {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: var(--bg-warm-tint);
-      border: 2px solid var(--accent-cobalt);
-      color: var(--accent-cobalt);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1.35rem;
-    }
-    .host-meta h3 {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .host-meta span {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--accent-coral);
-    }
-    .host-review-quote {
-      font-size: 1.12rem;
-      line-height: 1.6;
-      color: var(--text-main);
-      font-style: italic;
-      margin-bottom: 28px;
-      border-left: 2px solid var(--accent-coral);
-      padding-left: 20px;
-    }
-    .host-client-tag {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid var(--border-warm);
-      padding-top: 16px;
-    }
-
-    /* SEÇÃO 3: DAIENE, TIAGO E MATEUS (O SERVIÇO FARTO) */
-    .lunch-service-box {
-      background: var(--bg-warm-tint);
-      border-radius: 24px;
-      padding: 50px;
-      border: 1px solid rgba(36, 36, 38, 0.06);
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 50px;
-      align-items: center;
-    }
-    .lunch-text-side h3 {
-      font-family: var(--font-display);
-      font-size: 2.2rem;
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 20px;
-      letter-spacing: -0.02em;
-    }
-    .lunch-text-side p {
-      font-size: 1.08rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-      margin-bottom: 28px;
-    }
-    .lunch-quote-box {
-      background: #FFFFFF;
-      padding: 24px;
-      border-radius: 14px;
-      border: 1px solid var(--border-warm);
-      font-style: italic;
-      font-size: 1.05rem;
-      margin-bottom: 24px;
-    }
-    .lunch-quote-author {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--accent-gold);
-      margin-top: 8px;
-      display: block;
-    }
-    .lunch-photo-side {
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-      aspect-ratio: 4 / 3;
-    }
-    .lunch-photo-side img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* SEÇÃO 4: O CALOR DA GRELHA E O FRESCOR DO SAL */
-    .dishes-split-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 36px;
-    }
-    .dish-hero-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-warm);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.04);
-      display: flex;
-      flex-direction: column;
-    }
-    .dish-img-box {
-      height: 340px;
-      position: relative;
-      overflow: hidden;
-    }
-    .dish-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s var(--ease-director);
-    }
-    .dish-hero-card:hover .dish-img-box img {
-      transform: scale(1.03);
-    }
-    .dish-desc-box {
-      padding: 36px;
-      flex-grow: 1;
-    }
-    .dish-desc-box h3 {
-      font-family: var(--font-display);
-      font-size: 1.85rem;
-      font-weight: 800;
-      margin-bottom: 14px;
-      letter-spacing: -0.02em;
-    }
-    .dish-desc-box p {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 22px;
-    }
-    .dish-badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .dish-badge {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      background: var(--bg-warm-tint);
-      padding: 6px 12px;
-      border-radius: 6px;
-      color: var(--text-main);
-      font-weight: 500;
-    }
-
-    /* SEÇÃO 5: HOSPITALIDADE SEM LETRAS MIÚDAS (R$ 130) */
-    .pricing-table-card {
-      max-width: 860px;
-      margin: 0 auto;
-      background: #FFFFFF;
-      border: 2px solid var(--accent-gold);
-      border-radius: 22px;
-      padding: 48px;
-      box-shadow: 0 16px 50px rgba(180, 132, 36, 0.08);
-    }
-    .pricing-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 1px dashed rgba(36, 36, 38, 0.15);
-      padding-bottom: 24px;
-      margin-bottom: 30px;
-    }
-    .pricing-header-row h3 {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      font-weight: 800;
-    }
-    .pricing-stamp {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--accent-coral);
-      font-weight: 600;
-    }
-    .pricing-items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 34px;
-    }
-    .pricing-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.08rem;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-warm);
-    }
-    .item-tag {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      background: rgba(29, 78, 216, 0.1);
-      border: 1px solid var(--accent-cobalt);
-      color: var(--accent-cobalt);
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-right: 12px;
-      font-weight: 600;
-    }
-    .item-highlight {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--accent-gold);
-      font-weight: 500;
-    }
-    .pricing-final-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg-warm-tint);
-      border-radius: 14px;
-      padding: 26px 32px;
-    }
-    .final-label {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 700;
-    }
-    .final-sub {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-    .final-amount {
-      font-family: var(--font-display);
-      font-size: 3.2rem;
-      font-weight: 800;
-      color: var(--text-main);
-      line-height: 1;
-    }
-    .final-per-person {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--accent-coral);
-      text-align: right;
-    }
-
-    /* SEÇÃO 6: SUA MESA ESTÁ PRONTA */
-    .booking-callout-card {
-      background: var(--bg-slate);
-      color: #FFFFFF;
-      border-radius: 24px;
-      padding: 64px 44px;
-      text-align: center;
-      max-width: 900px;
-      margin: 0 auto;
-      box-shadow: 0 24px 60px rgba(29, 35, 46, 0.2);
-    }
-    .booking-callout-card h2 {
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 4.4vw, 3.8rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      color: #FFFFFF;
-    }
-    .booking-callout-card p {
-      color: #A3ABB7;
-      font-size: 1.15rem;
-      line-height: 1.6;
-      max-width: 660px;
-      margin: 0 auto 36px auto;
-    }
-    .booking-actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-      margin-bottom: 40px;
-    }
-    .btn-whatsapp-direct {
-      background: #10B981;
-      color: #FFFFFF;
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: 1.1rem;
-      min-height: 52px;
-      padding: 0 34px;
-      border-radius: 10px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      transition: background-color 0.3s, transform 0.3s var(--ease-director);
-    }
-    .btn-whatsapp-direct:hover {
-      background: #059669;
-      transform: translateY(-2px);
-    }
-    .btn-maps-direct {
-      background: transparent;
-      color: #FFFFFF;
-      font-family: var(--font-body);
-      font-weight: 600;
-      font-size: 1.02rem;
-      min-height: 52px;
-      padding: 0 28px;
-      border-radius: 10px;
-      text-decoration: none;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      display: inline-flex;
-      align-items: center;
-      transition: background-color 0.3s, border-color 0.3s;
-    }
-    .btn-maps-direct:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-    .location-details-footer {
-      font-family: var(--font-mono);
-      font-size: 0.88rem;
-      color: #8C95A3;
-      line-height: 1.6;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 28px;
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border-warm);
-      padding: 36px 6vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      background: var(--bg-light);
-    }
-
-    /* Scroll reveal transitions */
-    .reveal-item {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.7s var(--ease-director), transform 0.7s var(--ease-director);
-      will-change: opacity, transform;
-    }
-    .reveal-item.in {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Responsiveness */
-    @media (max-width: 960px) {
-      .hero-container {
-        grid-template-columns: 1fr;
-      }
-      .welcome-hosts-grid {
-        grid-template-columns: 1fr;
-      }
-      .lunch-service-box {
-        grid-template-columns: 1fr;
-      }
-      .dishes-split-grid {
-        grid-template-columns: 1fr;
-      }
-      footer {
-        flex-direction: column;
-        gap: 14px;
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .nav-status-badge {
-        display: none;
-      }
-      .btn-nav-book {
-        display: none;
-      }
-      .btn-hamburger {
-        display: flex;
-      }
-      .drawer-overlay {
-        display: flex;
-      }
-      .lunch-service-box {
-        padding: 30px 20px;
-      }
-      .pricing-table-card {
-        padding: 28px 18px;
-      }
-      .pricing-header-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
-      .pricing-final-box {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 14px;
-      }
-      .final-per-person {
-        text-align: left;
-      }
-      .booking-callout-card {
-        padding: 44px 20px;
-      }
-    }
-
-    /* Reduced Motion */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-      .reveal-item {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
-      }
-    }
-  </style>
+@media (pointer:coarse){
+  .btn,.nav-cta{min-height:44px}
+}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
 
-  <!-- Top Navigation -->
-  <nav class="top-nav" id="mainNav">
-    <a href="#" class="brand-mark">
-      <span class="brand-title">Asami</span>
-      <span class="brand-city">Santo André</span>
-    </a>
+<nav class="nav" id="mainNav" aria-label="Principal">
+  <a class="nav-mark" href="#hero-pin" aria-label="Asami Sushi, início">
+    <img src="imagens/imgi_2_412624567_893134862433209_6900609809336659314_n.jpg" alt="" width="34" height="34">
+    <span class="visually-hidden">Asami Sushi</span>
+  </a>
+  <a class="nav-cta" href="#venha">Reservar</a>
+</nav>
 
-    <div class="nav-status-badge">
-      <span class="status-dot-pulse"></span>
-      <span>Salão Aberto a partir das 12:00</span>
+<main id="main" tabindex="-1">
+
+  <section id="hero-pin" aria-label="Abertura">
+    <div class="hero-stage" id="heroStage">
+      <div class="hero-media" id="heroMedia">
+        <img id="heroImg" fetchpriority="high"
+          src="imagens/imgi_46_717129275_18324794560280812_8244691056684878461_n.jpg"
+          alt="Fumaça subindo de um bule derramado sobre um prato de sashimi, mesa do Asami Sushi">
+      </div>
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-scrim" id="heroScrim" aria-hidden="true"></div>
+      <div class="hero-text-scrim" aria-hidden="true"></div>
+      <div class="hero-content">
+        <h1 class="hero-title" id="heroTitle" data-text="o local é aconchegante e a comida é maravilhosa"></h1>
+        <p class="hero-attrib">— Yasmin Sakamoto, cliente</p>
+        <div class="hero-mid" id="heroMid">
+          <p>R$ 120–140 por pessoa. Bebidas e sobremesa inclusas.</p>
+        </div>
+        <div class="hero-cue" id="heroCue" aria-hidden="true">
+          <span>role para servir</span>
+          <svg width="16" height="26" viewBox="0 0 16 26" fill="none"><path d="M8 0v22M2 16l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="oferece" class="oferece" aria-labelledby="oferece-h">
+    <h2 id="oferece-h" class="visually-hidden">Quem te oferece</h2>
+
+    <div class="deliver">
+      <div class="deliver-media"><img loading="lazy" src="imagens/imgi_19_729754788_122179264124615421_7725820493539418055_n.jpg" alt="Nigiri de salmão erguido com hashi sobre bandeja azul do Asami Sushi"></div>
+      <div class="deliver-scrim" aria-hidden="true"></div>
+      <div class="deliver-content">
+        <p class="deliver-eyebrow reveal-item">Servido por</p>
+        <p class="deliver-name reveal-item">Andreza</p>
+        <blockquote class="deliver-quote reveal-item">"Experiência ótima, ambiente agradável, comida muito boa. Andreza muito gente boa, me atendeu super bem!"<cite>Livia Silva Barros</cite></blockquote>
+      </div>
     </div>
 
-    <div class="nav-actions-wrap">
-      <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi" target="_blank" rel="noopener" class="btn-nav-book">Reservar Mesa</a>
-      
-      <button class="btn-hamburger" id="hamburgerBtn" aria-label="Abrir menu">
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="deliver">
+      <div class="deliver-media"><img loading="lazy" src="imagens/imgi_35_723931126_18326382091280812_5073002082453478320_n.jpg" alt="Mesa farta com várias bandejas de sushi e sashimi do rodízio do Asami Sushi"></div>
+      <div class="deliver-scrim" aria-hidden="true"></div>
+      <div class="deliver-content">
+        <p class="deliver-eyebrow reveal-item">Servido por</p>
+        <p class="deliver-name reveal-item">Ana</p>
+        <blockquote class="deliver-quote reveal-item">"O rodízio está R$130 incluso bebidas e sobremesas. Fui muito bem atendida pela Ana, o local é aconchegante e a comida é maravilhosa!"<cite>Yasmin Sakamoto</cite></blockquote>
+      </div>
+    </div>
+
+    <div class="deliver">
+      <div class="deliver-media"><img loading="lazy" src="imagens/imgi_44_715464125_122177674058615421_855993563562005619_n.jpg" alt="Camarão grelhado na chapa com drink ao fundo no Asami Sushi"></div>
+      <div class="deliver-scrim" aria-hidden="true"></div>
+      <div class="deliver-content">
+        <p class="deliver-eyebrow reveal-item">Servido por</p>
+        <p class="deliver-name reveal-item">Daiene, Tiago e Mateus</p>
+        <blockquote class="deliver-quote reveal-item">"Comi a melhor chapa de frutos do mar (camarão e lula) da minha vida."<cite>avaliação no Google</cite></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section id="ritual" class="ritual" aria-labelledby="ritual-h">
+    <div class="ritual-media" aria-hidden="true"><img loading="lazy" src="imagens/imgi_46_717129275_18324794560280812_8244691056684878461_n.jpg" alt=""></div>
+    <div class="ritual-scrim" aria-hidden="true"></div>
+    <div class="ritual-fog" id="ritualFog" aria-hidden="true">
+      <span class="puff puff1"></span>
+      <span class="puff puff2"></span>
+      <span class="puff puff3"></span>
+      <span class="puff puff4"></span>
+    </div>
+    <div class="ritual-content">
+      <h2 id="ritual-h" class="ritual-title">Pov: o amor da sua vida sabe exatamente o que você gosta</h2>
+      <button type="button" class="ritual-btn" id="ritualBtn" aria-label="Segure para servir">
+        <svg class="kettle" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M14 20h16l4 3v4c0 7-5.4 12-12 12S10 34 10 27v-4l4-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M34 22l7-4-2 5-5 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M20 20v-5a4 4 0 0 1 8 0v5" stroke="currentColor" stroke-width="2"/>
+        </svg>
       </button>
+      <p class="ritual-hint" id="ritualHint">segure para servir</p>
+      <p class="ritual-skip"><a class="visually-hidden-focusable" id="ritualSkip" href="#vozes">Pular esta seção</a></p>
     </div>
+  </section>
 
-    <!-- Mobile Drawer Overlay -->
-    <div class="drawer-overlay" id="mobileDrawer">
-      <a href="#hosts" class="drawer-link">Quem te Recebe</a>
-      <a href="#almoco" class="drawer-link">Almoço com os Meninos</a>
-      <a href="#pratos" class="drawer-link">Grelha & Sashimi</a>
-      <a href="#preco" class="drawer-link">Preço Fixo R$ 130</a>
-      <a href="#chegada" class="drawer-link">Como Chegar</a>
+  <section id="vozes" class="vozes" aria-labelledby="vozes-h">
+    <h2 id="vozes-h" class="vozes-title reveal">Quem já veio</h2>
+    <div class="notes">
+      <article class="note reveal">
+        <p class="note-text">"Experiência ótima, ambiente agradável, comida muito boa. Andreza muito gente boa, me atendeu super bem!"</p>
+        <p class="note-author">Livia Silva Barros</p>
+      </article>
+      <article class="note reveal">
+        <p class="note-text">"Conheci hoje e amei. O rodízio está R$130 incluso bebidas e sobremesas. Fui muito bem atendida pela Ana, o local é aconchegante e a comida é maravilhosa! Voltarei mais vezes 💕"</p>
+        <p class="note-author">Yasmin Sakamoto</p>
+        <p class="note-reply">"Agradecemos pela avaliação e pela confiança em nosso trabalho. 🍣🥢 Será um prazer recebê-lo novamente." <span>Resposta do Asami Sushi</span></p>
+      </article>
+      <article class="note reveal">
+        <p class="note-text">"Simplesmente espetacular!! A Daiene nos atendeu super bem, além dos meninos, Tiago e Mateus!! (...) estava tudo muito fresco e extremamente saboroso!!"</p>
+        <p class="note-author">Collab Soluções em Cilindros e Roscas</p>
+        <p class="note-reply">"Ficamos felizes em receber seu retorno. 🍣🥢 Obrigado por escolher nosso restaurante." <span>Resposta do Asami Sushi</span></p>
+      </article>
     </div>
-  </nav>
+    <p class="vozes-meta reveal">4,6 de nota média em 3.907 avaliações no Google.</p>
+  </section>
 
-  <!-- SEÇÃO 1: HERO DAS PORTAS ABERTAS (A CHEGADA) -->
-  <header class="section-hero">
-    <div class="hero-container">
-      <div class="hero-text-wrap">
-        <div class="hero-trust-tag">
-          <span>★ 4,6</span> • 3.907 Avaliações Reais de Santo André
-        </div>
-        <h1 class="hero-title-main">
-          Aqui tem gente de verdade esperando por você.
-        </h1>
-        <p class="hero-description">
-          No Asami Sushi, o rodízio é completo, farto e servido com a atenção de quem conhece você pelo nome. Da recepção calorosa ao festival sem limites de repetição.
-        </p>
-        <div class="hero-buttons">
-          <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi" target="_blank" rel="noopener" class="btn-main-action">
-            <span>Garantir Minha Mesa</span>
-            <span>→</span>
-          </a>
-          <a href="#hosts" class="btn-outline-action">
-            Conhecer a Equipe
-          </a>
-        </div>
-      </div>
-
-      <div class="hero-visual-frame">
-        <img src="imagens/imgi_22_736759874_122179741736615421_6925371358894874330_n.jpg" alt="Mesa de almoço farta e acolhedora no Asami Sushi" fetchpriority="high">
-        <div class="visual-caption-card">
-          <h4>O Salão Pronto Para Te Acolher</h4>
-          <p>Av. Lino Jardim, 912 — Santo André</p>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- SEÇÃO 2: QUEM TE RECEBE À PORTA (ANDREZA E ANA) -->
-  <section class="hospitality-section" id="hosts">
-    <div class="section-inner-wrap">
-      <div class="section-heading-block">
-        <h2 class="section-title reveal-item">O atendimento que começa com um sorriso e vira amizade.</h2>
-        <p class="section-lede reveal-item">
-          Você entra e não encontra um totem frio nem pressa. Encontra quem cuida do salão com atenção genuína e faz questão de te deixar à vontade.
-        </p>
-      </div>
-
-      <div class="welcome-hosts-grid">
-        <div class="host-card reveal-item">
-          <div>
-            <div class="host-identity">
-              <div class="host-badge-avatar">A</div>
-              <div class="host-meta">
-                <h3>Andreza</h3>
-                <span>Recepção & Atenção no Salão</span>
-              </div>
-            </div>
-            <div class="host-review-quote">
-              "Experiência ótima, ambiente agradável, comida muito boa. Andreza muito gente boa, me atendeu super bem!"
-            </div>
-          </div>
-          <div class="host-client-tag">
-            <span>Avaliação por Livia Silva Barros</span>
-            <span style="color:var(--accent-gold);">★★★★★</span>
-          </div>
-        </div>
-
-        <div class="host-card reveal-item">
-          <div>
-            <div class="host-identity">
-              <div class="host-badge-avatar">A</div>
-              <div class="host-meta">
-                <h3>Ana</h3>
-                <span>Acolhimento & Cuidado com a Mesa</span>
-              </div>
-            </div>
-            <div class="host-review-quote">
-              "Conheci hoje e amei. O rodízio está R$130 incluso bebidas e sobremesas. Fui muito bem atendida pela Ana, o local é aconchegante e a comida é maravilhosa! Voltarei mais vezes 💕"
-            </div>
-          </div>
-          <div class="host-client-tag">
-            <span>Avaliação por Yasmin Sakamoto</span>
-            <span style="color:var(--accent-gold);">★★★★★</span>
-          </div>
-        </div>
+  <section id="venha" class="venha" aria-labelledby="venha-h">
+    <div class="venha-inner">
+      <h2 id="venha-h" class="reveal">Venha.</h2>
+      <dl class="venha-facts reveal">
+        <div><dt>Preço</dt><dd>R$ 120–140 por pessoa</dd></div>
+        <div><dt>Endereço</dt><dd>Av. Lino Jardim, 912 — Jardim Bela Vista, Santo André, SP</dd></div>
+        <div><dt>Horário</dt><dd>Abre às 12h</dd></div>
+        <div><dt>Telefone</dt><dd><a href="tel:+551144278202">(11) 4427-8202</a></dd></div>
+      </dl>
+      <div class="venha-cta reveal">
+        <a class="btn btn-accent" href="https://wa.me/551144278202" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+        <a class="btn btn-ghost" href="tel:+551144278202">Ligar agora</a>
       </div>
     </div>
   </section>
 
-  <!-- SEÇÃO 3: A MESA DOS MENINOS (DAIENE, TIAGO E MATEUS) -->
-  <section class="hospitality-section" id="almoco" style="background:#FBF8F4;">
-    <div class="section-inner-wrap">
-      <div class="lunch-service-box reveal-item">
-        <div class="lunch-text-side">
-          <h3>Rapidez e comida fresca na hora do almoço de semana.</h3>
-          <p>
-            No ritmo dinâmico do ABC, você precisa de um almoço que chegue rápido, mas sem perder o capricho artesanal. A Daiene e os meninos — Tiago e Mateus — orquestram o serviço para que você aproveite sua pausa com comida fresca e sem espera.
-          </p>
-          <div class="lunch-quote-box">
-            "A Daiene nos atendeu super bem, além dos meninos, Tiago e Mateus!! Eu e minha esposa fomos na hora do almoço em um dia de semana, e estava tudo muito fresco e extremamente saboroso!! Com certeza voltaremos mais vezes!!"
-            <span class="lunch-quote-author">— Collab Soluções em Cilindros e Roscas (Google Maps)</span>
-          </div>
-        </div>
+</main>
 
-        <div class="lunch-photo-side">
-          <img src="imagens/imgi_58_702320151_18322161253280812_4768258708712824851_n.jpg" alt="Mesa de almoço farta com travessas cerâmicas azuis" loading="lazy">
-        </div>
-      </div>
-    </div>
-  </section>
+<footer class="footer">
+  <img class="footer-mark" loading="lazy" src="imagens/imgi_2_412624567_893134862433209_6900609809336659314_n.jpg" alt="" width="36" height="36">
+  <p>Asami Sushi</p>
+  <p>Av. Lino Jardim, 912, Jardim Bela Vista, Santo André - SP</p>
+  <p>(11) 4427-8202</p>
+</footer>
 
-  <!-- SEÇÃO 4: O CALOR DA GRELHA E O FRESCOR DO SAL -->
-  <section class="hospitality-section" id="pratos">
-    <div class="section-inner-wrap">
-      <div class="section-heading-block">
-        <h2 class="section-title reveal-item">O cru mais nobre e a chapa mais elogiada de Santo André.</h2>
-        <p class="section-lede reveal-item">
-          Hospitalidade japonesa é nunca fazer o convidado ter que escolher entre um sashimi delicado e um prato quente reconfortante. Ambos desfilam juntos pela sua mesa.
-        </p>
-      </div>
+<script>
+(function(){
+  "use strict";
 
-      <div class="dishes-split-grid">
-        <div class="dish-hero-card reveal-item">
-          <div class="dish-img-box">
-            <img src="imagens/imgi_44_715464125_122177674058615421_855993563562005619_n.jpg" alt="Chapa quente de camarão e lula" loading="lazy">
-          </div>
-          <div class="dish-desc-box">
-            <h3>A Famosa Chapa de Frutos do Mar</h3>
-            <p>"Comi a melhor chapa de frutos do mar (camarão e lula) da minha vida." Ferro fundido crepitando na mesa com manteiga de ervas, anéis de lula tenros e camarões frescos.</p>
-            <div class="dish-badge-row">
-              <span class="dish-badge">Camarão & Lula na Manteiga</span>
-              <span class="dish-badge">Carnes Grelhadas</span>
-              <span class="dish-badge">Guiozas Dourados</span>
-            </div>
-          </div>
-        </div>
+  var reduceQ = matchMedia('(prefers-reduced-motion: reduce)');
+  var reduced = reduceQ.matches;
 
-        <div class="dish-hero-card reveal-item">
-          <div class="dish-img-box">
-            <img src="imagens/imgi_38_724123427_122178278036615421_2497840779835415252_n.jpg" alt="Barco imperial com sashimis no bloco de sal rosa" loading="lazy">
-          </div>
-          <div class="dish-desc-box">
-            <h3>Barcas Nobres no Bloco de Sal Rosa</h3>
-            <p>Sashimis espessos de salmão, peixe branco e polvo repousados sobre rocha maciça de sal do Himalaia, preservando a pureza mineral e a textura sedosa do corte.</p>
-            <div class="dish-badge-row">
-              <span class="dish-badge">Sal Rosa do Himalaia</span>
-              <span class="dish-badge">Carpaccios Trufados</span>
-              <span class="dish-badge">Temakis na Hora</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  /* ---------- utils ---------- */
+  function clamp(v,lo,hi){return Math.min(hi,Math.max(lo,v))}
+  function smoothstep(p,e0,e1){var t=clamp((p-e0)/(e1-e0),0,1);return t*t*(3-2*t)}
+  function lerpTo(shown,target,K,dt){
+    var f=1-Math.pow(1-K,dt/16.667);
+    return shown+(target-shown)*f;
+  }
 
-  <!-- SEÇÃO 5: HOSPITALIDADE SEM LETRAS MIÚDAS (A CONTA DE R$ 130) -->
-  <section class="hospitality-section" id="preco" style="background:#F7F4EE;">
-    <div class="section-inner-wrap">
-      <div class="section-heading-block">
-        <h2 class="section-title reveal-item">Comer bem sem ficar fazendo contas à mesa.</h2>
-        <p class="section-lede reveal-item">
-          "A proposta deles com rodízio + sobremesa + bebidas por preço fixo é boa demais." Quando você senta com a gente, o compromisso é claro do início ao fim.
-        </p>
-      </div>
+  /* ---------- nav solid on scroll ---------- */
+  var nav=document.getElementById('mainNav');
+  var navTicking=false;
+  function onNavScroll(){
+    if(navTicking)return;navTicking=true;
+    requestAnimationFrame(function(){
+      nav.classList.toggle('nav-solid',window.scrollY>60);
+      navTicking=false;
+    });
+  }
+  addEventListener('scroll',onNavScroll,{passive:true});
 
-      <div class="pricing-table-card reveal-item">
-        <div class="pricing-header-row">
-          <div>
-            <div class="pricing-stamp">ASAMI SUSHI • SANTO ANDRÉ</div>
-            <h3>O Compromisso de Preço Fechado</h3>
-          </div>
-          <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--accent-gold);font-weight:600;">
-            SEM TAXAS SURPRESA
-          </div>
-        </div>
+  /* ---------- hero: split title ---------- */
+  var heroTitle=document.getElementById('heroTitle');
+  var fullText=heroTitle.dataset.text;
+  (function splitTitle(){
+    var words=fullText.split(' ');
+    var visible=document.createElement('span');
+    visible.setAttribute('aria-hidden','true');
+    visible.className='visual';
+    visible.innerHTML=words.map(function(w){
+      return '<span class="sw"><span class="swi">'+w+'</span></span>';
+    }).join(' ');
+    var hidden=document.createElement('span');
+    hidden.className='visually-hidden';
+    hidden.textContent=fullText;
+    heroTitle.appendChild(hidden);
+    heroTitle.appendChild(visible);
+  })();
+  var wordEls=heroTitle.querySelectorAll('.swi');
 
-        <div class="pricing-items-list">
-          <div class="pricing-item">
-            <span><span class="item-tag">INCLUSO</span> Entradas quentes, guiozas e camarões crocantes</span>
-            <span class="item-highlight">À vontade</span>
-          </div>
-          <div class="pricing-item">
-            <span><span class="item-tag">INCLUSO</span> Chapas fumegantes de frutos do mar (camarão e lula)</span>
-            <span class="item-highlight">À vontade</span>
-          </div>
-          <div class="pricing-item">
-            <span><span class="item-tag">INCLUSO</span> Sashimis nobres e combinados especiais no bloco de sal</span>
-            <span class="item-highlight">À vontade</span>
-          </div>
-          <div class="pricing-item">
-            <span><span class="item-tag">INCLUSO</span> Bebidas e coquetéis inclusos durante todo o rodízio</span>
-            <span class="item-highlight">Livre consumo</span>
-          </div>
-          <div class="pricing-item">
-            <span><span class="item-tag">INCLUSO</span> Sobremesas artesanais inclusas</span>
-            <span class="item-highlight">Sem custo extra</span>
-          </div>
-        </div>
+  /* ---------- hero drive ---------- */
+  var heroPin=document.getElementById('hero-pin');
+  var heroMedia=document.getElementById('heroMedia');
+  var heroScrim=document.getElementById('heroScrim');
+  var heroMid=document.getElementById('heroMid');
+  var heroCue=document.getElementById('heroCue');
 
-        <div class="pricing-final-box">
-          <div>
-            <div class="final-label">Preço Fixo Por Pessoa</div>
-            <div class="final-sub">Rodízio integral + bebidas + sobremesas inclusas.</div>
-          </div>
-          <div>
-            <div class="final-amount">R$ 130</div>
-            <div class="final-per-person">VALOR TOTAL FECHADO</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  var heroVisible=false;
+  var heroTarget=0,heroShown=0;
+  var heroLoadStart=null;
+  var lastHeroWrite={ty:null,scrim:null,mid:null,cue:null,assemble:null};
 
-  <!-- SEÇÃO 6: SUA MESA ESTÁ PRONTA (O CONVITE FINAL) -->
-  <section class="hospitality-section" id="chegada">
-    <div class="section-inner-wrap">
-      <div class="booking-callout-card reveal-item">
-        <h2>Pode vir. A Andreza, a Ana e toda a equipe estão te esperando.</h2>
-        <p>
-          Seja para a pausa do almoço no meio da semana ou para um jantar comemorativo especial. Nossa casa na Av. Lino Jardim, 912 está de portas abertas.
-        </p>
+  function heroProgressRaw(){
+    var rect=heroPin.getBoundingClientRect();
+    var total=heroPin.offsetHeight-innerHeight;
+    if(total<=0)return 0;
+    var scrolled=-rect.top;
+    return clamp(scrolled/total,0,1);
+  }
 
-        <div class="booking-actions-row">
-          <a href="https://wa.me/551144278202?text=Olá,%20gostaria%20de%20garantir%20uma%20mesa%20no%20Asami%20Sushi!" target="_blank" rel="noopener" class="btn-whatsapp-direct">
-            <span>Falar com a Equipe no WhatsApp</span>
-            <span>→</span>
-          </a>
-          <a href="https://maps.google.com/?q=Av.+Lino+Jardim,+912+-+Jardim+Bela+Vista,+Santo+Andr%C3%A9+-+SP,+09041-031" target="_blank" rel="noopener" class="btn-maps-direct">
-            Ver Rota no Google Maps
-          </a>
-        </div>
+  function applyHero(p,now){
+    // parallax -4% -> +4%
+    var ty=(-4+p*8).toFixed(2);
+    if(ty!==lastHeroWrite.ty){
+      heroMedia.style.transform='translateY('+ty+'%)';
+      lastHeroWrite.ty=ty;
+    }
+    // scrim
+    var alpha=clamp(p*0.9,0,0.55).toFixed(3);
+    if(alpha!==lastHeroWrite.scrim){
+      heroScrim.style.background='radial-gradient(ellipse 120% 90% at 50% 55%, rgba(10,10,18,0) 30%, rgba(10,10,18,'+alpha+') 100%)';
+      lastHeroWrite.scrim=alpha;
+    }
+    // mid band: appears 0.28-0.50, gone 0.55-0.76
+    var midOp=(smoothstep(p,0.28,0.50)*(1-smoothstep(p,0.55,0.76))).toFixed(3);
+    if(midOp!==lastHeroWrite.mid){
+      heroMid.style.opacity=midOp;
+      lastHeroWrite.mid=midOp;
+    }
+    // cue: gone by p=0.20
+    var cueOp=clamp(1-p/0.20,0,1).toFixed(3);
+    if(cueOp!==lastHeroWrite.cue){
+      heroCue.style.opacity=cueOp;
+      lastHeroWrite.cue=cueOp;
+    }
+    // title assembly: scroll-driven k combined with a one-time load ramp
+    var loadK=1;
+    if(heroLoadStart!==null){
+      loadK=clamp((now-heroLoadStart)/900,0,1);
+      loadK=1-Math.pow(1-loadK,3);
+    }
+    var scrollK=clamp(p/0.22,0,1);
+    var k=Math.max(scrollK,loadK);
+    var kRounded=k.toFixed(3);
+    if(kRounded!==lastHeroWrite.assemble){
+      lastHeroWrite.assemble=kRounded;
+      var total=wordEls.length;
+      for(var i=0;i<total;i++){
+        var th=(i/total)*0.6;
+        var kc=clamp((k-th)*2.6,0,1);
+        wordEls[i].style.transform='translateY('+((1-kc)*108).toFixed(1)+'%)';
+      }
+    }
+  }
 
-        <div class="location-details-footer">
-          <div>Av. Lino Jardim, 912 — Jardim Bela Vista, Santo André - SP</div>
-          <div>Telefone: (11) 4427-8202 • Almoço e Jantar • Terça a Domingo a partir das 12:00</div>
-        </div>
-      </div>
-    </div>
-  </section>
+  /* ---------- ritual state ---------- */
+  var ritualSection=document.getElementById('ritual');
+  var ritualBtn=document.getElementById('ritualBtn');
+  var ritualFog=document.getElementById('ritualFog');
+  var ritualHint=document.getElementById('ritualHint');
+  var puffs=ritualFog.querySelectorAll('.puff');
+  var ritualVisible=false;
+  var ritualActive=false; // substantially in view -> scroll gate armed
+  var ritualHolding=false;
+  var ritualProgress=0;
+  var ritualCompleted=reduced; // reduced-motion visitors start completed
+  var lastFogWrite=null;
 
-  <!-- Rodapé -->
-  <footer>
-    <div>© Asami Sushi Santo André. Todos os direitos reservados.</div>
-    <div>Hospitalidade com Nome Próprio • Santo André - SP</div>
-  </footer>
+  if(reduced){
+    ritualHint.textContent='servido.';
+    ritualBtn.classList.add('done');
+    ritualBtn.setAttribute('aria-hidden','true');
+    ritualBtn.tabIndex=-1;
+  }
 
-  <!-- SCRIPT LEVE DE NAVEGAÇÃO E REVEAL -->
-  <script>
-    (function() {
-      // 1. Mobile Drawer
-      const hamburger = document.getElementById('hamburgerBtn');
-      const drawerLinks = document.querySelectorAll('.drawer-link');
+  function applyRitual(dt){
+    if(ritualHolding && ritualProgress<1){
+      ritualProgress=clamp(ritualProgress+dt/1600,0,1);
+      if(ritualProgress>=1)completeRitual();
+    } else if(!ritualHolding && ritualProgress>0 && !ritualCompleted){
+      ritualProgress=lerpTo(ritualProgress,0,0.08,dt);
+      if(ritualProgress<0.0008)ritualProgress=0;
+    }
+    var f=ritualProgress.toFixed(3);
+    if(f!==lastFogWrite){
+      lastFogWrite=f;
+      ritualBtn.style.setProperty('--fill',ritualProgress);
+      for(var i=0;i<puffs.length;i++){
+        var stagger=i*0.12;
+        var local=clamp((ritualProgress-stagger)*1.6,0,1);
+        puffs[i].style.opacity=(local*0.85).toFixed(2);
+        puffs[i].style.transform='translateY('+((1-local)*40)+'px) scale('+(0.7+local*0.5).toFixed(2)+')';
+      }
+    }
+  }
 
-      hamburger.addEventListener('click', () => {
-        document.body.classList.toggle('nav-open');
-      });
-      drawerLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          document.body.classList.remove('nav-open');
+  function completeRitual(){
+    if(ritualCompleted)return;
+    ritualCompleted=true;
+    ritualBtn.classList.add('done');
+    ritualBtn.setAttribute('aria-label','Servido');
+    ritualHint.textContent='servido.';
+    disarmScrollGate();
+  }
+
+  function ritualNeedsUpdate(){
+    return ritualVisible && (ritualHolding || (ritualProgress>0 && !ritualCompleted));
+  }
+
+  /* pointer + keyboard hold */
+  function startHold(e){
+    if(ritualCompleted)return;
+    ritualHolding=true;
+    ensureLoop();
+    e.preventDefault&&e.preventDefault();
+  }
+  function endHold(){
+    if(!ritualHolding)return;
+    ritualHolding=false;
+    ensureLoop();
+  }
+  ritualBtn.addEventListener('pointerdown',startHold);
+  addEventListener('pointerup',endHold);
+  addEventListener('pointercancel',endHold);
+  ritualBtn.addEventListener('keydown',function(e){
+    if(e.code==='Space'||e.code==='Enter'){startHold(e);}
+  });
+  ritualBtn.addEventListener('keyup',function(e){
+    if(e.code==='Space'||e.code==='Enter'){endHold();}
+  });
+  ritualBtn.addEventListener('touchstart',startHold,{passive:false});
+  ritualBtn.addEventListener('touchend',endHold);
+
+  /* ---------- scroll gate on ritual ---------- */
+  function wheelGuard(e){
+    if(ritualActive && !ritualCompleted && e.deltaY>0){
+      e.preventDefault();
+    }
+  }
+  var touchStartY=null;
+  function touchGuardStart(e){touchStartY=e.touches[0].clientY}
+  function touchGuardMove(e){
+    if(ritualActive && !ritualCompleted && touchStartY!==null){
+      var dy=touchStartY-e.touches[0].clientY;
+      if(dy>0)e.preventDefault();
+    }
+  }
+  function keyGuard(e){
+    if(!ritualActive||ritualCompleted)return;
+    if(['ArrowDown','PageDown',' '].indexOf(e.key)>-1 && document.activeElement!==ritualBtn){
+      e.preventDefault();
+    }
+  }
+  var gateArmed=false;
+  function armScrollGate(){
+    if(gateArmed||reduced)return;
+    gateArmed=true;
+    addEventListener('wheel',wheelGuard,{passive:false});
+    addEventListener('touchstart',touchGuardStart,{passive:true});
+    addEventListener('touchmove',touchGuardMove,{passive:false});
+    addEventListener('keydown',keyGuard);
+  }
+  function disarmScrollGate(){
+    if(!gateArmed)return;
+    gateArmed=false;
+    removeEventListener('wheel',wheelGuard);
+    removeEventListener('touchstart',touchGuardStart);
+    removeEventListener('touchmove',touchGuardMove);
+    removeEventListener('keydown',keyGuard);
+  }
+
+  /* ---------- shared rAF driver ---------- */
+  var running=false,lastTick=0;
+  function heroNeedsUpdate(){return heroVisible && Math.abs(heroTarget-heroShown)>0.0005}
+  function ensureLoop(){
+    if(running)return;
+    running=true;lastTick=0;
+    requestAnimationFrame(tick);
+  }
+  function tick(now){
+    var dt=Math.min(100,lastTick?now-lastTick:16.667);
+    lastTick=now;
+
+    if(heroVisible){
+      heroTarget=heroProgressRaw();
+      heroShown=lerpTo(heroShown,heroTarget,0.10,dt);
+      if(Math.abs(heroTarget-heroShown)<0.0005)heroShown=heroTarget;
+      applyHero(heroShown,now);
+    }
+    if(ritualVisible){
+      applyRitual(dt);
+    }
+
+    if(heroNeedsUpdate()||ritualNeedsUpdate()){
+      requestAnimationFrame(tick);
+    } else {
+      running=false;
+    }
+  }
+
+  addEventListener('scroll',function(){ if(heroVisible)ensureLoop(); },{passive:true});
+  addEventListener('resize',function(){ if(heroVisible)ensureLoop(); });
+
+  /* IO gating */
+  var heroIO=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      heroVisible=en.isIntersecting;
+      if(heroVisible){ heroLoadStart=heroLoadStart===null?performance.now():heroLoadStart; ensureLoop(); }
+    });
+  },{threshold:0});
+  heroIO.observe(heroPin);
+
+  var ritualIO=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      ritualVisible=en.isIntersecting;
+      if(ritualVisible)ensureLoop();
+    });
+  },{threshold:0});
+  ritualIO.observe(ritualSection);
+
+  var ritualActiveIO=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      ritualActive=en.intersectionRatio>0.55;
+      if(ritualActive)armScrollGate(); else disarmScrollGate();
+    });
+  },{threshold:[0,0.55,1]});
+  ritualActiveIO.observe(ritualSection);
+
+  document.getElementById('ritualSkip').addEventListener('click',function(){
+    completeRitual();
+  });
+
+  /* first paint: kick the loop once for the load-ramp title */
+  if(!reduced){
+    heroLoadStart=performance.now();
+    ensureLoop();
+  } else {
+    heroShown=0;applyHero(0,performance.now());
+    var w=wordEls;for(var i=0;i<w.length;i++)w[i].style.transform='translateY(0)';
+    heroMid.style.opacity=1;
+  }
+
+  /* ---------- generic reveal-on-scroll ---------- */
+  var revealGroups=document.querySelectorAll('.oferece .deliver, .vozes, .venha-inner');
+  revealGroups.forEach(function(group){
+    var items=group.querySelectorAll('.reveal-item, .reveal');
+    items.forEach(function(el,i){
+      el.style.transitionDelay=(i*0.07)+'s';
+    });
+  });
+
+  var revealIO=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        en.target.addEventListener('transitionend',function clearDelay(){
+          en.target.style.transitionDelay='';
+          en.target.removeEventListener('transitionend',clearDelay);
         });
-      });
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') document.body.classList.remove('nav-open');
-      });
+        revealIO.unobserve(en.target);
+      }
+    });
+  },{rootMargin:'0px 0px -8% 0px',threshold:0.15});
+  document.querySelectorAll('.reveal-item, .reveal').forEach(function(el){revealIO.observe(el)});
 
-      // 2. Navbar on scroll
-      const nav = document.getElementById('mainNav');
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 40) {
-          nav.classList.add('scrolled');
-        } else {
-          nav.classList.remove('scrolled');
-        }
-      }, { passive: true });
+  /* ---------- reduced motion live toggle ---------- */
+  reduceQ.addEventListener('change',function(e){
+    reduced=e.matches;
+    if(reduced){
+      disarmScrollGate();
+      completeRitual();
+      document.querySelectorAll('.reveal-item,.reveal').forEach(function(el){el.classList.add('in')});
+    }
+  });
 
-      // 3. Staggered Scroll Reveal
-      const revealItems = document.querySelectorAll('.reveal-item');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            const parent = el.parentElement;
-            const siblings = parent ? Array.from(parent.querySelectorAll('.reveal-item')) : [];
-            const idx = siblings.indexOf(el);
-            const delay = idx >= 0 ? idx * 0.08 : 0;
-            el.style.transitionDelay = delay.toFixed(2) + 's';
-            el.classList.add('in');
-            observer.unobserve(el);
-          }
-        });
-      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
-
-      revealItems.forEach(el => observer.observe(el));
-    })();
-  </script>
+  /* pause ambient animations off-screen / hidden tab */
+  document.addEventListener('visibilitychange',function(){
+    document.body.classList.toggle('paused',document.hidden);
+  });
+})();
+</script>
 </body>
 </html>
