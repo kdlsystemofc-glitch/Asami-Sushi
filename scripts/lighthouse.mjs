@@ -1,5 +1,5 @@
 // Lighthouse mobile (throttling simulado), N execuções, mediana por nota.
-// Uso: npm run lh [-- --runs 3 --out screenshots/lighthouse/nome]
+// Uso: npm run lh [-- --runs 3 --out screenshots/lighthouse/nome --root pasta-do-site]
 // Sobe o próprio servidor estático de site/. Chromium: CHROME_PATH ou o do Playwright.
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
@@ -13,7 +13,7 @@ const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > 0 ?
 const RUNS = Number(arg("runs", 3));
 const OUT = arg("out", "screenshots/lighthouse/mobile");
 
-const ROOT = resolve("site");
+const ROOT = resolve(arg("root", "site")); // --root: outra cópia do site (ex.: um commit antigo, para comparar)
 const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".webp": "image/webp", ".svg": "image/svg+xml" };
 const server = createServer(async (req, res) => {
   let p = decodeURIComponent(new URL(req.url, "http://x").pathname);

@@ -78,3 +78,29 @@ Somam-se `css/motion.css` (2,3 KB, 1,0 KB gzip, bloqueante como os outros CSS) e
 1,6 KB de script inline no `<head>`. O servidor local não comprime, por isso o Lighthouse
 contabiliza 164 KB transferidos. Numa hospedagem com gzip ou brotli (Vercel), vão cerca de
 56 KB.
+
+---
+
+## Depois da etapa "motion hero"
+
+A comparação que vale é a lado a lado, rodada na mesma sessão de rede, com o commit
+`33b2baf` como referência. As duas versões foram servidas com quebras de linha LF, como no git e
+em produção. A cópia de trabalho no Windows usa CRLF (`core.autocrlf`), o que acrescenta cerca de
+3,5 KB de CSS bloqueante e distorce a medição.
+
+| 5 execuções, mediana | Desempenho | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|
+| Referência (`33b2baf`, motion base) | 84 | 2,9 s | 3,6 s | 2 ms | 0,001 |
+| Motion hero | 83 | 2,9 s | **3,6 s** | 0 ms | 0,000 |
+
+- **Linha de base original:** 80 / LCP 3,7 s.
+- **Primeira versão do hero:** LCP 3,8 s em todas as execuções. Dois motivos:
+  - os loops ficavam no CSS bloqueante;
+  - o carregador foi para um arquivo externo.
+
+  Os dois saíram do caminho crítico (D31).
+- **O que o hero acrescenta:**
+  - `hero-loops.css` (3,4 KB) e `js/motion/hero.js` (2,4 KB), pedidos junto com o motion
+    depois do `load`;
+  - cerca de 3 KB no `hero.css` bloqueante, com as entradas.
+- **Custo de CPU e GPU:** está no DESIGN.md, §5 Hero.

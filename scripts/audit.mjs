@@ -135,7 +135,7 @@ function checar({ toque }) {
   // 4 · hero
   const hero = document.getElementById("ato-1");
   const hb = doc(hero.getBoundingClientRect());
-  const wmNode = document.querySelector(".hero__wordmark-text").firstChild;
+  const wmNode = document.querySelector(".hero__wordmark .hero__wordmark-text").firstChild; // o do h1, não a cópia do reflexo
   const rg = document.createRange(); rg.selectNodeContents(wmNode);
   const wm = doc(rg.getBoundingClientRect());
   const pecas = {

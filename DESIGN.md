@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D30). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D33). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -621,12 +621,14 @@ desfaz em `--t-enter` (800 ms), só `opacity`. É CSS puro: não espera JS, e o 
 pinta por baixo desde o primeiro quadro. Não existe em `reduced` e ignora a pausa (pausado, ficaria
 preto).
 
-**Carregamento tardio (D29).** GSAP, ScrollTrigger, Lenis e `core.js` somam 51 KB gzip (164 KB
+**Carregamento tardio (D29, D31, D33).** GSAP, ScrollTrigger, Lenis e `core.js` somam 51 KB gzip (164 KB
 sem compressão). Pedidos com `defer`, disputavam banda com a imagem de LCP no 4G simulado: o
 Lighthouse mobile caiu de 80 para 76 e o LCP subiu de 3,7 s para 4,4 s. Por isso o carregador do
 `<head>` só os pede depois do `load`, na 1ª interação (`scroll`, `wheel`, `touchstart`,
 `pointerdown`, `keydown`) ou 2,5 s depois, o que vier antes. Se a página abrir numa âncora ou já
-rolada, carrega na hora. Se o núcleo não ficar pronto em 6 s, `js-motion`/`motion-enter` saem,
+rolada, carrega na hora. A fila é `gsap`, `ScrollTrigger`, `lenis`, `core.js`, `hero.js` e o CSS
+`hero-loops.css` (D31), nunca durante uma rolagem ou uma sequência de cliques (D33). Se o núcleo
+não ficar pronto em 6 s, `js-motion`/`motion-enter` saem,
 tudo aparece e o núcleo não religa depois. Consequência: o primeiro gesto de rolagem pode ainda
 ser nativo, e **nada da primeira tela pode depender do GSAP**.
 
@@ -657,21 +659,80 @@ reserva) e para a ondulação da água do ACT IV, que em mobile vira gradiente f
 As tabelas abaixo são o plano por seção, a implementar nas próximas etapas sobre esta base.
 Onde elas pedem entrada no hero, vale a D29: CSS, não GSAP.
 
-### Hero
-| Elemento | Animação |
-|---|---|
-| Entrada da página | Fade a partir de `#040507`, 800 ms; wordmark entra de `scale(1.06)` + `blur(14px)` → `scale(1)` + `blur(0)` em 1800 ms `--ease-out` |
-| Fumaça | 3 camadas em `translateX` + `scale` lentos, 40–70 s, `alternate`, `linear` |
-| Bolhas | `rise`: `translateY(0 → -180px)` + `opacity 0→.6→0`, 6–14 s, delays escalonados |
-| Nigiri | Flutuação `translateY(±10px)` + `rotate(±2deg)`, 7 s `ease-in-out infinite alternate` |
-| Grade do piso | `feTurbulence` com `baseFrequency` animado (SMIL ou `requestAnimationFrame`), ciclo de 12 s |
-| Reflexo | Mesmo ripple, defasado 400 ms |
-| Scroll | Parallax: wordmark `translateY(scroll × .25)`, fumaça `× .10`, água `× .40`. Via `animation-timeline: view()` onde houver suporte; `IntersectionObserver` + `transform` como fallback |
-| Rótulo `ACT I / THE ARRIVAL` | Entra com `delay 2000ms` (depois do wordmark assentar), `translateY(12px)` + fade, 600 ms |
-| HUD / player | `opacity 0→1` com `delay 1600ms`; hover nos botões leva a borda a `--chrome-100` em 220 ms |
-| Trilho de seção | Traço do ato ativo cresce de 6 → 14 px e clareia, 300 ms; segue o `IntersectionObserver` dos atos |
-| ⏮ ⏭ do player | Rolagem suave até o ato vizinho, `behavior:"smooth"` (ou salto direto sob movimento reduzido) |
-| Overlay de menu | Abre com `opacity 0→1` + `backdrop-filter: blur(0→20px)` em 400 ms; itens entram em cascata de 60 ms, `translateY(12px)` → 0 |
+### Hero — construído (etapa "motion hero", 24/09/2026)
+
+Arquivos:
+- `css/hero.css`: entradas e o wrapper `.hero__water`;
+- `css/hero-loops.css`: loops;
+- `js/motion/hero.js`: ondulação da água;
+- `data-parallax` e `data-loop` no HTML;
+- traço do trilho em `css/nav.css`.
+
+Testes e medição: `npm run test:motion` (`scripts/test-motion-hero.mjs`), com saída em
+`screenshots/motion/`.
+
+| Elemento | Como ficou | Técnica |
+|---|---|---|
+| Entrada da página | Véu `#040507` → conteúdo, 800 ms (D28) | CSS |
+| Wordmark (e a cópia no reflexo) | `scale(1.06)` + `blur(14px)` → repouso, 1800 ms `--ease-out`. Em `quality="low"`: `scale(1.06)` + `opacity 0` → repouso, sem blur. Sem `fill: forwards` e sem `will-change`: ao terminar, o `filter` volta aos dois `drop-shadow` estáticos e a camada deixa de ser promovida | CSS (`@keyframes hero-wordmark-in`) |
+| Rótulo `ACT I / THE ARRIVAL` | `translateY(12px)` + fade, 600 ms, delay 2000 ms | CSS |
+| HUD e player | `opacity 0→1`, 600 ms, delay 1600 ms. Hover do player: borda → `--chrome-100` em 220 ms (`--t-fast`, já existia) | CSS |
+| Fumaça | 3 camadas: 56 s, 70 s e 40 s, `linear infinite alternate`, `translate` + `scale` como propriedades individuais (compõem com o `scaleX(-1)` da camada espelhada). **low: só a camada central anima** | CSS (`hero-loops.css`) |
+| Bolhas | 14 bolhas, 6–14 s, fases escalonadas por delay negativo. O ciclo **passa pela pose estática**: parte dela, sobe 180 px sumindo (0–62 %), renasce 40 px abaixo e volta à pose (62–100 %). **low: 6 animam**, as outras 8 ficam na pose estática | CSS |
+| Nigiri | `translateY(±10px)` + `rotate(±2deg)`, 7 s `ease-in-out infinite alternate`, compondo com o `rotate: -14deg` de base | CSS |
+| Grade do piso e reflexo | `baseFrequency` do `#wave` e do `#ripple` oscila (+12–20 %), 6 s ida + 6 s volta = ciclo de 12 s, reflexo defasado 400 ms. **Só `full` + `high` + ≥ 768 px** (D18, D27). Durante a rolagem o atributo não é reescrito (D32) | GSAP em `motion.register` + `motion.loop` |
+| Parallax | Wordmark `× .25` (`h1`), fumaça `× .10` (`.hero__smoke`), água `× .40` (wrapper novo `.hero__water` com piso + reflexo, porque o reflexo já tem `scaleY(-1)`). Repouso no topo da página. Desligado em `reduced`, `paused` e `low` | `data-parallax` (§5.0) |
+| Trilho | Traço em duas camadas (`::before` apagado, `::after` aceso) com a altura do ativo; inativo `scaleY(.45)` ≈ 6,3 de 14 px; ativo cresce para `scaleY(1)` e acende por `opacity`, 300 ms `--ease-out` | CSS (`nav.css`) |
+| ⏮ ⏭ | Ver D30 | — |
+| Overlay de menu | Não mexido nesta etapa (fica o fade de 200 ms) | — |
+
+**Modos.**
+- **`reduced`:** sem `html.js-motion` → nenhuma entrada, nenhum loop, nenhum parallax, e o hero
+  aparece direto no estado estático. O "fade de 200 ms" pedido não existe aqui: o `reset.css`
+  já zera animações em `reduced`, e o conteúdo do hero nunca some.
+- **`paused`:** congela tudo (CSS por `animation-play-state`, ondulação pela timeline global) e
+  retoma de onde parou.
+- **Fora da tela:** `data-loop` no `#ato-1` pausa os loops CSS, e `motion.loop` pausa a ondulação.
+- **Aba escondida:** tudo pausa.
+
+**Estado final = estático aprovado.** Todo loop está na pose estática na fase 0 e toda entrada
+termina nela. O teste compara o `#ato-1` com a entrada terminada e os loops na fase 0 contra o
+hero do commit `33b2baf`. Tolerância: pixel diferente = algum canal com diferença > 24/255, e no
+máximo 0,5 % dos pixels podem diferir. Medido: **0,078 % em 1440** e **0,142 % em 390** (média
+0,60 e 0,46/255). A diferença é antialiasing e o traço inativo do trilho (6,3 px contra 6,48 px).
+
+**Custo (medido, 24/09/2026)**, em Chromium headless com GPU (Intel UHD 770, ANGLE/D3D11), 10 s
+parado e 10 s rolando.
+- **Métricas:** rAF, Long Animation Frames e quadros do compositor pelo trace (`PipelineReporter`).
+- **Orçamento:**
+  - até 2 quadros > 50 ms isolados em 10 s;
+  - até 5 % de quadros do compositor descartados;
+  - uma fase fora do orçamento é medida de novo uma vez.
+- **Parado:** 60 fps e 0 descartados em todos os casos.
+- **Rolando:**
+
+  | Caso | Quadros descartados | Quadros longos |
+  |---|---|---|
+  | high com a ondulação | ~1–3 % | 1–2 isolados, 120–130 ms, sem script |
+  | high sem a ondulação (controle) | ~0,5–2 % | ~1 isolado |
+  | low | 0–2 % | — |
+  | celular 390 | 0 % | — |
+
+- **Ruído do ambiente:** o controle mostra rajadas esporádicas de ~20 quadros descartados sem
+  nenhuma animação cara.
+- **Primeira medida da ondulação:** reescrever o `baseFrequency` durante a rolagem derrubava 18
+  quadros, com picos de 141–189 ms. Daí a D32.
+- **A/B de 8 rodadas de rolagem, já com a D32:** 11 contra 5 descartados em média, ~1,1 % contra
+  0,5 %.
+
+Por isso o `feTurbulence` animado foi **mantido**: parado custa zero, e rolando fica dentro do
+orçamento.
+
+**Lighthouse mobile** (5 execuções, mediana; versão atual e `33b2baf` servidas com LF, como vão
+para produção): referência 84 / LCP 3,6 s; hero 83 / LCP 3,6 s. Duas coisas atrasavam o LCP
+em 0,2 s e foram tiradas do caminho crítico (D31):
+- os loops no CSS bloqueante;
+- um arquivo externo para o carregador.
 
 ### Rodízio
 | Elemento | Animação |
@@ -767,7 +828,7 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates, D24–D25 na construção dos atos e D26–D30 na base de motion. Cada uma
+inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero. Cada uma
 vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
@@ -820,6 +881,9 @@ o efeito que já foi aplicado nas seções acima.
 | **D28** ✅ | **Entrada da página = véu `--ink-900` em CSS puro**, 800 ms, só `opacity`; não espera JS nem atrasa o LCP. | §5.0 |
 | **D29** ✅ | **Motion carregado fora do caminho do LCP**: depois do `load`, na 1ª interação ou 2,5 s depois. Nada da primeira tela depende do GSAP; entradas do hero em CSS. | §5.0 |
 | **D30** ✅ | **Lenis só no modo `full`**; âncoras e ⏮ ⏭ com offset zero e duração fixa dos tokens; menu para o Lenis; ⏮ ⏭ contam a partir do destino pedido. | §5.0, §4b |
+| **D31** ✅ | **Nada do motion no caminho crítico do LCP.** Loops do hero em `css/hero-loops.css`, pedido junto com o motion; carregador inline no `<head>` (um arquivo externo a mais também atrasava). Medido: LCP simulado 3,8 → 3,6 s, igual ao da referência. Entradas continuam no CSS bloqueante porque valem desde o 1º quadro. | §5 Hero |
+| **D32** ✅ | **Ondulação da água por `feTurbulence` mantida, mas congelada durante a rolagem**: o `baseFrequency` não é reescrito enquanto a página rola (retoma 200 ms depois). Reescrever durante a rolagem re-rasterizava o filtro e derrubava quadros. | §5 Hero (custo) |
+| **D33** ✅ | **O motion nunca se instala no meio de uma navegação.** Ao se registrar, o ScrollTrigger reescreve a posição de rolagem e matava uma rolagem suave em andamento (⏭ ou âncora antes do motion chegar). O carregador espera 250 ms sem rolar e 600 ms sem gesto; o núcleo monta tudo só depois de 150 ms de rolagem parada (`data-motion-ready="pending"` até lá); e `js/nav.js` retoma até o destino pedido se algo ainda interromper (evento `motion:pronto`). | §5.0, §4b |
 
 ---
 

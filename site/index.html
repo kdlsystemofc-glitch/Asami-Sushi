@@ -17,9 +17,10 @@
         imagesizes="(min-width: 48rem) 34vw, 70vw">
 
   <!-- Antes da pintura (DESIGN.md §5, D26–D29): classe js, qualidade do aparelho, estado
-       inicial do motion e o carregador do motion. GSAP/Lenis/núcleo só são pedidos depois do
-       load, na 1ª interação ou 2,5 s depois (o que vier antes), para não disputar banda com o
-       LCP. Se o motion não subir em 6 s, js-motion/motion-enter saem e tudo aparece. -->
+       inicial do motion e o carregador (inline: um arquivo a mais atrasava o LCP). GSAP, Lenis,
+       núcleo, hero.js e os loops CSS do hero só são pedidos depois do load, na 1ª interação ou
+       2,5 s depois — nunca durante uma rolagem ou uma sequência de cliques. Se o núcleo não
+       subir em 6 s, js-motion/motion-enter saem e tudo aparece. -->
   <script>
     (function (h, n) {
       var q = /[?&]quality=(low|high)(?:&|$)/.exec(location.search);
@@ -32,7 +33,11 @@
         if (e.animationName === "motion-veil") h.classList.remove("motion-enter");
       });
       addEventListener("load", function () {
-        var eventos = ["scroll", "wheel", "touchstart", "pointerdown", "keydown"], pedido = false;
+        var eventos = ["scroll", "wheel", "touchstart", "pointerdown", "keydown"], pedido = false, rolou = 0, mexeu = 0;
+        var rolagem = function () { rolou = Date.now(); };
+        var agendado = 0;
+        var agendar = function (ms) { clearTimeout(agendado); agendado = setTimeout(carregar, ms); };
+        addEventListener("scroll", rolagem, { passive: true });
         var desistir = function () {
           if (h.hasAttribute("data-motion-ready")) return;
           h.classList.remove("js-motion", "motion-enter");
@@ -40,22 +45,35 @@
         };
         var carregar = function () {
           if (pedido) return;
+          // nunca durante uma rolagem nem no meio de uma sequência de cliques: ao se registrar, o
+          // ScrollTrigger reescreve a posição de rolagem e mataria uma rolagem suave em andamento
+          // (⏭, âncora, item do menu). Espera 250 ms sem rolar e 600 ms sem gesto.
+          if (Date.now() - rolou < 250 || Date.now() - mexeu < 600) return agendar(250);
           pedido = true;
-          eventos.forEach(function (e) { removeEventListener(e, carregar, true); });
-          ["js/vendor/gsap.min.js", "js/vendor/ScrollTrigger.min.js", "js/vendor/lenis.min.js", "js/motion/core.js"]
-            .forEach(function (src, i, fila) {
+          eventos.forEach(function (e) { removeEventListener(e, gesto, true); });
+          removeEventListener("scroll", rolagem);
+          ["js/vendor/gsap.min.js", "js/vendor/ScrollTrigger.min.js", "js/vendor/lenis.min.js", "js/motion/core.js",
+           "js/motion/hero.js"]
+            .forEach(function (src) {
               var s = document.createElement("script");
               s.src = src;
               s.async = false; // executa na ordem da fila
               // só o núcleo decide: sem GSAP ele mesmo desliga; sem Lenis segue sem rolagem suave
-              if (i === fila.length - 1) s.onload = s.onerror = desistir;
+              if (/core\.js$/.test(src)) s.onload = s.onerror = desistir;
               document.head.appendChild(s);
             });
+          // loops do hero (CSS): também fora do caminho do LCP; sem motion, o hero fica estático
+          var css = document.createElement("link");
+          css.rel = "stylesheet";
+          css.href = "css/hero-loops.css";
+          document.head.appendChild(css);
           setTimeout(desistir, 6000);
         };
-        eventos.forEach(function (e) { addEventListener(e, carregar, { capture: true, passive: true }); });
+        // o 1º gesto pede o motion; carregar() espera a interação assentar
+        var gesto = function () { mexeu = Date.now(); agendar(600); };
+        eventos.forEach(function (e) { addEventListener(e, gesto, { capture: true, passive: true }); });
         // aberta numa âncora ou já rolada: pode haver data-reveal na tela, carrega já
-        if (scrollY > 0 || location.hash) carregar(); else setTimeout(carregar, 2500);
+        if (scrollY > 0 || location.hash) carregar(); else agendar(2500);
       });
     })(document.documentElement, navigator);
   </script>
@@ -174,13 +192,13 @@
   <main id="conteudo">
 
     <!-- ═══ ACT I — THE ARRIVAL ═══════════════════════════════ -->
-    <section class="section hero" id="ato-1" aria-labelledby="ato-1-titulo">
+    <section class="section hero" id="ato-1" aria-labelledby="ato-1-titulo" data-loop>
 
       <!-- 1 · fundo -->
       <div class="hero__bg" aria-hidden="true"></div>
 
       <!-- 2 · névoa: um plate, três camadas mascaradas no terço médio -->
-      <div class="hero__smoke" aria-hidden="true">
+      <div class="hero__smoke" aria-hidden="true" data-parallax="0.10">
         <img width="800" height="447" class="plate hero__smoke-layer hero__smoke-layer--l"
              src="assets/plate-smoke-hero-800.webp"
              srcset="assets/plate-smoke-hero-800.webp 800w, assets/plate-smoke-hero-1600.webp 1600w"
@@ -220,19 +238,21 @@
            sizes="(min-width: 48rem) 34vw, 70vw"
            alt="" fetchpriority="high" decoding="async">
 
-      <!-- 6 · piso em grade -->
-      <div class="hero__floor" aria-hidden="true"><div class="hero__floor-plane"></div></div>
+      <!-- 6–7 · água: piso em grade + espelho. O wrapper só existe para o parallax (o reflexo
+           já tem transform próprio, scaleY(-1)) e mantém a mesma camada (z 3) dos dois -->
+      <div class="hero__water" aria-hidden="true" data-parallax="0.40">
+        <div class="hero__floor"><div class="hero__floor-plane"></div></div>
+
+        <div class="hero__reflection">
+          <span class="hero__wordmark-text" data-text="Asami">Asami</span>
+        </div>
+      </div>
 
       <!-- 5 · wordmark (texto real) -->
-      <h1 class="hero__wordmark" id="ato-1-titulo">
+      <h1 class="hero__wordmark" id="ato-1-titulo" data-parallax="0.25">
         <span class="hero__wordmark-text" data-text="Asami">Asami</span>
         <span class="visually-hidden"> Sushi São Bernardo</span>
       </h1>
-
-      <!-- 7 · espelho d'água -->
-      <div class="hero__reflection" aria-hidden="true">
-        <span class="hero__wordmark-text" data-text="Asami">Asami</span>
-      </div>
 
       <!-- 3b · rótulo do ato (D8) -->
       <div class="act-label hero__label">

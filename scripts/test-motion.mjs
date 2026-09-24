@@ -66,7 +66,7 @@ async function abrir({ width = 1440, height = 810, query = "", fixtures = true, 
   await page.goto(URL_ + query, { waitUntil: "networkidle" });
   // o motion carrega depois do load (D29): espera o núcleo decidir
   if (contexto.javaScriptEnabled !== false) {
-    await page.waitForFunction(() => document.documentElement.hasAttribute("data-motion-ready"), null, { timeout: 10000 });
+    await page.waitForFunction(() => ["true", "failed"].includes(document.documentElement.dataset.motionReady), null, { timeout: 10000 });
     if (fixtures) { await page.evaluate(FIXTURES.js); await page.waitForTimeout(150); } // 1º aviso do IntersectionObserver
   }
   return { ctx, page, errosPagina };
@@ -77,11 +77,14 @@ const fechar = async ({ ctx, errosPagina }, rotulo, esperarErros = false) => {
 };
 
 const topoDe = (page, sel) => page.evaluate((s) => Math.round(document.querySelector(s).getBoundingClientRect().top), sel);
+// "assentou" = 5 leituras iguais (~400 ms): sem GPU, durante a entrada do hero (blur), a
+// rolagem suave pode levar ~350 ms para começar, e 2 leituras iguais dariam falso "parou"
 const assentar = async (page, sel) => {
-  let antes = null;
-  for (let i = 0; i < 80; i++) {
+  let antes = null, iguais = 0;
+  for (let i = 0; i < 100; i++) {
     const t = await topoDe(page, sel);
-    if (t === antes) return t;
+    iguais = t === antes ? iguais + 1 : 0;
+    if (iguais >= 5) return t;
     antes = t; await page.waitForTimeout(80);
   }
   return antes;
@@ -358,7 +361,7 @@ async function bateria(page, rotulo) {
   page.on("pageerror", (e) => errosFile.push(e.message));
   page.on("console", (m) => { if (m.type() === "error") errosFile.push(m.text()); });
   await page.goto(pathToFileURL(resolve("site/index.html")).href, { waitUntil: "load" });
-  await page.waitForFunction(() => document.documentElement.hasAttribute("data-motion-ready"), null, { timeout: 10000 });
+  await page.waitForFunction(() => ["true", "failed"].includes(document.documentElement.dataset.motionReady), null, { timeout: 10000 });
   const e = await estado(page);
   ok(e.pronto === "true" && e.modo === "full" && e.lenis && errosFile.length === 0,
     `file://: motion pronto (mode=${e.modo}, Lenis=${e.lenis}), ${errosFile.length} erro(s)${errosFile.length ? ": " + errosFile.join(" | ") : ""}`);
@@ -395,11 +398,11 @@ async function bateria(page, rotulo) {
     const s = await abrir({ width: w, height: h, fixtures: false });
     const r = await s.page.evaluate(() => ({
       sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth,
-      reveal: document.querySelectorAll("[data-reveal], [data-parallax], [data-loop]").length,
+      fora: [...document.querySelectorAll("[data-reveal], [data-parallax], [data-loop]")].filter((el) => !el.closest("#ato-1")).length,
       nigiri: getComputedStyle(document.querySelector(".hero__nigiri")).opacity,
     }));
     ok(r.sw <= r.cw, `${w}px: sem rolagem horizontal (${r.sw} ≤ ${r.cw})`);
-    ok(r.reveal === 0 && r.nigiri === "1", `${w}px: nenhuma seção animada ainda (${r.reveal} data-*), nigiri visível`);
+    ok(r.fora === 0 && r.nigiri === "1", `${w}px: só o hero tem motion (${r.fora} data-* fora do #ato-1), nigiri visível`);
     await fechar(s, `sanidade ${w}`);
   }
 }

@@ -73,18 +73,30 @@
   height: var(--touch); /* alvo de toque de 44 px (o traço visível continua curto) */
 }
 
-.rail__tick::before {
+/* Traço em duas camadas com a altura do traço ativo: ::before apagado, ::after aceso.
+   Inativo = scaleY(.45) (≈ 6,5 px de 14 no desktop, 4 de 9 no celular), só o apagado aparece.
+   Ativo = cresce para scaleY(1) e o aceso surge por opacity, em 300 ms (§5 Hero, "Trilho").
+   Só transform/opacity: nada de animar height. */
+.rail__tick::before,
+.rail__tick::after {
   content: "";
+  grid-area: 1 / 1;
   width: 1.5px;
-  height: clamp(4px, .45vw, 7px);
+  height: clamp(9px, 1vw, 14px);
   border-radius: var(--r-pill);
   background: var(--text-faint);
+  transform: scaleY(.45);
+  transition: transform 300ms var(--ease-out), opacity 300ms var(--ease-out);
 }
 
-.rail__tick[aria-current]::before {
-  height: clamp(9px, 1vw, 14px);
+.rail__tick::after {
   background: var(--chrome-100);
+  opacity: 0;
 }
+
+.rail__tick[aria-current]::before,
+.rail__tick[aria-current]::after { transform: none; }
+.rail__tick[aria-current]::after { opacity: 1; }
 
 .rail__tick:hover::before { background: var(--text-base); }
 

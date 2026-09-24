@@ -46,12 +46,14 @@ const esperarAtivo = async (page, alvo) => {
   for (let i = 0; i < 40; i++) { if ((await ativo(page)) === alvo) return true; await page.waitForTimeout(100); }
   return false;
 };
-// espera a rolagem suave assentar e devolve o topo da seção
+// espera a rolagem suave assentar e devolve o topo da seção. "Assentou" = 5 leituras iguais
+// (~400 ms): sem GPU, durante a entrada do hero (blur), a rolagem pode levar ~350 ms para começar
 const assentar = async (page, sel) => {
-  let antes = null;
-  for (let i = 0; i < 60; i++) {
+  let antes = null, iguais = 0;
+  for (let i = 0; i < 80; i++) {
     const t = await topoDe(page, sel);
-    if (t === antes) return t;
+    iguais = t === antes ? iguais + 1 : 0;
+    if (iguais >= 5) return t;
     antes = t; await page.waitForTimeout(80);
   }
   return antes;

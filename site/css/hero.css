@@ -255,3 +255,53 @@
 }
 
 /* 16 · grão: global, em base.css (.section::after), para não marcar emenda entre atos */
+
+/* ── 6–7 · wrapper da água (só para o parallax, D30/§5.0): mesma camada z 3 do piso e do reflexo ── */
+.hero__water {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ═══ MOTION (DESIGN.md §5 Hero, §5.0) ═══════════════════════════════════════════════
+   Tudo sob html.js-motion: sem JS, com falha do motion ou em "reduced" a classe não existe e
+   o hero fica no estado estático aprovado. Entradas e loops são CSS puro (D29): não esperam o
+   GSAP, que só chega depois do load. Pausa (⏸, aba escondida, fora da tela via data-loop no
+   #ato-1) é global, em motion.css. Só transform/opacity; filter só no blur da entrada.
+   Todo loop passa pela pose estática na fase 0 (0 %), e as entradas terminam nela. */
+
+/* ── entrada: wordmark (e sua cópia no reflexo) ── */
+@keyframes hero-wordmark-in {
+  from {
+    transform: scale(1.06);
+    filter: blur(14px) drop-shadow(0 2px 0 var(--ink-800)) drop-shadow(0 0 40px color-mix(in srgb, var(--mist-200) 25%, transparent));
+  }
+  to {
+    transform: none;
+    filter: blur(0) drop-shadow(0 2px 0 var(--ink-800)) drop-shadow(0 0 40px color-mix(in srgb, var(--mist-200) 25%, transparent));
+  }
+}
+/* "low": sem blur (filter animado em texto desse tamanho é caro) */
+@keyframes hero-wordmark-in-low {
+  from { transform: scale(1.06); opacity: 0; }
+}
+
+/* sem fill "forwards": ao terminar, o filter e o transform voltam aos valores estáticos
+   (o blur some da cascata). Sem will-change: o navegador promove a camada só enquanto anima. */
+.js-motion .hero__wordmark-text { animation: hero-wordmark-in 1800ms var(--ease-out) backwards; }
+.js-motion[data-quality="low"] .hero__wordmark-text { animation-name: hero-wordmark-in-low; }
+
+/* ── entrada: rótulo do ato, HUD e player ── */
+@keyframes hero-rise-in { from { transform: translateY(12px); opacity: 0; } }
+@keyframes hero-fade-in { from { opacity: 0; } }
+
+.js-motion .hero__label { animation: hero-rise-in var(--t-mid) var(--ease-out) 2000ms backwards; }
+.js-motion .hero__hud,
+.js-motion .player { animation: hero-fade-in var(--t-mid) var(--ease-soft) 1600ms backwards; }
+
+/* ── loops (fumaça, bolhas, nigiri): em css/hero-loops.css, pedido junto com o motion,
+   depois do load (medido: qualquer pedido antes do LCP o atrasava de 3,6 s para 3,8 s) ── */
+
+/* ── grade do piso e reflexo: ondulação por feTurbulence animado em js/motion/hero.js
+   (GSAP, só "full" + quality "high" + ≥ 768 px; D18/D27) ── */

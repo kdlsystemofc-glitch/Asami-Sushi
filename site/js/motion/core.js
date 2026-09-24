@@ -66,6 +66,7 @@
     const ouvintes = new Set();
     const registros = [];
     let emMontagem = null; // registro cujo setup está rodando (para motion.loop achar o dono)
+    let iniciado = false;  // ver "início" no fim: nada é montado antes de a rolagem parar
 
     const api = {
       get mode() { return modo; },
@@ -83,7 +84,7 @@
       register(setup) {
         const r = { setup, ctx: null, limpar: null, extras: [] };
         registros.push(r);
-        montar(r);
+        if (iniciado) montar(r);
         return () => { desmontar(r); registros.splice(registros.indexOf(r), 1); };
       },
       loop(el, anim) {
@@ -292,6 +293,7 @@
     // ── aplicar o modo (carga + toda mudança) ─────────────────
     // idempotente: pode rodar a qualquer momento e só muda o que difere
     const aplicar = () => {
+      if (!iniciado) return;
       const anterior = modo;
       modo = calcularModo();
       const novaBase = calcularBase();
@@ -331,12 +333,28 @@
 
     registros.push(declarativos);
     window.motion = api;
-    aplicar();
 
-    // fontes e imagens mudam a altura dos atos
-    document.fonts?.ready.then(() => ScrollTrigger.refresh());
-
-    raiz.dataset.motionReady = "true";
+    // ── início ──
+    // O motion chega depois do load, muitas vezes disparado por um gesto (D29). Criar
+    // ScrollTriggers faz um refresh que reescreve a posição de rolagem, e isso interrompe uma
+    // rolagem suave em andamento (⏭ clicado antes do motion chegar parava no topo). Por isso
+    // tudo é montado só quando a rolagem fica 150 ms parada. Enquanto isso: ready="pending".
+    raiz.dataset.motionReady = "pending";
+    let espera = 0;
+    const adiar = () => {
+      clearTimeout(espera);
+      espera = setTimeout(() => {
+        removeEventListener("scroll", adiar);
+        iniciado = true;
+        modo = null; // força a 1ª aplicação completa (e o aviso aos ouvintes)
+        aplicar();
+        document.fonts?.ready.then(() => ScrollTrigger.refresh()); // fontes mudam a altura dos atos
+        raiz.dataset.motionReady = "true";
+        document.dispatchEvent(new Event("motion:pronto")); // js/nav.js retoma uma navegação interrompida
+      }, 150);
+    };
+    addEventListener("scroll", adiar, { passive: true });
+    adiar();
   } catch (e) {
     falhar(e);
   }

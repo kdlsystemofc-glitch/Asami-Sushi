@@ -66,6 +66,18 @@ const irPara = (i) => {
 };
 prev?.addEventListener("click", () => irPara((destino ?? atual) - 1));
 next?.addEventListener("click", () => irPara((destino ?? atual) + 1));
+// âncoras de ato (trilho, menu, RESERVAR, logo) também contam como destino pedido
+document.addEventListener("click", (e) => {
+  const i = atos.findIndex((a) => e.target.closest?.(`a[href="#${a.id}"]`));
+  if (i >= 0) destino = i;
+});
+
+// O motion chega depois do load (D29); se ele se instalou no meio de uma navegação (o
+// ScrollTrigger reescreve a posição de rolagem ao se registrar), retoma até o destino
+document.addEventListener("motion:pronto", () => {
+  if (destino !== null && Math.abs(atos[destino].getBoundingClientRect().top) > 2) window.motion.scrollTo(atos[destino]);
+});
+
 // o visitante assumiu a rolagem: vale de novo o ato em que ele está
 const soltar = () => { destino = null; };
 addEventListener("wheel", soltar, { passive: true });
