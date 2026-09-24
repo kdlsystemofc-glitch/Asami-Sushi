@@ -36,7 +36,7 @@ npm run shots               # screenshots em 1440 e 390 → screenshots/
 npm run audit               # 12 telas + texto 200 %, movimento reduzido/tema claro, fontes bloqueadas, CLS
 npm run test:nav            # menu, teclado, trilho de atos, ⏮ ⏭ ⏸
 npm run test:form           # validação e mensagem do formulário de reserva
-npm run test:motion         # motion: base (modos, Lenis, âncoras, data-*, sem JS, file://) + hero + ACT II + ACT III (quadros, vídeo, custo)
+npm run test:motion         # motion: base (modos, Lenis, âncoras, data-*, sem JS, file://) + os 4 atos (quadros, vídeo, custo; no ACT IV, o formulário durante a animação)
 npm run vendor              # copia os builds de GSAP/Lenis de node_modules para site/js/vendor
 npm run lh                  # Lighthouse mobile, 3 execuções, mediana
 ```

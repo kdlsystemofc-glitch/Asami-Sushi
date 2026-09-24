@@ -59,9 +59,12 @@ const assentar = async (page, sel) => {
 // por isso não serve a regra "≤ 3" do ACT II.
 async function nevoaEscurece(page) {
   const clip = await page.evaluate(() => {
+    // só a parte da névoa DENTRO da seção (ela é cortada no fim do ACT III; abaixo começa o ACT IV,
+    // que pode estar animando entre as duas capturas)
     const r = document.querySelector("#ato-3 .sanctum__fog").getBoundingClientRect();
-    const x = Math.max(0, r.x), y = Math.max(0, r.y);
-    return { x, y, width: Math.min(innerWidth, r.right) - x, height: Math.min(innerHeight, r.bottom) - y };
+    const sec = document.getElementById("ato-3").getBoundingClientRect();
+    const x = Math.max(0, r.x, sec.x), y = Math.max(0, r.y, sec.y);
+    return { x, y, width: Math.min(innerWidth, r.right, sec.right) - x, height: Math.min(innerHeight, r.bottom, sec.bottom) - y };
   });
   if (clip.width < 2 || clip.height < 2) return { n: 0, fracao: 0 };
   const com = await page.screenshot({ clip });

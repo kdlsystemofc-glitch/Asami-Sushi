@@ -141,3 +141,23 @@ LF, 5 execuções cada.
 - **CSS bloqueante:** `sanctum.css` cresce 1,2 KB (os wrappers do ACT III; a maior parte são comentários).
 - **Custo de CPU e GPU:** está no DESIGN.md, §5 Sanctum.
 
+---
+
+## Depois da etapa "motion ato 4"
+
+Comparação lado a lado com o commit `54ca0c2` (motion do ACT III), as duas versões servidas com
+LF, 5 execuções cada.
+
+| 5 execuções, mediana | Desempenho | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|
+| Referência (`54ca0c2`, motion ACT III) | 84 | 2,9 s | 3,6 s | 6 ms | 0,000 |
+| Motion ACT IV | 85 | 2,9 s | **3,6 s** | 16 ms | 0,000 |
+
+- **Acessibilidade:** continua em 100.
+- **Arquivos novos**, pedidos depois do `load` junto com o motion (D29, D31):
+  - `js/motion/reserva.js`, 8,0 KB;
+  - `css/reserve-motion.css`, 2,4 KB.
+- **CSS bloqueante:** `reserve.css` cresce 2,6 KB. É CSS de interface que vale sem JS também: o
+  foco suave e a varredura do botão, com comentários. O `index.html` cresce 0,7 KB.
+- **Custo de CPU e GPU:** está no DESIGN.md, §5 Reserva.
+

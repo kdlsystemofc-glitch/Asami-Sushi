@@ -398,11 +398,11 @@ async function bateria(page, rotulo) {
     const s = await abrir({ width: w, height: h, fixtures: false });
     const r = await s.page.evaluate(() => ({
       sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth,
-      fora: [...document.querySelectorAll("[data-reveal], [data-parallax], [data-loop]")].filter((el) => !el.closest("#ato-1, #ato-2, #ato-3")).length,
+      fora: [...document.querySelectorAll("[data-reveal], [data-parallax], [data-loop]")].filter((el) => !el.closest("#ato-1, #ato-2, #ato-3, #ato-4")).length,
       nigiri: getComputedStyle(document.querySelector(".hero__nigiri")).opacity,
     }));
     ok(r.sw <= r.cw, `${w}px: sem rolagem horizontal (${r.sw} ≤ ${r.cw})`);
-    ok(r.fora === 0 && r.nigiri === "1", `${w}px: motion só no hero, no ACT II e no ACT III (${r.fora} data-* fora deles), nigiri visível`);
+    ok(r.fora === 0 && r.nigiri === "1", `${w}px: motion só nos atos (${r.fora} data-* fora deles), nigiri visível`);
     await fechar(s, `sanidade ${w}`);
   }
 }

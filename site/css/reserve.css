@@ -49,7 +49,12 @@
   }
 }
 
-/* ── 3 · bruma baixa ─────────────────────────────────────── */
+/* ── 3 · bruma baixa ─────────────────────────────────────────
+   O wrapper (inset 0) não é stacking context no estático: a bruma mescla direto no fundo. Com
+   parallax (motion "full" + "high") ele é transformado e passa a fazer screen também (D36) */
+.reserve__mist-wrap { position: absolute; inset: 0; pointer-events: none; }
+.js-motion[data-quality="high"] .reserve__mist-wrap { mix-blend-mode: var(--plate-blend); }
+
 .reserve__mist {
   position: absolute;
   left: -5%;
@@ -197,6 +202,9 @@
 }
 
 /* ── 8 · HORÁRIO e PESSOAS: caixas numéricas ─────────────── */
+/* wrapper do input (input não tem ::before): carrega o anel de foco e o contador (motion) */
+.num-campo { position: relative; display: block; min-width: 0; }
+
 .num {
   display: flex;
   align-items: center;
@@ -226,6 +234,27 @@
   outline-offset: 3px;
   border-color: var(--chrome-100);
 }
+
+/* Foco suave (§5 Reserva): a borda vai a --chrome-100 em 180 ms e um anel discreto acende por
+   opacity num pseudo-elemento — o box-shadow do anel é fixo, nunca animado. O contorno âmbar
+   acima não tem transição: aparece na hora, nunca atrasado */
+.select select,
+.num { transition: border-color 180ms var(--ease-soft); }
+
+.select::before,
+.num-campo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-md);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--chrome-100) 6%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms var(--ease-soft);
+}
+
+.select:has(:focus-visible)::before,
+.num-campo:has(:focus-visible)::before { opacity: 1; }
 
 .select select[aria-invalid="true"],
 .num[aria-invalid="true"] {
@@ -268,6 +297,44 @@
 }
 
 .btn-wa:hover { background: var(--chrome-100); color: var(--ink-900); }
+
+/* Com hover real, a troca vira varredura (§5 Reserva): o fundo cresce da esquerda (::before,
+   scaleX) e o texto escuro (::after, 2ª camada com o mesmo rótulo) é recortado pela MESMA
+   frente — mesmo tempo, mesma curva. Cada letra fica ou clara sobre escuro ou escura sobre
+   claro, nunca clara sobre claro. O rótulo vem de data-rotulo (js/reserva.js); sem ele não há
+   varredura e vale o hover simples acima. Foco por teclado: só o contorno âmbar */
+@media (hover: hover) {
+  .btn-wa[data-rotulo] { position: relative; isolation: isolate; overflow: hidden; }
+  .btn-wa[data-rotulo]::before,
+  .btn-wa[data-rotulo]::after {
+    position: absolute;
+    inset: 0;
+    transition-duration: 300ms;
+    transition-timing-function: var(--ease-soft);
+    pointer-events: none;
+  }
+  .btn-wa[data-rotulo]::before {
+    content: "";
+    z-index: -1;
+    background: var(--chrome-100);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition-property: transform;
+  }
+  .btn-wa[data-rotulo]::after {
+    content: attr(data-rotulo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: inherit;
+    color: var(--ink-900);
+    clip-path: inset(0 100% 0 0);
+    transition-property: clip-path;
+  }
+  .btn-wa[data-rotulo]:hover { background: transparent; color: var(--text-base); }
+  .btn-wa[data-rotulo]:hover::before { transform: none; }
+  .btn-wa[data-rotulo]:hover::after { clip-path: inset(0 0 0 0); }
+}
 
 .reserve__note {
   margin-top: calc(-1 * var(--sp-2));

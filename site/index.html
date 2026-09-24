@@ -54,7 +54,7 @@
           removeEventListener("scroll", rolagem);
           ["js/vendor/gsap.min.js", "js/vendor/ScrollTrigger.min.js", "js/vendor/lenis.min.js", "js/motion/core.js",
            "js/motion/hero.js", "js/motion/rodizio.js",
-           "js/motion/sanctum.js"]
+           "js/motion/sanctum.js", "js/motion/reserva.js"]
             .forEach(function (src) {
               var s = document.createElement("script");
               s.src = src;
@@ -64,7 +64,7 @@
               document.head.appendChild(s);
             });
           // CSS de motion das seções: também fora do caminho do LCP; sem motion, tudo estático
-          ["css/hero-loops.css", "css/rodizio-motion.css", "css/sanctum-motion.css"].forEach(function (href) {
+          ["css/hero-loops.css", "css/rodizio-motion.css", "css/sanctum-motion.css", "css/reserve-motion.css"].forEach(function (href) {
             var css = document.createElement("link");
             css.rel = "stylesheet";
             css.href = href;
@@ -106,7 +106,10 @@
       <feTurbulence type="fractalNoise" baseFrequency="0.0028 0.075" numOctaves="2" seed="11" result="n"/>
       <!-- alfa = cristas: só os picos do ruído acendem, em linhas finas -->
       <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 5 0 0 -2.75" result="a"/>
-      <feComposite in="SourceGraphic" in2="a" operator="in"/>
+      <feComposite in="SourceGraphic" in2="a" operator="in" result="cristas"/>
+      <!-- ondulação do ACT IV: deslocamento 0 = cristas estáticas; js/motion/reserva.js anima -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="1" seed="5" result="onda"/>
+      <feDisplacementMap in="cristas" in2="onda" scale="0" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
     <!-- reflexo do ACT II: scale 0 = sem distorção (estado estático); js/motion/rodizio.js anima -->
     <filter id="ripple-ato2" x="-5%" y="-5%" width="110%" height="110%">
@@ -461,20 +464,23 @@
     </section>
 
     <!-- ═══ ACT IV — THE RITUAL OF CONNECTION ════════════════ -->
-    <section class="section reserve" id="ato-4" aria-labelledby="ato-4-titulo">
+    <section class="section reserve" id="ato-4" aria-labelledby="ato-4-titulo" data-loop>
 
       <!-- 1–2 · água procedural estática (D21); < 768 px vira gradiente + blur (D18) -->
-      <div class="reserve__water" aria-hidden="true">
+      <div class="reserve__water" aria-hidden="true" data-parallax="0.10">
         <svg class="reserve__water-svg" viewBox="0 0 1440 600" preserveAspectRatio="none" focusable="false">
           <rect width="1440" height="600" filter="url(#water)"/>
         </svg>
       </div>
 
-      <!-- 3 · bruma baixa (plate-smoke-floor, D21/assets.md): filho direto da seção, em screen -->
-      <img width="1600" height="893" class="plate reserve__mist"
-           src="assets/plate-smoke-floor-800.webp"
-           srcset="assets/plate-smoke-floor-800.webp 800w, assets/plate-smoke-floor-1600.webp 1600w"
-           sizes="110vw" alt="" loading="lazy" decoding="async">
+      <!-- 3 · bruma baixa (plate-smoke-floor, D21/assets.md), em screen. O wrapper só carrega o
+           parallax; quando ele existe, o wrapper também faz screen (D36) -->
+      <div class="reserve__mist-wrap" aria-hidden="true" data-parallax="0.06">
+        <img width="1600" height="893" class="plate reserve__mist"
+             src="assets/plate-smoke-floor-800.webp"
+             srcset="assets/plate-smoke-floor-800.webp 800w, assets/plate-smoke-floor-1600.webp 1600w"
+             sizes="110vw" alt="" loading="lazy" decoding="async">
+      </div>
 
       <!-- entrada em --ink-900: emenda com o ACT III -->
       <div class="reserve__entry" aria-hidden="true"></div>
@@ -507,20 +513,20 @@
             <legend class="field-group__legend">Horário</legend>
             <div class="field-group__row field-group__row--pair">
               <label class="visually-hidden" for="res-hh">Hora (HH)</label>
-              <input class="num" id="res-hh" name="hh" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="20" required aria-describedby="res-erro">
+              <span class="num-campo"><input class="num" id="res-hh" name="hh" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="20" required aria-describedby="res-erro"></span>
               <span class="field-group__sep" aria-hidden="true">:</span>
               <label class="visually-hidden" for="res-mm">Minutos (MM)</label>
-              <input class="num" id="res-mm" name="mm" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="00" required aria-describedby="res-erro">
+              <span class="num-campo"><input class="num" id="res-mm" name="mm" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="00" required aria-describedby="res-erro"></span>
             </div>
           </fieldset>
           <fieldset class="field-group field-group--people">
             <legend class="field-group__legend">Pessoas</legend>
             <div class="field-group__row field-group__row--pair">
               <label class="visually-hidden" for="res-adultos">Adultos</label>
-              <input class="num" id="res-adultos" name="adultos" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="02" required aria-describedby="res-erro">
+              <span class="num-campo"><input class="num" id="res-adultos" name="adultos" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="02" required aria-describedby="res-erro"></span>
               <span class="field-group__sep" aria-hidden="true">:</span>
               <label class="visually-hidden" for="res-criancas">Crianças</label>
-              <input class="num" id="res-criancas" name="criancas" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="00" required aria-describedby="res-erro">
+              <span class="num-campo"><input class="num" id="res-criancas" name="criancas" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="00" required aria-describedby="res-erro"></span>
             </div>
           </fieldset>
           </div>

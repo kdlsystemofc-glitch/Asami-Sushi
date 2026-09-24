@@ -236,7 +236,7 @@ async function comTrace(navegador, page, fn) {
     await page.goto(atual.url + query, { waitUntil: "load" });
     await esperarMotion(page);
     await page.waitForTimeout(2500); // entrada terminada
-    if (semOnda) await page.evaluate(() => gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda).forEach((t) => t.pause()));
+    if (semOnda) await page.evaluate(() => gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda && t !== window.motion?.debug.ato4?.onda).forEach((t) => t.pause()));
     // uma fase que estoura o orçamento é medida de novo uma vez (rajadas do ambiente, ver abaixo)
     const noOrcamento = (m) => m.loaf50 <= 2 && m.compositor.descartados / Math.max(1, m.compositor.quadros) <= 0.05;
     const fase = async (fn) => {
@@ -285,7 +285,7 @@ async function comTrace(navegador, page, fn) {
     const r = await page.evaluate(() => ({
       y: gsap.getProperty(".hero__wordmark", "y"),
       op: getComputedStyle(document.querySelector(".hero__wordmark-text")).opacity,
-      onda: gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda).length,
+      onda: gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda && t !== window.motion?.debug.ato4?.onda).length,
     }));
     ok(loops.length === 0 && r.y === 0 && r.onda === 0 && r.op === "1",
       `reduced: ${loops.length} loops rodando, parallax y=${r.y}, ${r.onda} tweens GSAP, wordmark opacity ${r.op}`);
@@ -314,7 +314,7 @@ async function comTrace(navegador, page, fn) {
     // fora da tela (data-loop no #ato-1) e aba escondida
     await page.evaluate(() => motion.scrollTo("#ato-3", { imediato: true })); await page.waitForTimeout(500);
     const fora = (await infinitas(page)).filter(([nome]) => /^hero-/.test(nome)); // os do ACT II podem estar na margem
-    const ondaFora = await page.evaluate(() => gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda).every((t) => t.paused()));
+    const ondaFora = await page.evaluate(() => gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda && t !== window.motion?.debug.ato4?.onda).every((t) => t.paused()));
     ok(fora.every(([, st]) => st === "paused") && ondaFora, `hero fora da tela: loops CSS e ondulação GSAP pausados`);
     await ctx.close();
   }
@@ -328,7 +328,7 @@ async function comTrace(navegador, page, fn) {
       return {
         fumaca: nomes.filter((n) => /^hero-smoke/.test(n)).length,
         bolhas: nomes.filter((n) => n === "hero-bubble-rise").length,
-        onda: gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda).length,
+        onda: gsap.globalTimeline.getChildren(true, true, false).filter((t) => t.vars.repeat === -1 && t !== window.motion?.debug.ato2?.onda && t !== window.motion?.debug.ato4?.onda).length,
         blur: [...document.styleSheets].length && getComputedStyle(document.querySelector(".hero__wordmark-text")).animationName,
       };
     });

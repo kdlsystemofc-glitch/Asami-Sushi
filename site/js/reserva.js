@@ -26,6 +26,7 @@ if (form) {
   botao.type = "submit";
   botao.className = link.className;
   botao.textContent = rotulo;
+  botao.dataset.rotulo = rotulo; // 2ª camada de texto da varredura do hover (css/reserve.css)
   link.replaceWith(botao);
   form.action = waBase;
   form.noValidate = true; // validação própria, mensagens em PT-BR
@@ -68,7 +69,8 @@ if (form) {
   // ── campos numéricos: só dígitos ──
   for (const el of [hh, mm, adultos, criancas]) {
     el.addEventListener("input", () => { el.value = el.value.replace(/\D/g, "").slice(0, 2); });
-    el.addEventListener("blur", () => { if (el.value !== "") el.value = pad(Number(el.value)); });
+    // o zero à esquerda não dispara "input": o reflexo é atualizado aqui (antes ficava "1" × "01")
+    el.addEventListener("blur", () => { if (el.value !== "") { el.value = pad(Number(el.value)); espelhar(); } });
   }
 
   // ── reflexo: a réplica mostra os mesmos valores ──
@@ -133,5 +135,7 @@ if (form) {
       `Olá! Gostaria de reservar uma mesa para o dia ${pad(r.data.getDate())}/${pad(r.data.getMonth() + 1)} ` +
       `às ${pad(r.h)}:${pad(r.min)}, ${plural(r.a, "adulto", "adultos")} e ${plural(r.c, "criança", "crianças")}.`;
     window.open(waLink(msg), "_blank", "noopener");
+    // depois de abrir: a ondulação de confirmação (js/motion/reserva.js) nunca atrasa o WhatsApp
+    form.dispatchEvent(new CustomEvent("reserva:enviada", { detail: { botao } }));
   });
 }

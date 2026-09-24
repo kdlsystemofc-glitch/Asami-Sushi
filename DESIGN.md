@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D39). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D40). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -911,16 +911,99 @@ Teste e medição: `scripts/test-motion-ato3.mjs`, com saída em `screenshots/mo
 **Lighthouse mobile** (5 execuções, mediana, as duas versões com LF): `1267f2a` 83 / LCP 3,6 s;
 com o ACT III 85 / LCP 3,6 s.
 
-### Reserva
-| Elemento | Animação |
+### Reserva — construído (etapa "motion ato 4", 24/09/2026)
+
+**Prioridade absoluta: nenhuma animação atrapalha preencher e enviar o formulário (D40).**
+- **Sem bloqueio:** nenhum `inert`, `pointer-events: none` ou atraso nos campos.
+- **Interação vence:** qualquer foco, clique, tecla ou digitação no formulário conclui a entrada e
+  cancela o contador na hora.
+- **O `js/reserva.js` continua dono dos dados.** O motion não toca em `value`, no que o leitor
+  de tela lê nem no reflexo.
+- **Duas linhas novas nele:**
+  - `data-rotulo` no botão, para a varredura;
+  - o evento `reserva:enviada`, disparado depois do `window.open`.
+- **Bug do estático corrigido:** o zero à esquerda aplicado ao sair do campo ("1" → "01") não
+  chegava ao reflexo, que ficava com "1". Agora o `blur` também espelha.
+
+Arquivos:
+- `js/motion/reserva.js`;
+- `css/reserve-motion.css`, pedido junto com o motion (D31);
+- no `reserve.css`: foco suave, varredura do botão, wrapper dos números e wrapper da bruma.
+
+Teste e medição: `scripts/test-motion-ato4.mjs`, com saída em `screenshots/motion/ato4-*`.
+
+**Estrutura — um efeito de movimento por elemento:**
+
+| Elemento | Efeito | Propriedade |
+|---|---|---|
+| `.reserve__water` | parallax ×.10 | `transform` |
+| filtro `#water` (novo estágio `feDisplacementMap`) | ondulação | atributos `scale` / `baseFrequency` |
+| `.reserve__mist-wrap` (novo) | parallax ×.06 (+ screen quando existe; D36) | `transform` |
+| `.reserve__mist` | deriva horizontal | `translate` |
+| `.act-label` | entrada | `transform` + `opacity` |
+| `.reserve__slot` (wrapper externo do card) | entrada do card | só `transform` (ver abaixo) |
+| `.reserve__card` | `backdrop-filter` (estático, nunca animado) | — |
+| `.reserve__reflection` | entrada do reflexo | `opacity` |
+| `.num-campo` (novo, 1 por campo numérico) e `.select` | anel de foco (`::before`) | `opacity` |
+| `.num-contador` (criado pelo JS, `aria-hidden`) | contador | `transform` das faixas |
+| `.btn-wa::before` / `::after` | varredura do hover | `transform` / `clip-path` |
+| `.reserve__onda` (criado pelo JS, `aria-hidden`) | confirmação | `transform` + `opacity` |
+
+**Card: só `translate` (item 4 do pedido, medido).**
+- **Opacidade no wrapper não serve:** opacity num ancestral do `backdrop-filter` faz dele a raiz
+  do backdrop. O blur do card deixa de enxergar a água e volta de uma vez quando a opacidade
+  chega a 1.
+- **Medido com opacity .99:** 2,8 % dos pixels do card mudam mais de 6/255, contra 0,46 % com
+  `translate` (ruído).
+- **O card entra só com `translateY(24px) → 0`**, em 900 ms `--ease-out`, sem fade.
+- **Alternativa medida, não aplicada:** opacity no próprio card (o elemento com o
+  `backdrop-filter`) não salta (0,48 %).
+- **Cintilação, quadros de 30 ms no fim da entrada:** no máximo 0,41 % dos pixels mudam entre
+  quadros, e 0,006 % entre o último quadro e os estilos limpos.
+
+| Elemento | Como ficou |
 |---|---|
-| Água | Ripple contínuo (`baseFrequency` 0,008→0,014), ciclo de 9 s |
-| Card | Entra em `translateY(24px)` + `blur(6px)` até o repouso, 900 ms |
-| Reflexo | Entra 250 ms depois, `opacity 0 → .5` |
-| Campos | Foco: borda de `--border-hud` para `--chrome-100` + `box-shadow: 0 0 0 3px rgb(255 255 255/.06)`, 180 ms |
-| Valores numéricos | Os campos agora são editáveis (D9), então **não** há contador de entrada: o valor inicial já aparece posto. O efeito `steps()` fica só no campo `PESSOAS`, ao usar as setas — o dígito desliza 1 → 2, 160 ms |
-| Botão WhatsApp | Hover: fundo varre da esquerda (`::before` com `scaleX(0→1)`, `transform-origin:left`), texto inverte para `--ink-900`, 300 ms. Foco visível: `outline: 2px solid var(--amber-400); outline-offset: 3px` |
-| Confirmação | Ao enviar, ondulação circular na água partindo do botão, 600 ms (`radial-gradient` animado), enquanto a aba do WhatsApp abre |
+| Água | Novo estágio no fim do `#water`: `feDisplacementMap` sobre as cristas, com um ruído próprio. Anima o deslocamento 0 → 16 e o `baseFrequency` 0,008 → 0,014, ciclo de 9 s (4,5 + 4,5). **Fase 0 = deslocamento 0 = estático aprovado.** Só `full` + `high` + ≥ 768 px (D18); congela durante a rolagem (D32); grupo exclusivo "turbulencia" (D34): nunca junto com o hero nem com o ACT II (verificado em 14 posições) |
+| Bruma | Deriva de 4 % em 60 s, `alternate`; pausa durante a rolagem por classe no próprio elemento (D39). **low: estática** |
+| Rótulo | `translateY(16px)` + fade, 600 ms, a 35 % de visibilidade (como nos atos anteriores) |
+| Card | Ver acima |
+| Reflexo | 250 ms depois do card, `opacity 0 → .62` (o valor estático, lido do CSS), 900 ms. Continua `inert` e `aria-hidden`, espelhando os campos |
+| Contador | A partir de 300 ms, por 500 ms: uma camada `aria-hidden` sobre cada campo numérico. Cada dígito rola por uma faixa de 10 algarismos até o valor do campo, com `steps(9)`, e o texto do input fica transparente só nesse intervalo. **Nunca altera o `value`**, o que o leitor de tela lê nem o reflexo. Cancela na hora com qualquer interação no formulário. Toca uma vez por carregamento da página (a entrada é `once`). Termina removendo a camada: idêntico ao estático |
+| Foco dos campos | A borda vai a `--chrome-100` em 180 ms e um anel (`box-shadow` fixo num `::before`) acende por `opacity` em 180 ms. O contorno âmbar de `:focus-visible` não tem transição: aparece na hora |
+| Botão WhatsApp | Só com `(hover: hover)`: `::before` (`--chrome-100`) cresce da esquerda com `scaleX` e `::after` (o mesmo rótulo, em `--ink-900`, de `data-rotulo`) é recortado pela mesma frente (`clip-path: inset(0 X 0 0)`), com mesmo tempo e mesma curva, 300 ms `--ease-soft`. Cada letra fica clara sobre escuro ou escura sobre claro. **Pior quadro da varredura: 10,6:1**, igual ao botão em repouso; no fim, 15,8:1. Foco por teclado: só o contorno âmbar. Sem hover real, fica o hover simples de antes |
+| Confirmação | Só depois de um envio válido: `reserva.js` abre o WhatsApp e só então avisa (`reserva:enviada`). Um círculo com borda parte do centro do botão, sob o card e sobre a água: `scale` 1 → ~20 e `opacity` .8 → 0, 600 ms. Erro de validação: nada além do estado de erro que já existia. `reduced`/`paused`: sem ondulação |
+| Parallax | Água ×.10, bruma ×.06. Desligado em `reduced`, `paused` e `low` |
+
+**Formulário durante a animação** (testado, `test-motion-ato4.mjs`):
+- **Preencher e enviar com a entrada e o contador rodando:** o `wa.me` sai exato.
+- **Digitar "21" no meio do contador:** o valor permanece e o contador some na hora.
+- **Tab até o 1º campo antes do fim da entrada:** o campo fica focado e visível, com o contorno
+  âmbar.
+- **Erro de validação:** sem ondulação e sem abrir nada.
+- **Envio válido:** abre o link e dispara a ondulação.
+- **Reflexo:** espelha os valores durante e depois.
+
+**Contraste:**
+- **Botão:** pior quadro da varredura 10,6:1, igual ao botão em repouso no site aprovado; no fim,
+  15,8:1.
+- **Legendas e nota:** contraste nominal 5,56:1 e 7,42:1 (cor do texto × fundo real medido). A
+  métrica por pixel é igual à do estático aprovado; em texto de 11 px ela subestima, porque o
+  miolo das letras quase não atinge a cor exata.
+
+**Estado final = estático aprovado** (`54ca0c2`):
+- **1440:** 0,004 %.
+- **390:** 0,000 %.
+- **Reduced:** idêntico, 0,000 %.
+
+**Custo** (GPU Intel UHD 770; 10 s parado no ACT IV e rolagem ACT III → fim da página):
+
+| Caso | Parado | Rolando |
+|---|---|---|
+| high | 0 descartados | 6,0 % (controle, site aprovado: 8,3 %) |
+| low | 0 | 1,0 % |
+| celular 390 | 0 | 0,2 % |
+
+Tarefas longas: no máximo 2 isoladas, sem script.
 
 ### Rodapé
 | Elemento | Animação |
@@ -983,7 +1066,7 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II e D37–D39 no motion do ACT III. Cada uma
+inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II, D37–D39 no motion do ACT III e D40 no motion do ACT IV. Cada uma
 vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
@@ -1045,6 +1128,7 @@ o efeito que já foi aplicado nas seções acima.
 | **D37** ✅ | **Máscara em quem não escala.** No ACT III a máscara do salão ficou no wrapper do parallax; entrada e zoom de rolagem escalam wrappers internos, e a imagem com filtro não é refeita. A escala do zoom é escrita direto no `style` (o `quickSetter` do GSAP não aceita o atalho `scale`). | §5 Sanctum |
 | **D38** ✅ | **Espaçamento de letras sem animar `letter-spacing`:** cópia `aria-hidden` com as letras nas posições medidas do texto original (com kerning), convergindo por `translateX`; o original, um nó só, fica transparente e volta intacto no fim. Sem JS e em "low": não existe. | §5 Sanctum |
 | **D39** ✅ | **Loops caros pausam durante a rolagem por classe no próprio elemento**, nunca por atributo no `<html>`, que força recálculo de estilo da página inteira a cada gesto. O núcleo ganhou `motion.entrada()` e `motion.abaixo()` (padrão D35 compartilhado pelos atos). | §5.0, §5 Sanctum |
+| **D40** ✅ | **O formulário vence qualquer animação.** Foco, clique, tecla ou digitação concluem a entrada e cancelam o contador na hora; o contador é uma camada visual `aria-hidden` que nunca toca o `value`; a confirmação só toca depois do `window.open`. O card entra só por `translate` no wrapper: opacity num ancestral do `backdrop-filter` faz o blur perder o fundo e voltar de uma vez (medido). | §5 Reserva |
 
 ---
 
