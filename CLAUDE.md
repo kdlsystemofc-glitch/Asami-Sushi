@@ -9,3 +9,4 @@
   em grid de 3, sombras padrão. Se o design mostra outra coisa, seguir o design.
 - Ao terminar cada seção: screenshot em 1440, 1024, 768 e 390px, comparar com
   a referência, listar diferenças e corrigir (máx. 3 iterações).
+- Ao fim de cada etapa: commit e push, com o mesmo método, sem persistir token.
