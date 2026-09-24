@@ -44,7 +44,7 @@
 }
 
 /* ── 2 · névoa ──────────────────────────────────────────── */
-.hero__smoke { position: absolute; inset: 0; z-index: -1; }
+.hero__smoke { position: absolute; inset: 0; z-index: -1; mix-blend-mode: var(--plate-blend); }
 
 .hero__smoke-layer {
   position: absolute;
@@ -324,14 +324,14 @@
 
 .hz-pill--toggle { grid-area: toggle; padding-inline-end: calc(var(--ctl-size) * .19); }
 
-/* ── 16 · grão ──────────────────────────────────────────── */
-.hero::after {
-  content: "";
+/* ── saída: funde a base do hero em --ink-900 para emendar com o ACT II ── */
+.hero__exit {
   position: absolute;
-  inset: 0;
-  z-index: 30;
+  inset: auto 0 0;
+  height: 22%;
+  z-index: 6;
   pointer-events: none;
-  opacity: .04;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background: linear-gradient(180deg, transparent, var(--ink-900));
 }
+
+/* 16 · grão: global, em base.css (.section::after), para não marcar emenda entre atos */

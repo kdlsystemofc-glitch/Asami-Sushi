@@ -146,8 +146,8 @@ Medida = altura de maiúscula (cap-height) no mockup; `font-size ≈ cap ÷ 0,72
 |---|---|---|---|---|---|---|---|
 | `--fs-wordmark` | `ASAMI` do hero | **96** (remedido) | 12,5 | 180 px | mobile `clamp(4rem, 24.4vw, 22rem)` · ≥768 `clamp(4rem, 17.9vw, 22rem)` ✱ | `.045em` ✱ | `1` + `text-box: trim-both cap alphabetic` |
 | `--fs-display` | `SÃO BERNARDO DO CAMPO // CENTRO` | 15 | 2,71 | 39 px | `clamp(1.25rem, 2.7vw, 2.5rem)` | `.02em` | `1.1` |
-| `--fs-title` | `THE FEAST OF ABUNDANCE` | 10,5 | 1,90 | 27 px | `clamp(1.125rem, 1.9vw, 1.75rem)` | `.01em` | `1.14` |
-| `--fs-eyebrow` | `ACT II` | 8 | 1,45 | 21 px | `clamp(.75rem, 1.45vw, 1.25rem)` | `.08em` | `1.2` |
+| `--fs-title` | `THE FEAST OF ABUNDANCE` | **9,5** ✱ | 1,78 | 25,6 px | `clamp(1.125rem, 1.78vw, 1.6rem)` ✱ | `.01em` | `1.2` ✱ |
+| `--fs-eyebrow` | *(não usado no rótulo de ato)* ✱ | 8 | 1,45 | 21 px | `clamp(.75rem, 1.45vw, 1.25rem)` | `.08em` | `1.2` |
 | `--fs-logo` | `ASAMI` da nav | 19 | 3,43 | 49 px | `clamp(1.375rem, 2.2vw, 1.75rem)` ✔︎ | `.03em` ✱ | `1` |
 | `--fs-logo-sub` | `SUSHI` | 8 | 1,45 | 21 px | `clamp(.5rem, .8vw, .7rem)` ✔︎ | `.48em` | `1` |
 | `--fs-hud` | `DEPTH 0.4MM / TENSION / MA` | 6,5 | 1,17 | 17 px | `clamp(.625rem, 1.17vw, .875rem)` ✔︎ | `.14em` | `1.3` |
@@ -163,6 +163,12 @@ de 1440 px está confirmada (D14), então os valores da coluna `@1440` são defi
 wordmark é 96 px@768 (não 135) e o desenho é de largura normal, não estendido — a 1440 px a
 caixa da maiúscula fica em y 426–603 contra 424–604 do mockup. O tracking do logo da nav no
 mockup é justo (~.03em), não .16em.
+
+✱ **Recalibrado no ACT II (24/09/2026):** as três linhas do rótulo de ato (`ACT II`,
+`THE FEAST OF ABUNDANCE`, `SPATIAL RODÍZIO`) têm o **mesmo** cap (9,5 px@768), mesma fonte e
+mesmo peso, em largura normal. O rótulo inteiro usa `--fs-title` em Archivo `400 / wdth 100`;
+`ACT I…IV` não é mais eyebrow menor. A 1440 px, `THE FEAST OF ABUNDANCE` mede 354 px contra
+350 px no mockup.
 
 Pesos: wordmark `500 / wdth 100` ✱ (`--fw-wordmark`, `--wdth-wordmark`); display e title `400 / wdth 112`; eyebrow, hud e label
 `500 / wdth 100`. Todo texto da peça é caixa-alta — escrever em caixa normal no HTML e
@@ -283,7 +289,7 @@ Legenda da coluna **Origem**:
 | 6 | Tábua direita | Ardósia com sashimi de salmão e atum, wasabi | `plate-board-right` com `screen`. Se o parallax exigir camada separada, recortar com `rembg` | PLATE |
 | 7 | Sombra de contato | Mancha escura difusa sob cada tábua | `::after` com `radial-gradient(ellipse, #000 0%, transparent 70%)` + `filter:blur(12px)` | CSS |
 | 8 | Callouts | Linhas-guia finas, colchetes e micro-rótulos em volta da comida | `svg` inline com `line`/`path` em `--line-hud` a 1 px; os **rótulos ficam em `span` HTML** posicionados por cima, para continuarem texto real. Cor `--text-mid` (D19), todos `aria-hidden="true"` (D6) | SVG+TEXTO |
-| 9 | Micro-label do topo | Rótulo com leader line horizontal | Era `STAGE // 01 TO 18` no mockup — número inventado, **removido** (D6). Entra `RODÍZIO // À LA CARTE`. `span` + `span` de 1 px que cresce na entrada | TEXTO+CSS |
+| 9 | Micro-label do topo | Rótulo com leader line horizontal | Era `STAGE // 01 TO 18` no mockup — o CLIENTE.md não tem "18 etapas" (o único "18" é o eixo do gráfico de horário de pico). **Removido** (D6). Entra `RODÍZIO // À LA CARTE`. `span` + `span` de 1 px que cresce na entrada | TEXTO+CSS |
 | 10 | Espelho d'água | Reflexo ondulado das tábuas no rodapé da seção | Mesmo padrão do hero: clone `aria-hidden` + `scaleY(-1)` + máscara + `feDisplacementMap` | CSS+SVG |
 
 #### Copy dos callouts (D6)
@@ -306,6 +312,22 @@ linha-guia ficar visualmente órfã, ela permanece como traço puro, **sem rótu
 é decoração, o texto é que precisava ser verdadeiro.
 
 Todos os callouts levam `aria-hidden="true"` e cor `--text-mid`.
+
+#### Notas de implementação (construção do ACT II)
+
+- **Palco de proporção fixa** (`.rodizio__stage`): 1440×662 no desktop, 390×560 no mobile.
+  Tábuas, linhas-guia (SVG com `viewBox` nas mesmas coordenadas) e rótulos HTML usam o mesmo
+  sistema, então nada se desalinha em outra largura. Em mobile o SVG é outro (`.callouts--narrow`)
+  e o colchete `SUSHI` sai.
+- **Screen e stacking context.** `mix-blend-mode: screen` só alcança o fundo até o stacking
+  context mais próximo. Por isso o palco é centralizado **sem `transform`**, as camadas de plate
+  ficam num grupo `.rodizio__screen` em `screen`, e a sombra de contato (camada 7) fica **fora**
+  desse grupo, senão some. A mesma regra vale para `.hero__smoke`.
+- **Emenda entre atos:** o hero termina num degradê de saída para `--ink-900` (`.hero__exit`),
+  o ACT II começa em `--ink-900`, o vapor nasce transparente no topo e o grão (camada 16 do
+  hero) passou a ser global (`.section::after`).
+- **Sem asset para o camarão/lula flutuante** do centro do mockup: o espaço fica com vapor e
+  faíscas.
 
 ---
 

@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/rodizio.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -160,6 +161,9 @@
       <!-- 12 · progresso de scroll (decorativo) -->
       <div class="progress" aria-hidden="true" style="--progress:0"><span class="progress__dot"></span></div>
 
+      <!-- saída em --ink-900: emenda com o ACT II -->
+      <div class="hero__exit" aria-hidden="true"></div>
+
       <!-- 13–15 · barra inferior -->
       <div class="hero__bar">
         <div class="player" role="group" aria-label="Controles da página">
@@ -181,6 +185,122 @@
           <span>432Hz</span>
           <span class="hz-pill__knob"></span>
         </span>
+      </div>
+    </section>
+
+    <!-- ═══ ACT II — THE FEAST OF ABUNDANCE ══════════════════ -->
+    <section class="section rodizio" id="ato-2" aria-labelledby="ato-2-titulo">
+
+      <!-- 1 · fundo + água -->
+      <div class="rodizio__bg" aria-hidden="true"></div>
+
+      <!-- 4 · rótulo -->
+      <div class="grid rodizio__head">
+        <div class="act-label col-label">
+          <p class="act-label__eyebrow">Act II</p>
+          <h2 class="act-label__title" id="ato-2-titulo">
+            <span>The Feast of Abundance</span>
+            <span>Spatial Rodízio</span>
+          </h2>
+        </div>
+      </div>
+
+      <!-- palco: proporção fixa, tudo em % dele (tábuas, linhas-guia e rótulos alinhados) -->
+      <div class="rodizio__stage">
+
+        <!-- 7 · sombras de contato (fora do grupo em screen) -->
+        <div class="rodizio__shadows" aria-hidden="true">
+          <div class="board board--left"></div>
+          <div class="board board--right"></div>
+        </div>
+
+        <!-- camadas de plate: grupo em screen sobre o fundo da seção -->
+        <div class="rodizio__screen">
+        <!-- 2 · vapor: um plate, espelhado -->
+        <div class="rodizio__steam" aria-hidden="true">
+          <img class="plate rodizio__steam-layer rodizio__steam-layer--a"
+               src="assets/plate-smoke-thin-800.webp" alt="" loading="lazy" decoding="async">
+          <img class="plate rodizio__steam-layer rodizio__steam-layer--b"
+               src="assets/plate-smoke-thin-800.webp" alt="" loading="lazy" decoding="async">
+          <img class="plate rodizio__steam-layer rodizio__steam-layer--c"
+               src="assets/plate-smoke-thin-800.webp" alt="" loading="lazy" decoding="async">
+        </div>
+
+        <!-- 3 · faíscas -->
+        <div class="rodizio__embers" aria-hidden="true">
+          <i style="--x:36.81%;--y:24.17%"></i>
+          <i style="--x:39.03%;--y:29.61%"></i>
+          <i style="--x:41.88%;--y:22.66%"></i>
+          <i style="--x:45.49%;--y:18.43%"></i>
+          <i style="--x:48.75%;--y:32.02%"></i>
+          <i style="--x:51.81%;--y:21.45%"></i>
+          <i style="--x:52.78%;--y:48.64%"></i>
+          <i style="--x:43.19%;--y:59.21%"></i>
+          <i style="--x:37.64%;--y:43.20%"></i>
+          <i style="--x:76.81%;--y:24.17%"></i>
+          <i style="--x:75.69%;--y:29.00%"></i>
+          <i style="--x:40.62%;--y:51.06%"></i>
+          <i style="--x:50.56%;--y:39.58%"></i>
+        </div>
+
+        <!-- 5–7 · tábuas -->
+        <div class="rodizio__boards" aria-hidden="true">
+          <!-- TODO D22: plate-board-left é provisório; o cliente vai substituir -->
+          <div class="board board--left">
+            <img class="plate" src="assets/plate-board-left-800.webp"
+                 srcset="assets/plate-board-left-800.webp 800w, assets/plate-board-left-1600.webp 1600w"
+                 sizes="(min-width: 48rem) 33vw, 72vw" alt="" loading="lazy" decoding="async">
+          </div>
+          <div class="board board--right">
+            <img class="plate" src="assets/plate-board-right-800.webp"
+                 srcset="assets/plate-board-right-800.webp 800w, assets/plate-board-right-1600.webp 1600w"
+                 sizes="(min-width: 48rem) 42vw, 90vw" alt="" loading="lazy" decoding="async">
+          </div>
+        </div>
+
+        <!-- 10 · espelho d'água (clone estático + blur) -->
+        <div class="rodizio__reflection" aria-hidden="true">
+          <div class="board board--left"><img class="plate" src="assets/plate-board-left-800.webp" alt="" loading="lazy" decoding="async"></div>
+          <div class="board board--right"><img class="plate" src="assets/plate-board-right-800.webp" alt="" loading="lazy" decoding="async"></div>
+        </div>
+        </div>
+
+        <!-- 8 · linhas-guia (SVG) — desktop: coordenadas do layout-mãe 1440×662 -->
+        <svg class="callouts callouts--wide" viewBox="0 0 1440 662" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <!-- tábua esquerda: só traço, sem rótulo (D22) -->
+          <path d="M355 238H250V495H320"/>
+          <path d="M330 518H505L532 490"/>
+          <circle cx="330" cy="518" r="2"/>
+          <!-- preço, sob a tábua direita -->
+          <path d="M566 556H762V516"/>
+          <circle cx="566" cy="556" r="2"/>
+          <!-- sashimi -->
+          <path d="M1030 420L1062 465H1140"/>
+          <circle cx="1030" cy="420" r="2"/>
+          <!-- colchete direito -->
+          <path d="M1070 175H1210V405H1135"/>
+        </svg>
+
+        <!-- 8 · linhas-guia — mobile: palco 390×560 -->
+        <svg class="callouts callouts--narrow" viewBox="0 0 390 560" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path d="M268 214L300 252H352"/>
+          <circle cx="268" cy="214" r="2"/>
+          <path d="M60 500H230V424"/>
+          <circle cx="60" cy="500" r="2"/>
+        </svg>
+
+        <!-- 8 · rótulos dos callouts: texto HTML real, decorativo (D6) -->
+        <div class="callout-labels" aria-hidden="true">
+          <span class="callout-label callout-label--price">R$ 80–160 por pessoa</span>
+          <span class="callout-label callout-label--sashimi">Sashimi</span>
+          <span class="callout-label callout-label--sushi">Sushi</span>
+        </div>
+
+        <!-- 9 · micro-label do topo (D6: sem "01 TO 18") -->
+        <p class="stage-tag" aria-hidden="true">
+          <span>Rodízio // À la carte</span>
+          <span class="stage-tag__line"></span>
+        </p>
       </div>
     </section>
 

@@ -30,6 +30,18 @@ body {
   isolation: isolate;
 }
 
+/* §4/01 camada 16 · grão: o mesmo em todos os atos, para a emenda não aparecer */
+.section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: .04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
@@ -98,21 +110,17 @@ body {
   gap: var(--sp-1);
   color: var(--text-base);
 }
-.act-label__eyebrow {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--ls-eyebrow);
-  line-height: var(--lh-eyebrow);
-}
+/* No mockup, ACT II e o título têm o mesmo corpo e desenho (cap 9,5 px@768). */
+.act-label__eyebrow,
 .act-label__title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-variation-settings: "wdth" 112;
+  font-variation-settings: "wdth" 100;
   font-size: var(--fs-title);
   letter-spacing: var(--ls-title);
   line-height: var(--lh-title);
 }
+.act-label { gap: 0; }
 
 .svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
