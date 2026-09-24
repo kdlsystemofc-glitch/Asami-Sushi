@@ -3,7 +3,8 @@
 // Aqui: a ondulação da grade do piso e do reflexo, animando o baseFrequency dos feTurbulence
 // #wave e #ripple (ciclo de 12 s, reflexo defasado em 400 ms). É a camada mais cara do hero:
 // só roda no modo "full", com quality "high" e em telas ≥ 768 px (D18, D27). Pausa (⏸, aba
-// escondida) vem da timeline global; fora da tela, de motion.loop.
+// escondida) vem da timeline global; fora da tela, de motion.loop — no grupo "turbulencia",
+// que só deixa rodar a ondulação da seção mais visível (D34: hero ou ACT II, nunca os dois).
 (() => {
   const { motion, gsap } = window;
   const hero = document.getElementById("ato-1");
@@ -20,29 +21,20 @@
 
     const originais = ONDAS.map(([t]) => t.getAttribute("baseFrequency"));
 
-    // Durante a rolagem o baseFrequency não é reescrito: medido (test:motion), mudar o ruído
-    // enquanto a camada filtrada se move re-rasteriza o filtro a cada quadro e derrubava quadros
-    // (18 descartados e picos de 140–190 ms em 10 s rolando). Parado, o custo é nulo.
-    let rolando = false;
-    let parou = 0;
-    const aoRolar = () => { rolando = true; clearTimeout(parou); parou = setTimeout(() => { rolando = false; }, 200); };
-    addEventListener("scroll", aoRolar, { passive: true });
+    // Durante a rolagem o baseFrequency não é reescrito (D32): mudar o ruído enquanto a camada
+    // filtrada se move re-rasteriza o filtro a cada quadro e derrubava quadros.
     ONDAS.forEach(([turb, [ax, ay], defasagem], i) => {
       const [bx, by] = originais[i].split(/\s+/).map(Number);
       const fase = { p: 0 };
-      const escrever = () => !rolando &&
+      const escrever = () => !m.rolando &&
         turb.setAttribute("baseFrequency", `${(bx * (1 + ax * fase.p)).toFixed(5)} ${(by * (1 + ay * fase.p)).toFixed(5)}`);
       // 6 s de ida + 6 s de volta = ciclo de 12 s; fase 0 = valores estáticos do HTML
       m.loop(hero, gsap.to(fase, {
         p: 1, duration: 6, ease: "sine.inOut", yoyo: true, repeat: -1, delay: defasagem, onUpdate: escrever,
-      }));
+      }), { grupo: "turbulencia" });
     });
 
-    // o gsap.context desfaz os tweens, mas não o atributo que eles escreveram nem o listener
-    return () => {
-      removeEventListener("scroll", aoRolar);
-      clearTimeout(parou);
-      ONDAS.forEach(([t], i) => t.setAttribute("baseFrequency", originais[i]));
-    };
+    // o gsap.context desfaz os tweens, mas não o atributo que eles escreveram
+    return () => ONDAS.forEach(([t], i) => t.setAttribute("baseFrequency", originais[i]));
   });
 })();

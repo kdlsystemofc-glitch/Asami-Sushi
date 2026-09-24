@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D33). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D36). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -554,7 +554,9 @@ global) e volta ao reaparecer, salvo se o visitante tiver pausado.
 | `motion.quality` | `"high"` ou `"low"` (D27) |
 | `motion.on("mode", fn)` | `fn(mode, anterior)` a cada troca; devolve a função que cancela |
 | `motion.register(setup)` | ver abaixo; devolve a função que desregistra |
-| `motion.loop(el, anim)` | animação GSAP contínua: pausada com `el` fora da tela; em `reduced` é morta e devolve `null` |
+| `motion.loop(el, anim, { grupo })` | animação GSAP contínua: pausada com `el` fora da tela; em `reduced` é morta e devolve `null`. Num `grupo` (ex.: `"turbulencia"`) só roda a do elemento mais visível (D34) |
+| `motion.rolando` | `true` enquanto a página rola, até 200 ms depois do último scroll. Quem anima um filtro caro não reescreve durante a rolagem (D32) |
+| `motion.debug` | gancho de inspeção dos testes: cada seção expõe suas timelines (`motion.debug.ato2.entrada` etc.) |
 | `motion.scrollTo(alvo, { imediato })` | rola até elemento/seletor com offset zero (Lenis se ativo, senão nativo) |
 | `motion.scan()` | relê `data-reveal`, `data-parallax` e `data-loop` (conteúdo inserido depois) |
 | `motion.ease`, `motion.easeSoft`, `motion.dur("--t-mid")` | tokens já convertidos para o GSAP |
@@ -734,17 +736,85 @@ em 0,2 s e foram tiradas do caminho crítico (D31):
 - os loops no CSS bloqueante;
 - um arquivo externo para o carregador.
 
-### Rodízio
-| Elemento | Animação |
+### Rodízio — construído (etapa "motion ato 2", 24/09/2026)
+
+Arquivos:
+- `js/motion/rodizio.js`: entradas, callouts e ondulação;
+- `css/rodizio-motion.css`: loops e hover, pedido junto com o motion (D31);
+- `data-parallax` e `data-loop` no HTML;
+- dois ajustes no `rodizio.css`: o grupo de mescla e o wrapper do reflexo.
+
+Teste e medição: `scripts/test-motion-ato2.mjs`, com saída em `screenshots/motion/ato2-*`.
+
+**Estrutura — um efeito de movimento por elemento:**
+
+| Elemento | Efeito | Propriedade |
+|---|---|---|
+| `.rodizio__boards`, `.rodizio__shadows` | parallax ×.12 | `transform` (core.js) |
+| `.board` (tábua) | entrada | `transform` (GSAP) |
+| `.board` (tábua) | hover | `scale` (propriedade individual, separada da entrada) |
+| `.board img` | flutuação | `translate` |
+| `.rodizio__steam` | parallax ×.06 | `transform` |
+| `.rodizio__steam-layer` | loop do vapor | `translate` + `opacity` |
+| `.rodizio__reflection-wrap` (novo) | parallax ×.20 + fade da entrada | `transform` / `opacity` |
+| `.rodizio__reflection` | espelho (estático) + ondulação | `scaleY(-1)` / `filter` |
+
+**Mescla.**
+- **Wrapper transformado dentro do grupo em screen:** vira stacking context, e as tábuas passam
+  a mesclar só dentro dele. Por isso o `.rodizio__boards` também faz `mix-blend-mode: screen`.
+  O screen é associativo, então o resultado é o mesmo.
+- **Só quando há parallax** (`html.js-motion[data-quality="high"]`): isolar o grupo muda a
+  reamostragem das imagens (1,7 % dos pixels no retrato), e sem parallax ele não é necessário.
+- **`rotateX` com `perspective` na própria tábua em screen não quebra a mescla.** Verificado em
+  cada quadro-chave da entrada: pixels "preto de plate" (todos os canais ≤ 3; o fundo nunca
+  desce de `#040507` e os plates têm o preto esmagado em 0) nas tábuas = **0** em 1440 e 390.
+
+| Elemento | Como ficou |
 |---|---|
-| Rótulo | Entra em `translateY(16px)` + fade, 600 ms, ao atingir 35 % de visibilidade |
-| Tábuas | Sobem de `translateY(40px) rotateX(6deg)` até o repouso, 1200 ms, com 180 ms de defasagem entre esquerda e direita |
-| Flutuação contínua | Cada tábua em `translateY(±6px)`, 9 s e 11 s (dessincronizadas) |
-| Vapor | Loop vertical de 18 s + `opacity` pulsante |
-| Faíscas | `ember`: sobe 60 px, `opacity 0→1→0`, 3–5 s, delays aleatórios |
-| Callouts | Linhas-guia desenhadas com `stroke-dasharray`/`stroke-dashoffset` 0→100 % em 700 ms; o rótulo entra 200 ms depois. Defasagem de 120 ms entre callouts |
-| Parallax | Tábuas `× .12`, fumaça `× .06`, reflexo `× .20` |
-| Hover na tábua | `scale(1.02)` + realce do próprio callout (linha passa a `--chrome-100`), 220 ms |
+| Rótulo | `translateY(16px)` + fade, 600 ms `--ease-out`, uma vez, a 35 % de visibilidade |
+| Tábuas | `translateY(40px) rotateX(6deg)` → repouso, 1200 ms `--ease-out`, 180 ms entre esquerda e direita. **Sem fade**: com `opacity 0` desde a montagem o Chrome não rasteriza as tábuas (imagens grandes em screen), e o 1º quadro da entrada rasterizava tudo de uma vez (~400 ms medidos). Sombras e reflexo entram por `opacity` **no container** (o filho de um elemento com `blur` obrigaria a refazer o filtro a cada quadro) |
+| Flutuação | `translate` ±6 px, 9 s e 11 s (defasadas), `ease-in-out infinite alternate`, só depois da entrada (`.is-flutuando`) |
+| Vapor | 18 s, sobe 7 % e volta, `opacity` a 55 % no meio. 2 camadas; **low: 1** |
+| Faíscas | 12 de 13 (a 13ª fica na pose); **low: 5**. Sobem 60 px sumindo e renascem 16 px abaixo; 3–5 s com fases fixas por elemento (sem `Math.random`) |
+| Callouts | Linha desenhada por `stroke-dashoffset` (comprimento → 0) em 700 ms `--ease-soft`; ponto junto; rótulo 200 ms depois de a linha terminar; 120 ms entre callouts (esquerda, preço, sashimi, colchete), começando 400 ms depois das tábuas. **O `pathLength` normalizado não funciona aqui**: as linhas usam `vector-effect: non-scaling-stroke`, e com ele o tracejado é medido na tela (o `dasharray` de 1 virava pontilhado de 1 px). O comprimento é medido em pixels de tela (`getScreenCTM`). Sem JS, as linhas aparecem inteiras |
+| Parallax | Tábuas e sombras ×.12, vapor ×.06, reflexo ×.20. Desligado em `reduced`, `paused` e `low` |
+| Hover na tábua | `scale: 1.02` + as linhas-guia dela em `--chrome-100`, 220 ms, só em `@media (hover: hover)` (`:has()` liga a tábua às linhas) |
+| Reflexo d'água | Filtro próprio `#ripple-ato2`; anima o deslocamento (0 → 14) e o ruído, ciclo de 12 s, 3 s defasado do hero. **Fase 0 = deslocamento 0 = estático aprovado**, que não tinha ondulação. Só `full` + `high` + paisagem ≥ 768 px; congela durante a rolagem (D32); grupo exclusivo com o hero (D34) |
+
+**Entradas nunca prendem conteúdo escondido (D35).**
+- **O que é escondido:** só o que ainda está abaixo da tela quando o motion se instala (menos de
+  35 % visível). O motion chega depois do load (D29), e o que já está à vista fica como está.
+- **Visitante que pula o ato** (trilho ou menu até o ACT IV, ⏭ ⏮ rápidos): a entrada dispara ao
+  passar e termina fora da tela.
+- **Pausa:** conclui a entrada na hora.
+- **Testado:** o ACT II termina visível e no estado final nos três caminhos.
+
+**Um `feTurbulence` por vez (D34).** Hero e ACT II usam `motion.loop(..., { grupo: "turbulencia" })`.
+Só roda a ondulação da seção mais visível, e a do hero também pausa quando ele sai da tela.
+Medido em 6 posições de rolagem: nunca as duas ao mesmo tempo. As duas ondulações do hero, piso e
+reflexo, contam como um efeito só.
+
+**Estado final = estático aprovado** (`382ecc4`, mesma tolerância do hero).
+- **Loops cancelados** (pose de repouso): **0,017 % em 1440** e **0,000 % em 390**.
+- **Loops parados na fase 0:** 0,133 % e 0,044 %. A diferença é o elemento animado virando
+  camada do compositor.
+
+**Custo** (GPU Intel UHD 770; 10 s parado no ACT II e rolagem hero → ACT II → ACT III; mesmo
+orçamento do hero, com uma fase repetida se estourar):
+
+| Caso | Parado | Rolando |
+|---|---|---|
+| high | 0 descartados | 0–3,8 % descartados, 0–1 quadro longo isolado |
+| low | 0 descartados | 0–2,5 % |
+| celular 390 | 0 | 0 |
+
+- **Controle:** a mesma rolagem no site aprovado teve 0–63 descartados em 3 rodadas, com picos
+  de até 1 s sem script. É o ruído do ambiente.
+- **Primeira versão:** 20 % de quadros descartados e picos de 900 ms. As causas eram o fade das
+  tábuas e a opacidade animada dentro dos elementos com `blur`, as duas corrigidas acima.
+
+**Lighthouse mobile** (5 execuções, mediana, as duas versões com LF): `382ecc4` 84 / LCP 3,6 s;
+com o ACT II 83 / LCP 3,6 s.
 
 ### Sanctum
 | Elemento | Animação |
@@ -828,7 +898,7 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero. Cada uma
+inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero e D34–D36 no motion do ACT II. Cada uma
 vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
@@ -884,6 +954,9 @@ o efeito que já foi aplicado nas seções acima.
 | **D31** ✅ | **Nada do motion no caminho crítico do LCP.** Loops do hero em `css/hero-loops.css`, pedido junto com o motion; carregador inline no `<head>` (um arquivo externo a mais também atrasava). Medido: LCP simulado 3,8 → 3,6 s, igual ao da referência. Entradas continuam no CSS bloqueante porque valem desde o 1º quadro. | §5 Hero |
 | **D32** ✅ | **Ondulação da água por `feTurbulence` mantida, mas congelada durante a rolagem**: o `baseFrequency` não é reescrito enquanto a página rola (retoma 200 ms depois). Reescrever durante a rolagem re-rasterizava o filtro e derrubava quadros. | §5 Hero (custo) |
 | **D33** ✅ | **O motion nunca se instala no meio de uma navegação.** Ao se registrar, o ScrollTrigger reescreve a posição de rolagem e matava uma rolagem suave em andamento (⏭ ou âncora antes do motion chegar). O carregador espera 250 ms sem rolar e 600 ms sem gesto; o núcleo monta tudo só depois de 150 ms de rolagem parada (`data-motion-ready="pending"` até lá); e `js/nav.js` retoma até o destino pedido se algo ainda interromper (evento `motion:pronto`). | §5.0, §4b |
+| **D34** ✅ | **Um `feTurbulence` animado por vez.** `motion.loop` ganhou grupos exclusivos: no grupo `"turbulencia"` só roda a ondulação da seção mais visível (fração visível pelo `IntersectionObserver`). `motion.rolando` é compartilhado por quem congela o filtro durante a rolagem. | §5.0, §5 Rodízio |
+| **D35** ✅ | **Entradas só escondem o que ainda está abaixo da tela** quando o motion se instala, e a pausa as conclui na hora. Tábuas do ACT II sem fade (a opacidade 0 adiava a rasterização e causava um quadro de ~400 ms); sombras e reflexo com `blur` entram pelo container. | §5 Rodízio |
+| **D36** ✅ | **Wrapper transformado dentro de um grupo em screen também faz screen**, e só quando o transform existe (parallax: `js-motion` + `high`). Um efeito de movimento por elemento: entrada, flutuação, hover e parallax em elementos ou propriedades separados. | §5 Rodízio |
 
 ---
 

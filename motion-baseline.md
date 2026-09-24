@@ -104,3 +104,22 @@ em produção. A cópia de trabalho no Windows usa CRLF (`core.autocrlf`), o que
     depois do `load`;
   - cerca de 3 KB no `hero.css` bloqueante, com as entradas.
 - **Custo de CPU e GPU:** está no DESIGN.md, §5 Hero.
+
+---
+
+## Depois da etapa "motion ato 2"
+
+Mesmo método da etapa anterior: comparação lado a lado com o commit `382ecc4` (motion do hero),
+as duas versões servidas com LF, 5 execuções cada.
+
+| 5 execuções, mediana | Desempenho | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|
+| Referência (`382ecc4`, motion hero) | 84 | 2,9 s | 3,6 s | 2 ms | 0,000 |
+| Motion ACT II | 83 | 2,9 s | **3,6 s** | 0 ms | 0,000 |
+
+- **Arquivos novos**, pedidos depois do `load` junto com o motion (D29, D31):
+  - `js/motion/rodizio.js`, 7,8 KB;
+  - `css/rodizio-motion.css`, 4,5 KB.
+- **CSS bloqueante:** cresce menos de 1 KB, com o grupo de mescla e o wrapper do reflexo.
+- **Custo de CPU e GPU:** está no DESIGN.md, §5 Rodízio.
+

@@ -11,8 +11,11 @@
 //                           função de limpeza. É desfeito e refeito quando motion.base muda.
 //                           A pausa NÃO refaz nada: congela a timeline global e, ao sair, tudo
 //                           continua de onde parou. Devolve a função que desregistra.
-//   motion.loop(el, anim)   animação contínua: pausada com `el` fora da tela; recusada em
-//                           "reduced" (mata a animação e devolve null)
+//   motion.loop(el, anim, { grupo })  animação contínua: pausada com `el` fora da tela;
+//                           recusada em "reduced" (mata a animação e devolve null). Num `grupo`
+//                           (ex.: "turbulencia") só roda a do elemento mais visível (D34)
+//   motion.rolando          true enquanto a página rola (até 200 ms depois do último scroll)
+//   motion.debug            gancho de inspeção para os testes (cada módulo expõe o que precisar)
 //   motion.scrollTo(alvo)   rola até um elemento/seletor (Lenis se ativo, senão nativo)
 //   motion.scan()           relê data-reveal / data-parallax / data-loop (conteúdo novo)
 //   motion.ease, motion.easeSoft, motion.dur("--t-mid")   tokens de tokens.css já convertidos
@@ -66,6 +69,13 @@
     const ouvintes = new Set();
     const registros = [];
     let emMontagem = null; // registro cujo setup está rodando (para motion.loop achar o dono)
+    let rolando = false;
+    let fimRolagem = 0;
+    addEventListener("scroll", () => {
+      rolando = true;
+      clearTimeout(fimRolagem);
+      fimRolagem = setTimeout(() => { rolando = false; }, 200);
+    }, { passive: true });
     let iniciado = false;  // ver "início" no fim: nada é montado antes de a rolagem parar
 
     const api = {
@@ -73,6 +83,8 @@
       get base() { return base; },
       quality,
       lenis: null,
+      get rolando() { return rolando; },
+      debug: {},
       ease: bezier(token("--ease-out")),
       easeSoft: bezier(token("--ease-soft")),
       dur,
@@ -87,9 +99,9 @@
         if (iniciado) montar(r);
         return () => { desmontar(r); registros.splice(registros.indexOf(r), 1); };
       },
-      loop(el, anim) {
+      loop(el, anim, { grupo = null } = {}) {
         if (base === "reduced") { anim.kill(); return null; }
-        loops.add(el, anim);
+        loops.add(el, anim, grupo);
         emMontagem?.extras.push(() => loops.remove(el, anim));
         return anim;
       },
@@ -181,26 +193,45 @@
     });
 
     // ── loops: pausados fora da tela ──────────────────────────
+    // Loops: pausados fora da tela. Num grupo exclusivo, só roda o do elemento mais visível
+    // (D34: um feTurbulence animado por vez — hero e ACT II se tocam na emenda).
     const loops = (() => {
-      const anims = new Map(); // el → Set(animações GSAP)
-      const io = new IntersectionObserver((entradas) => {
-        for (const { target, isIntersecting } of entradas) {
-          target.toggleAttribute("data-offscreen", !isIntersecting); // loops CSS (motion.css)
-          anims.get(target)?.forEach((a) => (isIntersecting ? a.resume() : a.pause()));
+      const anims = new Map();  // el → Set({ anim, grupo })
+      const visivel = new Map(); // el → fração visível (0 = fora da tela, com margem de 10 %)
+      const decidir = () => {
+        const lider = new Map(); // grupo → [el, fração]
+        for (const [el, itens] of anims) {
+          const f = visivel.get(el) ?? 0;
+          for (const { grupo } of itens) if (grupo && f > (lider.get(grupo)?.[1] ?? 0)) lider.set(grupo, [el, f]);
         }
-      }, { rootMargin: "10% 0px" });
+        for (const [el, itens] of anims) {
+          for (const { anim, grupo } of itens) {
+            const roda = grupo ? lider.get(grupo)?.[0] === el : (visivel.get(el) ?? 0) > 0;
+            if (roda) anim.resume(); else anim.pause();
+          }
+        }
+      };
+      const io = new IntersectionObserver((entradas) => {
+        for (const { target, isIntersecting, intersectionRatio } of entradas) {
+          target.toggleAttribute("data-offscreen", !isIntersecting); // loops CSS (motion.css)
+          visivel.set(target, isIntersecting ? Math.max(intersectionRatio, 0.001) : 0);
+        }
+        decidir();
+      }, { rootMargin: "10% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
       return {
         observar: (el) => io.observe(el),
-        add(el, anim) {
+        add(el, anim, grupo) {
           if (!anims.has(el)) { anims.set(el, new Set()); io.observe(el); }
-          anims.get(el).add(anim);
-          // elemento já avaliado pelo observador (data-loop): aplica o estado atual já
-          if (el.hasAttribute("data-offscreen")) anim.pause();
+          anims.get(el).add({ anim, grupo });
+          // ainda sem medida do observador: começa pausada; com medida (data-loop), decide já
+          decidir();
         },
         remove(el, anim) {
-          const s = anims.get(el);
-          s?.delete(anim);
-          if (s && !s.size) { anims.delete(el); if (!el.hasAttribute("data-loop")) io.unobserve(el); }
+          const itens = anims.get(el);
+          if (!itens) return;
+          for (const it of itens) if (it.anim === anim) itens.delete(it);
+          if (!itens.size) { anims.delete(el); if (!el.hasAttribute("data-loop")) { io.unobserve(el); visivel.delete(el); } }
+          decidir();
         },
       };
     })();
@@ -280,7 +311,9 @@
         // setter direto: um gsap.set entraria na timeline global, que está pausada
         const alternar = (m) => {
           for (const { el, st, y, posicionar } of itens) {
-            if (m === "paused") { st.disable(false); y(0); el.style.willChange = ""; }
+            // pausado: sem transform nenhum (nem translate(0,0)), para o elemento sair da camada
+            // do compositor e voltar a ser desenhado exatamente como no estático
+            if (m === "paused") { st.disable(false); y(0); limparEstilo(el, "transform", "will-change"); }
             else { st.enable(); posicionar(st); }
           }
         };

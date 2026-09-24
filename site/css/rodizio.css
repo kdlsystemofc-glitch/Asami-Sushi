@@ -127,7 +127,15 @@
 }
 
 /* ── 5–7 · tábuas ───────────────────────────────────────── */
-.rodizio__boards { position: absolute; inset: 0; } /* sem z-index: as tábuas fazem screen sobre o vapor */
+.rodizio__boards { position: absolute; inset: 0; }
+
+/* Com parallax (motion "full" + quality "high"; D27) o container das tábuas é transformado e vira
+   um stacking context: as tábuas passariam a mesclar só dentro dele e os retângulos pretos dos
+   plates apareceriam. Então ele também faz screen — o conjunto mescla sobre o vapor, e como o
+   screen é associativo o resultado é o mesmo. Só nesse caso: isolar o grupo muda a reamostragem
+   das imagens (medido: 1,7 % dos pixels no retrato). Os dois atributos existem antes da 1ª
+   pintura, então o grupo já está pronto quando o parallax começa. */
+.js-motion[data-quality="high"] .rodizio__boards { mix-blend-mode: var(--plate-blend); }
 
 .board {
   position: absolute;
@@ -163,11 +171,18 @@
   .board--right { --bx: 44%;   --by: 21.5%; --bw: 42%; }
 }
 
-/* ── 10 · espelho d'água: clone invertido na linha d'água, estático + blur ── */
-.rodizio__reflection {
+/* ── 10 · espelho d'água: clone invertido na linha d'água, estático + blur ──
+   O wrapper só carrega o parallax; o reflexo já tem o próprio transform (scaleY(-1)) */
+.rodizio__reflection-wrap {
   position: absolute;
   inset: 0;
   z-index: 2;
+  pointer-events: none;
+}
+
+.rodizio__reflection {
+  position: absolute;
+  inset: 0;
   transform: scaleY(-1);
   transform-origin: 50% var(--waterline);
   opacity: .45;

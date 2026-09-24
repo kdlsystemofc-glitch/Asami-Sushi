@@ -13,7 +13,7 @@
     "serve": "node scripts/serve.mjs",
     "lh": "node scripts/lighthouse.mjs",
     "vendor": "node scripts/vendor.mjs",
-    "test:motion": "node scripts/test-motion.mjs && node scripts/test-motion-hero.mjs"
+    "test:motion": "node scripts/test-motion.mjs && node scripts/test-motion-hero.mjs && node scripts/test-motion-ato2.mjs"
   },
   "keywords": [],
   "author": "",
