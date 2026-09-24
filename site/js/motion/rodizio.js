@@ -8,7 +8,7 @@
 // Só é escondido o que ainda está abaixo da tela quando o motion se instala: ele chega depois do
 // load (D29), e o que o visitante já está vendo nunca some. Sem JS ou em "reduced": estático.
 (() => {
-  const { motion, gsap, ScrollTrigger } = window;
+  const { motion, gsap } = window;
   const ato = document.getElementById("ato-2");
   if (!motion || !ato) return;
 
@@ -18,7 +18,6 @@
   const palco = um(".rodizio__stage");
   const turb = document.querySelector("#ripple-ato2 feTurbulence");
   const desloc = document.querySelector("#ripple-ato2 feDisplacementMap");
-  const FRACAO = 0.35; // --reveal-at
   // Comprimento da linha em pixels de tela. As linhas usam vector-effect: non-scaling-stroke,
   // e com ele o tracejado é medido na tela — pathLength="1" não normaliza nada (testado: o
   // dasharray de 1 virava um pontilhado de 1 px). Linhas retas: 40 amostras bastam (+2 px de folga).
@@ -34,38 +33,23 @@
     }
     return Math.ceil(soma) + 2;
   };
-  const ainda = (el) => el.getBoundingClientRect().top + Math.min(el.offsetHeight, innerHeight) * FRACAO > innerHeight;
 
   motion.register((m) => {
     const dbg = (m.debug.ato2 = {}); // gancho de teste (test-motion-ato2.mjs)
     if (m.base !== "full") return;
     const limpezas = [];
-    const entradas = new Set(); // timelines de entrada em andamento: concluídas na hora ao pausar
-    const tocar = (tl) => {
-      if (m.mode === "paused") { tl.progress(1); return; }
-      entradas.add(tl);
-      tl.eventCallback("onComplete", () => { entradas.delete(tl); tl.vars.fim?.(); });
-      tl.play();
-    };
-    const aoEntrar = (el, tl) => ScrollTrigger.create({
-      trigger: el, once: true,
-      start: () => `top+=${Math.min(el.offsetHeight, innerHeight) * FRACAO} bottom`,
-      onEnter: () => tocar(tl),
-    });
-    limpezas.push(m.on("mode", (modo) => { if (modo === "paused") entradas.forEach((tl) => tl.progress(1)); }));
 
     // ── 1 · rótulo: translateY(16px) + fade, 600 ms ──
-    if (rotulo && ainda(rotulo)) {
-      const tl = gsap.timeline({ paused: true, fim: () => gsap.set(rotulo, { clearProps: "transform,opacity" }) });
+    if (rotulo && m.abaixo(rotulo)) {
+      const tl = gsap.timeline({ paused: true });
       tl.fromTo(rotulo, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: m.dur("--t-mid"), ease: m.ease });
-      aoEntrar(rotulo, tl);
-      dbg.rotulo = tl;
+      dbg.rotulo = m.entrada(rotulo, tl, () => gsap.set(rotulo, { clearProps: "transform,opacity" }));
     }
 
     // ── 2 · palco: tábuas sobem (1200 ms, 180 ms entre elas) e as linhas-guia se desenham ──
     const flutuar = () => ato.classList.add("is-flutuando");
     const svg = todos(".callouts").find((s) => getComputedStyle(s).display !== "none");
-    if (palco && ainda(palco)) {
+    if (palco && m.abaixo(palco)) {
       const tabuas = todos(".rodizio__boards .board");
       // sombras e reflexo entram pelo container: os dois têm filter (blur) — animar um filho obriga
       // a refazer o filtro a cada quadro (medido: 145 quadros descartados numa rolagem); a
@@ -75,10 +59,7 @@
       const pontos = svg ? [...svg.querySelectorAll("circle")] : [];
       const rotulos = todos(".callout-label");
       const tudo = [...tabuas, ...coadjuvantes, ...linhas, ...pontos, ...rotulos];
-      const tl = gsap.timeline({
-        paused: true,
-        fim: () => { gsap.set(tudo, { clearProps: "transform,opacity,strokeDasharray,strokeDashoffset" }); flutuar(); },
-      });
+      const tl = gsap.timeline({ paused: true });
       const DUR = m.dur("--t-slow"); // 1200 ms
       tabuas.forEach((t, i) => {
         // 3D testado (rotateX com perspective no próprio elemento em screen): a mescla se mantém —
@@ -108,8 +89,7 @@
         if (seuRotulo.length) tl.fromTo(seuRotulo, { opacity: 0 }, { opacity: 1, duration: m.dur("--t-fast"), ease: m.easeSoft }, t0 + 0.7 + 0.2);
         k++;
       }
-      aoEntrar(palco, tl);
-      dbg.entrada = tl;
+      dbg.entrada = m.entrada(palco, tl, () => { gsap.set(tudo, { clearProps: "transform,opacity,strokeDasharray,strokeDashoffset" }); flutuar(); });
     } else {
       flutuar(); // já estava à vista quando o motion chegou: sem entrada, flutuação já
     }

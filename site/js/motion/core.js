@@ -15,6 +15,11 @@
 //                           recusada em "reduced" (mata a animação e devolve null). Num `grupo`
 //                           (ex.: "turbulencia") só roda a do elemento mais visível (D34)
 //   motion.rolando          true enquanto a página rola (até 200 ms depois do último scroll)
+//   motion.abaixo(el)       true se `el` ainda não chegou a --reveal-at (35 %) de visibilidade
+//   motion.entrada(gatilho, tl, fim)  entrada de seção (D35): a timeline pausada `tl` toca uma
+//                           vez quando 35 % do gatilho aparece; em "paused" conclui na hora (e as
+//                           em andamento também, ao pausar); `fim()` roda ao terminar. Chamar
+//                           dentro de motion.register (o ScrollTrigger é desfeito junto)
 //   motion.debug            gancho de inspeção para os testes (cada módulo expõe o que precisar)
 //   motion.scrollTo(alvo)   rola até um elemento/seletor (Lenis se ativo, senão nativo)
 //   motion.scan()           relê data-reveal / data-parallax / data-loop (conteúdo novo)
@@ -113,6 +118,25 @@
         return true;
       },
       scan() { desmontar(declarativos); montar(declarativos); },
+      abaixo(el) {
+        const f = parseFloat(token("--reveal-at")) || 0.35;
+        return el.getBoundingClientRect().top + Math.min(el.offsetHeight, innerHeight) * f > innerHeight;
+      },
+      entrada(gatilho, tl, fim) {
+        const f = parseFloat(token("--reveal-at")) || 0.35;
+        const tocar = () => {
+          tl.eventCallback("onComplete", () => { emAndamento.delete(tl); fim?.(); });
+          if (modo === "paused") { tl.progress(1); return; }
+          emAndamento.add(tl);
+          tl.play();
+        };
+        ScrollTrigger.create({
+          trigger: gatilho, once: true,
+          start: () => `top+=${Math.min(gatilho.offsetHeight, innerHeight) * f} bottom`,
+          onEnter: tocar,
+        });
+        return tl;
+      },
     };
 
     function montar(r) {

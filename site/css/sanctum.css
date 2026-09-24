@@ -21,15 +21,13 @@
 }
 
 /* ── 2 · salão: imagem normal (sem fundo preto → sem screen), escurecida e dessaturada,
-        bordas dissolvidas em --ink-900 por máscara ─────────────────────────────── */
+        bordas dissolvidas em --ink-900 por máscara ───────────────────────────────
+   Um efeito por elemento (§5 Sanctum): .sanctum__room tem a máscara e só se desloca (parallax),
+   nunca escala — a máscara fica parada na tela e recorta a imagem ampliada; dentro dele,
+   -zoom (zoom de rolagem) › -in (entrada) › -img (imagem + filtro, estáticos). */
 .sanctum__room {
   position: absolute;
   inset: 0 12%;
-  background:
-    linear-gradient(color-mix(in srgb, var(--ink-900) 40%, transparent) 0 0),
-    var(--room-img) 50% 72% / cover no-repeat;
-  background-blend-mode: multiply, normal;
-  filter: brightness(.42) saturate(.6) sepia(.25);
   -webkit-mask-image:
     linear-gradient(90deg, transparent 0%, #000 30%, #000 70%, transparent 100%),
     linear-gradient(180deg, transparent 0%, #000 22%, #000 70%, transparent 100%);
@@ -40,11 +38,26 @@
   mask-composite: intersect;
 }
 
+.sanctum__room-zoom,
+.sanctum__room-in,
+.sanctum__room-img { position: absolute; inset: 0; }
+
+.sanctum__room-img {
+  background:
+    linear-gradient(color-mix(in srgb, var(--ink-900) 40%, transparent) 0 0),
+    var(--room-img) 50% 72% / cover no-repeat;
+  background-blend-mode: multiply, normal;
+  filter: brightness(.42) saturate(.6) sepia(.25);
+}
+
 @media (max-width: 47.99rem) {
   .sanctum__room { inset: 8% -45% 0; }
 }
 
-/* ── 4 · luz rebatida: trapézios âmbar nas paredes, na altura das barras externas ── */
+/* ── 4 · luz rebatida: trapézios âmbar nas paredes, na altura das barras externas.
+   O wrapper (inset 0) só existe para acompanhar o parallax do salão ── */
+.sanctum__spills { position: absolute; inset: 0; pointer-events: none; }
+
 .sanctum__spill {
   position: absolute;
   top: 11%;
@@ -65,6 +78,9 @@
 
 /* ── 3 · neon: núcleo claro + halo largo, CSS puro ──────── */
 .neon { position: absolute; inset: 0; }
+/* slot = a área inteira do neon, uma por barra: é quem recebe a entrada (opacity), para a barra e
+   o halo ficarem livres para os loops. Sem z-index: não cria stacking context no estático */
+.neon__slot { position: absolute; inset: 0; pointer-events: none; }
 
 .neon__bar {
   position: absolute;
@@ -114,16 +130,21 @@
 
 @media (max-width: 47.99rem) {
   /* 4 barras no retrato: as do vão da porta saem, as externas abrem */
-  .neon__bar:nth-child(3),
-  .neon__bar:nth-child(4) { display: none; }
+  .neon__slot:nth-child(3),
+  .neon__slot:nth-child(4) { display: none; }
   /* --x vem inline (desktop); no retrato a posição é fixada aqui */
-  .neon__bar:nth-child(1) { left: 6%; }
-  .neon__bar:nth-child(2) { left: 13%; }
-  .neon__bar:nth-child(5) { left: 87%; }
-  .neon__bar:nth-child(6) { left: 94%; }
+  .neon__slot:nth-child(1) .neon__bar { left: 6%; }
+  .neon__slot:nth-child(2) .neon__bar { left: 13%; }
+  .neon__slot:nth-child(5) .neon__bar { left: 87%; }
+  .neon__slot:nth-child(6) .neon__bar { left: 94%; }
 }
 
-/* ── 5 · névoa de chão: filho direto da seção (sem stacking context entre ela e o fundo) ── */
+/* ── 5 · névoa de chão: o wrapper (inset 0) não é stacking context no estático, então a névoa
+   mescla direto no fundo. Com parallax (motion "full" + "high") ele é transformado e passa a
+   fazer screen também (D36): screen é associativo, o resultado é o mesmo ── */
+.sanctum__fog-wrap { position: absolute; inset: 0; pointer-events: none; }
+.js-motion[data-quality="high"] .sanctum__fog-wrap { mix-blend-mode: var(--plate-blend); }
+
 .sanctum__fog {
   position: absolute;
   left: -5%;

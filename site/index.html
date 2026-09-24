@@ -53,7 +53,8 @@
           eventos.forEach(function (e) { removeEventListener(e, gesto, true); });
           removeEventListener("scroll", rolagem);
           ["js/vendor/gsap.min.js", "js/vendor/ScrollTrigger.min.js", "js/vendor/lenis.min.js", "js/motion/core.js",
-           "js/motion/hero.js", "js/motion/rodizio.js"]
+           "js/motion/hero.js", "js/motion/rodizio.js",
+           "js/motion/sanctum.js"]
             .forEach(function (src) {
               var s = document.createElement("script");
               s.src = src;
@@ -63,7 +64,7 @@
               document.head.appendChild(s);
             });
           // CSS de motion das seções: também fora do caminho do LCP; sem motion, tudo estático
-          ["css/hero-loops.css", "css/rodizio-motion.css"].forEach(function (href) {
+          ["css/hero-loops.css", "css/rodizio-motion.css", "css/sanctum-motion.css"].forEach(function (href) {
             var css = document.createElement("link");
             css.rel = "stylesheet";
             css.href = href;
@@ -401,34 +402,42 @@
     </section>
 
     <!-- ═══ ACT III — THE SANCTUM ════════════════════════════ -->
-    <section class="section sanctum" id="ato-3" aria-labelledby="ato-3-titulo">
+    <section class="section sanctum" id="ato-3" aria-labelledby="ato-3-titulo" data-loop>
 
       <!-- 1 · fundo -->
       <div class="sanctum__bg" aria-hidden="true"></div>
 
       <!-- 2 · salão — PROVISÓRIO (D24): imagem gerada, trocar por foto real.
            O arquivo é definido num único lugar: --room-img em css/sanctum.css -->
-      <div class="sanctum__room" aria-hidden="true"></div>
-
-      <!-- 4 · luz rebatida nas paredes laterais -->
-      <div class="sanctum__spill sanctum__spill--l" aria-hidden="true"></div>
-      <div class="sanctum__spill sanctum__spill--r" aria-hidden="true"></div>
-
-      <!-- 3 · neon vertical (posições e alturas medidas no mockup, 1440×591) -->
-      <div class="neon" aria-hidden="true">
-        <i class="neon__bar" style="--x:27.99%;--t:13.0%;--b:76.3%;--i:1"></i>
-        <i class="neon__bar" style="--x:31.94%;--t:15.2%;--b:71.7%;--i:1"></i>
-        <i class="neon__bar" style="--x:39.72%;--t:24.5%;--b:79.7%;--i:0.75"></i>
-        <i class="neon__bar" style="--x:59.79%;--t:22.8%;--b:79.9%;--i:0.85"></i>
-        <i class="neon__bar" style="--x:67.64%;--t:13.4%;--b:73.3%;--i:1"></i>
-        <i class="neon__bar" style="--x:71.74%;--t:12.7%;--b:76.6%;--i:1"></i>
+      <!-- um efeito por elemento: parallax + máscara (não escala) › zoom de rolagem › entrada › imagem -->
+      <div class="sanctum__room" aria-hidden="true" data-parallax="0.08">
+        <div class="sanctum__room-zoom"><div class="sanctum__room-in"><div class="sanctum__room-img"></div></div></div>
       </div>
 
-      <!-- 5 · névoa de chão (fundo preto → screen; filho direto da seção, sem stacking context no meio) -->
-      <img width="800" height="447" class="plate sanctum__fog"
-           src="assets/plate-smoke-floor-800.webp"
-           srcset="assets/plate-smoke-floor-800.webp 800w, assets/plate-smoke-floor-1600.webp 1600w"
-           sizes="110vw" alt="" loading="lazy" decoding="async">
+      <!-- 4 · luz rebatida nas paredes laterais (o wrapper acompanha o parallax do salão) -->
+      <div class="sanctum__spills" aria-hidden="true" data-parallax="0.08">
+        <div class="sanctum__spill sanctum__spill--l"></div>
+        <div class="sanctum__spill sanctum__spill--r"></div>
+      </div>
+
+      <!-- 3 · neon vertical (posições e alturas medidas no mockup, 1440×591) -->
+      <div class="neon" aria-hidden="true" data-parallax="0.14">
+        <span class="neon__slot"><i class="neon__bar" style="--x:27.99%;--t:13.0%;--b:76.3%;--i:1"></i></span>
+        <span class="neon__slot"><i class="neon__bar" style="--x:31.94%;--t:15.2%;--b:71.7%;--i:1"></i></span>
+        <span class="neon__slot"><i class="neon__bar" style="--x:39.72%;--t:24.5%;--b:79.7%;--i:0.75"></i></span>
+        <span class="neon__slot"><i class="neon__bar" style="--x:59.79%;--t:22.8%;--b:79.9%;--i:0.85"></i></span>
+        <span class="neon__slot"><i class="neon__bar" style="--x:67.64%;--t:13.4%;--b:73.3%;--i:1"></i></span>
+        <span class="neon__slot"><i class="neon__bar" style="--x:71.74%;--t:12.7%;--b:76.6%;--i:1"></i></span>
+      </div>
+
+      <!-- 5 · névoa de chão (fundo preto → screen). O wrapper só carrega o parallax; quando ele
+           existe, o wrapper também faz screen (D36) — a névoa continua mesclando no fundo -->
+      <div class="sanctum__fog-wrap" aria-hidden="true" data-parallax="0.22">
+        <img width="800" height="447" class="plate sanctum__fog"
+             src="assets/plate-smoke-floor-800.webp"
+             srcset="assets/plate-smoke-floor-800.webp 800w, assets/plate-smoke-floor-1600.webp 1600w"
+             sizes="110vw" alt="" loading="lazy" decoding="async">
+      </div>
 
       <!-- 8 · gradiente de saída rumo ao ACT IV -->
       <div class="sanctum__exit" aria-hidden="true"></div>

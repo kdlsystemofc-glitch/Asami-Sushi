@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D36). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D39). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -557,6 +557,8 @@ global) e volta ao reaparecer, salvo se o visitante tiver pausado.
 | `motion.loop(el, anim, { grupo })` | animação GSAP contínua: pausada com `el` fora da tela; em `reduced` é morta e devolve `null`. Num `grupo` (ex.: `"turbulencia"`) só roda a do elemento mais visível (D34) |
 | `motion.rolando` | `true` enquanto a página rola, até 200 ms depois do último scroll. Quem anima um filtro caro não reescreve durante a rolagem (D32) |
 | `motion.debug` | gancho de inspeção dos testes: cada seção expõe suas timelines (`motion.debug.ato2.entrada` etc.) |
+| `motion.abaixo(el)` | `true` se `el` ainda não chegou a `--reveal-at` (35 %) de visibilidade — só isso pode ser escondido para uma entrada (D35) |
+| `motion.entrada(gatilho, tl, fim)` | entrada de seção: a timeline pausada toca uma vez quando 35 % do gatilho aparece; em `paused` conclui na hora (e as em andamento também); `fim()` ao terminar. Usada pelo ACT II e pelo ACT III |
 | `motion.scrollTo(alvo, { imediato })` | rola até elemento/seletor com offset zero (Lenis se ativo, senão nativo) |
 | `motion.scan()` | relê `data-reveal`, `data-parallax` e `data-loop` (conteúdo inserido depois) |
 | `motion.ease`, `motion.easeSoft`, `motion.dur("--t-mid")` | tokens já convertidos para o GSAP |
@@ -816,15 +818,98 @@ orçamento do hero, com uma fase repetida se estourar):
 **Lighthouse mobile** (5 execuções, mediana, as duas versões com LF): `382ecc4` 84 / LCP 3,6 s;
 com o ACT II 83 / LCP 3,6 s.
 
-### Sanctum
-| Elemento | Animação |
+### Sanctum — construído (etapa "motion ato 3", 24/09/2026)
+
+Arquivos:
+- `js/motion/sanctum.js`: entrada, título e zoom de rolagem;
+- `css/sanctum-motion.css`: loops, pedido junto com o motion (D31);
+- `data-parallax` e `data-loop` no HTML;
+- wrappers novos no `sanctum.css`, que não mudam o estático.
+
+Teste e medição: `scripts/test-motion-ato3.mjs`, com saída em `screenshots/motion/ato3-*`.
+
+**Estrutura — um efeito de movimento por elemento:**
+
+| Elemento | Efeito | Propriedade |
+|---|---|---|
+| `.sanctum__room` | parallax ×.08 + **a máscara** (nunca escala) | `transform` |
+| `.sanctum__room-zoom` (novo) | zoom de rolagem 1 → 1,03 | `transform: scale` (escrita direta) |
+| `.sanctum__room-in` (novo) | entrada 1,08 → 1 | `transform` (GSAP) |
+| `.sanctum__room-img` (novo) | a imagem, o multiply e o filtro (estáticos) | — |
+| `.sanctum__spills` (novo) | parallax ×.08, junto com o salão (a luz está nas paredes dele) | `transform` |
+| `.sanctum__spill` | fade da entrada | `opacity` |
+| `.neon` | parallax ×.14 | `transform` |
+| `.neon__slot` (novo, 1 por barra) | cascata da entrada | `opacity` |
+| `.neon__bar` | micro-flicker | `opacity` |
+| `.neon__bar::after` (halo largo) | pulso | `opacity` |
+| `.sanctum__fog-wrap` (novo) | parallax ×.22; faz screen quando existe (D36) | `transform` |
+| `.sanctum__fog` | deriva horizontal | `translate` |
+
+**Salão e máscara (item 3 do pedido).** A máscara saiu da camada que escala: ela fica em
+`.sanctum__room`, que só se desloca pelo parallax. Imagem e filtro ficam em
+`.sanctum__room-img`, e a escala da entrada e a do zoom ficam em wrappers próprios entre os dois.
+- **A borda dissolvida fica parada na tela:** a imagem ampliada é recortada por ela, então nenhuma
+  borda de imagem aparece nem na entrada (1,08) nem no zoom (1,03).
+- **As escalas são só composição:** `will-change` durante a entrada e enquanto o ScrollTrigger do
+  zoom está ativo, e o filtro e a máscara não são refeitos a cada quadro.
+- **Custo medido:** parado, 0 quadros descartados.
+
+**Título sem animar `letter-spacing` (D38).**
+- **Onde cada letra fica:** o `sanctum.js` mede, com `Range`, onde o texto original desenha cada
+  letra, já com o kerning. Cria uma cópia `aria-hidden` (`.sanctum__place-fx`) com uma letra por
+  `span` nesses pontos e corrige cada uma pela própria medida.
+- **A abertura:** cada letra parte deslocada como se o espaçamento fosse +0,12em a partir do
+  centro da sua linha (no retrato são duas linhas, cada uma centrada) e converge por `translateX`,
+  com fade, em 1400 ms `--ease-out`.
+- **O texto original:** fica transparente (`.is-letras`), mas continua no layout e na árvore de
+  acessibilidade. Ao terminar, a cópia sai e o original — um nó só, nunca desmontado — volta.
+  Estado final = o texto estático, sem aproximação.
+- **Sem JS ou em "low":** nada disso existe; em "low" é só fade.
+- **Espaçamento de chegada:** o pedido falava em `.12em → .02em`, mas o estático aprovado usa
+  `--ls-display: 0`. A abertura termina em 0 para ficar idêntica.
+
+| Elemento | Como ficou |
 |---|---|
-| Neon | Ao entrar, acende em cascata da esquerda para a direita, 90 ms entre barras, cada uma com flicker de 3 quadros (`opacity .2 → 1 → .7 → 1`) |
-| Neon (loop) | `box-shadow` pulsando ±8 % em 5 s; uma barra com micro-flicker aleatório a cada ~12 s |
-| Salão | `scale(1.08 → 1.0)` em 2400 ms na entrada; depois zoom lento contínuo até `1.03` ao longo do scroll |
-| Névoa de chão | Deriva horizontal de 50 s |
-| `SÃO BERNARDO DO CAMPO // CENTRO` | Fade + `letter-spacing: .12em → .02em`, 1400 ms `--ease-out` |
-| Parallax | Salão `× .08` (fundo), neon `× .14`, névoa `× .22` |
+| Neon (entrada) | Cascata da esquerda para a direita, 90 ms entre barras; cada `.neon__slot` faz `opacity 0 → .2 → 1 → .7 → 1` em 4 passos de 50 ms (núcleo e halos juntos, porque são o mesmo slot) |
+| Neon (loop) | Pulso do halo largo (`::after`), 5 s, fases fixas por barra. A opacidade não passa de 1, então o "±8 %" virou uma oscilação de 16 % abaixo do repouso (1 → .84 → 1). **low: pulso só nas 2 barras externas** |
+| Micro-flicker | A 5ª barra, a cada 12 s, sempre a mesma sequência (`--i → 35 % → --i → 55 % → --i` em ~300 ms), em CSS puro, sem `Math.random`. **Sem micro-flicker em low** |
+| Salão | Entrada `scale(1.08) → 1`, 2400 ms `--ease-out`. Zoom de rolagem: 1 com o ato no topo da tela (repouso) → 1,03 quando ele sai por cima. Em ⏸ volta a 1 |
+| Névoa | Deriva de 4 % em 50 s, `alternate`, com `translate` na própria imagem em screen. **Pausa enquanto a página rola** (D32): uma classe no próprio elemento, e não um atributo no `<html>`, que invalidava o estilo da página inteira a cada gesto (medido: picos de 900 ms). **low: estática** |
+| Luz rebatida | Fade `0 → 1` em 1200 ms, começando depois da 3ª barra (380 ms) |
+| Título | Ver D38 acima; começa aos 300 ms |
+| Rótulo | Como no ACT II: `translateY(16px)` + fade, 600 ms, a 35 % de visibilidade |
+| Parallax | Salão e luz ×.08, neon ×.14, névoa ×.22. Desligado em `reduced`, `paused` e `low`. Verificado em ±120 e ±240 px de rolagem: a máscara esconde as bordas do salão, a luz acompanha as paredes, e só as barras deslizam em relação à sala (é a profundidade). A borda de baixo da névoa (`bottom: -26 %`) continua fora da seção no pior caso (−32 px em 1440 × 810) |
+
+**Contraste do título**, medido pixel a pixel:
+- **Método:** captura do título com e sem as letras (com `color: transparent`, o halo escuro
+  continua), contando só o miolo das letras.
+- **Pior caso depois do fade:** 6,68:1 em 1440 (estático: 7,44:1) e 9,24:1 em 390. Inclui a fase
+  0 do pulso, que é o pico de brilho, o micro-flicker e o neon deslizando atrás pelo parallax.
+- **Durante o fade de entrada:** o contraste sobe junto com a opacidade (5,11:1 aos 900 ms, só nos
+  pixels já com a cor do título).
+
+**Estado final = estático aprovado** (`1267f2a`):
+- **Loops cancelados:** 0,099 % em 1440 e 0,000 % em 390.
+- **Reduced:** idêntico, 0,000 %.
+- **Mescla da névoa:** em screen ela só clareia. Nos quadros-chave, nenhum pixel fica mais
+  escuro com a névoa do que sem ela.
+
+**Custo** (GPU Intel UHD 770; 10 s parado no ACT III e rolagem ACT II → ACT III → ACT IV):
+
+| Caso | Parado | Rolando |
+|---|---|---|
+| high | 0 descartados | 0–3,2 % |
+| low | 0–3 % | 0,7–2,8 % |
+| celular 390 | 0 % | 0 % |
+
+- **Controle:** a mesma rolagem no site aprovado teve 0–6 % de quadros descartados e picos de até
+  380 ms entre rodadas. Por isso a rolagem é julgada contra o controle medido na mesma execução:
+  até 5 %, ou até 2 pontos acima dele.
+- **Primeira versão:** a deriva da névoa rodando durante a rolagem dava cerca de 2× o controle.
+  Resolvido pela pausa.
+
+**Lighthouse mobile** (5 execuções, mediana, as duas versões com LF): `1267f2a` 83 / LCP 3,6 s;
+com o ACT III 85 / LCP 3,6 s.
 
 ### Reserva
 | Elemento | Animação |
@@ -898,7 +983,7 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero e D34–D36 no motion do ACT II. Cada uma
+inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II e D37–D39 no motion do ACT III. Cada uma
 vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
@@ -957,6 +1042,9 @@ o efeito que já foi aplicado nas seções acima.
 | **D34** ✅ | **Um `feTurbulence` animado por vez.** `motion.loop` ganhou grupos exclusivos: no grupo `"turbulencia"` só roda a ondulação da seção mais visível (fração visível pelo `IntersectionObserver`). `motion.rolando` é compartilhado por quem congela o filtro durante a rolagem. | §5.0, §5 Rodízio |
 | **D35** ✅ | **Entradas só escondem o que ainda está abaixo da tela** quando o motion se instala, e a pausa as conclui na hora. Tábuas do ACT II sem fade (a opacidade 0 adiava a rasterização e causava um quadro de ~400 ms); sombras e reflexo com `blur` entram pelo container. | §5 Rodízio |
 | **D36** ✅ | **Wrapper transformado dentro de um grupo em screen também faz screen**, e só quando o transform existe (parallax: `js-motion` + `high`). Um efeito de movimento por elemento: entrada, flutuação, hover e parallax em elementos ou propriedades separados. | §5 Rodízio |
+| **D37** ✅ | **Máscara em quem não escala.** No ACT III a máscara do salão ficou no wrapper do parallax; entrada e zoom de rolagem escalam wrappers internos, e a imagem com filtro não é refeita. A escala do zoom é escrita direto no `style` (o `quickSetter` do GSAP não aceita o atalho `scale`). | §5 Sanctum |
+| **D38** ✅ | **Espaçamento de letras sem animar `letter-spacing`:** cópia `aria-hidden` com as letras nas posições medidas do texto original (com kerning), convergindo por `translateX`; o original, um nó só, fica transparente e volta intacto no fim. Sem JS e em "low": não existe. | §5 Sanctum |
+| **D39** ✅ | **Loops caros pausam durante a rolagem por classe no próprio elemento**, nunca por atributo no `<html>`, que força recálculo de estilo da página inteira a cada gesto. O núcleo ganhou `motion.entrada()` e `motion.abaixo()` (padrão D35 compartilhado pelos atos). | §5.0, §5 Sanctum |
 
 ---
 

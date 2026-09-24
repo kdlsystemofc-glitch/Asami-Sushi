@@ -58,7 +58,7 @@ function checar({ toque }) {
   if (document.documentElement.scrollWidth > vw) problemas.push(`rolagem horizontal: ${document.documentElement.scrollWidth} > ${vw}`);
 
   // 2 · caixas de texto (cada nó de texto visível)
-  const ignorar = ".hero__reflection, .reserve__reflection, .visually-hidden, .skip-link, .svg-defs, script, style";
+  const ignorar = ".hero__reflection, .reserve__reflection, .sanctum__place-fx, .visually-hidden, .skip-link, .svg-defs, script, style";
   const textos = [];
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {
@@ -180,7 +180,7 @@ function checarNavFixo() {
   const alvos = [];
   const walker = document.createTreeWalker(document.getElementById("conteudo"), NodeFilter.SHOW_TEXT);
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {
-    if (!n.textContent.trim() || n.parentElement.closest(".hero__reflection, .reserve__reflection, .visually-hidden")) continue;
+    if (!n.textContent.trim() || n.parentElement.closest(".hero__reflection, .reserve__reflection, .sanctum__place-fx, .visually-hidden")) continue;
     const rg = document.createRange(); rg.selectNodeContents(n);
     for (const q of rg.getClientRects()) if (q.width > 1 && q.bottom > 0 && q.top < innerHeight) alvos.push([`"${n.textContent.trim().slice(0, 20)}"`, q]);
   }

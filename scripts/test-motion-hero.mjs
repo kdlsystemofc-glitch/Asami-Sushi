@@ -273,7 +273,8 @@ async function comTrace(navegador, page, fn) {
 {
   console.log("\n— Modos e qualidade —");
   const infinitas = (page) => page.evaluate(() => document.getAnimations()
-    .filter((a) => a.effect.getComputedTiming().iterations === Infinity).map((a) => [a.animationName, a.playState]));
+    .filter((a) => a.effect.getComputedTiming().iterations === Infinity && /^hero-/.test(a.animationName)) // só os do hero
+    .map((a) => [a.animationName, a.playState]));
 
   // reduced: sem loops, sem parallax, sem entrada, wordmark visível
   {

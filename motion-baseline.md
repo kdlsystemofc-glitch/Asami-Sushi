@@ -123,3 +123,21 @@ as duas versões servidas com LF, 5 execuções cada.
 - **CSS bloqueante:** cresce menos de 1 KB, com o grupo de mescla e o wrapper do reflexo.
 - **Custo de CPU e GPU:** está no DESIGN.md, §5 Rodízio.
 
+---
+
+## Depois da etapa "motion ato 3"
+
+Comparação lado a lado com o commit `1267f2a` (motion do ACT II), as duas versões servidas com
+LF, 5 execuções cada.
+
+| 5 execuções, mediana | Desempenho | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|
+| Referência (`1267f2a`, motion ACT II) | 83 | 2,9 s | 3,6 s | 0 ms | 0,000 |
+| Motion ACT III | 85 | 2,9 s | **3,6 s** | 0 ms | 0,000 |
+
+- **Arquivos novos**, pedidos depois do `load` junto com o motion (D29, D31):
+  - `js/motion/sanctum.js`, 8,8 KB;
+  - `css/sanctum-motion.css`, 4,0 KB.
+- **CSS bloqueante:** `sanctum.css` cresce 1,2 KB (os wrappers do ACT III; a maior parte são comentários).
+- **Custo de CPU e GPU:** está no DESIGN.md, §5 Sanctum.
+
