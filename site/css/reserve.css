@@ -4,6 +4,7 @@
 .reserve {
   position: relative;
   min-height: var(--h-reserva-min);
+  overflow: hidden; /* fallback Safari < 16 */
   overflow: clip;
   background: var(--ink-850);
 }
@@ -78,6 +79,7 @@
   display: grid;
   gap: var(--sp-4);
   padding: var(--sp-4) var(--sp-5);
+  background: var(--ink-900); /* fallback: Safari < 16.2 não conhece color-mix */
   background: color-mix(in srgb, var(--ink-900) 78%, transparent); /* rgb(4 5 7 / .78) */
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
@@ -91,11 +93,18 @@
 }
 
 @media (min-width: 48rem) {
+  /* tablet: DATA numa linha, HORÁRIO e PESSOAS lado a lado */
   .reserve__fields {
-    /* proporção medida no mockup: DATA 365 · HORÁRIO 152 · PESSOAS 153 */
-    grid-template-columns: 2.4fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     column-gap: clamp(1rem, 2.43vw, 2.25rem);
   }
+  .field-group--date { grid-column: 1 / -1; }
+}
+
+@media (min-width: 64rem) {
+  /* desktop: proporção medida no mockup — DATA 365 · HORÁRIO 152 · PESSOAS 153 */
+  .reserve__fields { grid-template-columns: 2.4fr 1fr 1fr; }
+  .field-group--date { grid-column: auto; }
 }
 
 /* ── 6 · labels ─────────────────────────────────────────── */
@@ -120,7 +129,8 @@
 
 .field-group__row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* 2 selects lado a lado; com texto grande ou tela estreita, um embaixo do outro */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
   gap: clamp(.5rem, 1.05vw, 1rem);
 }
 
@@ -150,7 +160,8 @@
   align-items: center;
   width: 100%;
   height: var(--field-h);
-  padding: 0 calc(var(--sp-5) + .75rem) 0 var(--sp-3);
+  /* folga do chevron em em: acompanha o valor, e o valor nunca fica sem espaço */
+  padding: 0 calc(var(--sp-2) + 1.1em) 0 var(--sp-2);
   -webkit-appearance: none;
   appearance: none;
   /* bisel: aro claro + degradê metálico com brilho no topo */
@@ -174,7 +185,7 @@
 .select::after {
   content: "";
   position: absolute;
-  right: var(--sp-3);
+  right: var(--sp-2);
   top: 50%;
   width: clamp(.7rem, 1vw, .95rem);
   aspect-ratio: 1;
@@ -194,6 +205,9 @@
   min-width: 0;
   height: var(--field-h);
   padding: 0;
+  -webkit-appearance: none; /* iOS: sem sombra interna nem cantos próprios */
+  appearance: none;
+  background: var(--ink-600); /* fallback sem color-mix */
   background: color-mix(in srgb, var(--ink-600) 45%, transparent);
   border: var(--border-hud);
   border-radius: var(--r-md);
@@ -270,6 +284,7 @@
 .reserve__reflection {
   height: clamp(4.5rem, 7vw, 6.5rem);
   margin-top: calc(-1 * var(--sp-5) + var(--sp-1));
+  overflow: hidden; /* fallback Safari < 16 */
   overflow: clip;
   pointer-events: none;
   user-select: none;

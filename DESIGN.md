@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D24). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D25). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -216,11 +216,59 @@ aplicar `text-transform: uppercase` no CSS (leitor de tela e SEO agradecem).
 
 | Seção | @768 | Proporção | Alvo desktop |
 |---|---|---|---|
-| Hero | 437 | 0,569 W | ≥768: `min(100svh, 56.9vw)`; mobile: `100svh` (56,9vw daria 222 px a 390) |
+| Hero | 437 | 0,569 W | ver **§3b** (depende do regime) |
 | Rodízio | 353 | 0,460 W | `max(80svh, 46vw)` |
 | Sanctum | 315 | 0,410 W | `max(72svh, 41vw)` |
 | Reserva | 271 | 0,353 W | `auto`, mínimo `60svh` |
 | Rodapé (novo) | — | — | `auto`, ~`clamp(14rem, 22vw, 20rem)` |
+
+### 3b. Regimes responsivos (passada responsiva, 24/09/2026)
+
+A composição do hero e do palco do ACT II depende da **orientação**, não só da largura:
+
+| Regime | Condição | Hero | Nav de atos (trilho/progresso/player) |
+|---|---|---|---|
+| **Retrato** | `< 48rem` **ou** mais alto que largo (celular, tablet em pé) | `max(100svh, 540px)`, composição vertical | `absolute`, sobre o hero |
+| **Paisagem baixa** | `≥ 48rem`, mais largo que alto, `< 32rem` de altura (celular deitado) | `max(min(100svh, 56.9vw), min(56.9vw, 480px))` — o quadro 16:9 do mockup, sem achatar (480 px em 844×390) | `absolute`, sobre o hero |
+| **Paisagem** | `≥ 48rem`, mais largo que alto, `≥ 32rem` de altura | `100svh` | `fixed` |
+
+- **No regime Paisagem, cada ato tem ao menos `100svh`** (`--h-rodizio: max(100svh, 46vw)`,
+  `--h-sanctum: max(100svh, 41vw)`, `--h-reserva-min: 100svh`). Com o player fixo no canto
+  inferior esquerdo, um ato mais baixo que a tela deixava o rótulo do ato seguinte (canto superior
+  esquerdo) aparecer sob o player quando ⏭ parava num ato. O hero em `100svh` mantém a linha do
+  player sempre na base do hero.
+- **Retrato baixo** (regime retrato com `< 50rem` de altura: 360×740, 320×568, texto a 200 %):
+  trilho e progresso saem (`display: none`) — com alvos de 44 px o trilho tem ~210 px e não cabe
+  entre o rótulo e o wordmark. Menu e player cobrem a navegação.
+- **Nigiri no retrato:** `min(76%, 38% da altura do hero)`, centrado — em 768×1024 os 76 % da
+  largura desciam sobre o wordmark.
+- **Palco do ACT II no retrato:** `max-width: 600px`, centrado.
+- **Wordmark:** limitado também pela largura — retrato `min(clamp(4rem, 24.4vw, 22rem), 25vw)`,
+  paisagem `min(clamp(4rem, 17.9vw, 22rem), 19vw)`. Com texto a 200 % o piso `4rem` estouraria.
+- **Formulário:** três grupos lado a lado só a partir de `64rem`; entre 48 e 64rem, DATA numa
+  linha e HORÁRIO + PESSOAS lado a lado (nas caixas de 36 px não cabia o alvo de toque). Os dois
+  selects de DATA quebram para uma coluna quando não cabem (`auto-fit`, mínimo `7rem`).
+
+**Alvo de toque:** `--touch: 44px` — medida física, em px de propósito (não cresce com o texto).
+`--ctl-size: clamp(var(--touch), 3.1vw, 48px)` (player, pílula), hambúrguer em caixa 44×44, traços
+do trilho com 44 px de altura (o traço visível continua curto), logo, links do rodapé e skip link
+com `min-height: var(--touch)`.
+
+**Fontes de fallback com métricas ajustadas** (`base.css`): `Archivo Fallback` (Segoe UI,
+`size-adjust 107%`) e `Archivo Fallback Helvetica` (Helvetica/Liberation/DejaVu, `99.4%`), idem
+para Space Grotesk (`99.6%` / `92.5%`), com `ascent/descent-override` medidos. CLS com as web fonts
+atrasadas 1,5 s: 0,003 (1440) e 0,001 (390).
+
+**Compatibilidade (Safari/iOS) já tratada no CSS:** `svh` com fallback em `vh` via
+`@supports not (height: 1svh)`; `overflow: clip` com `overflow: hidden` antes; `text-box` com
+fallback `line-height: .73` no wordmark (`@supports not`); `-webkit-` em `mask-*`,
+`backdrop-filter`, `background-clip: text`, `appearance`; `color-mix()` com cor sólida antes onde
+a falta dele apagaria algo (fundo do card, fundo das caixas, halo do título do ACT III);
+`-webkit-appearance: none` nos campos numéricos; `-webkit-tap-highlight-color: transparent`;
+`overscroll-behavior: contain` no menu. Campos com fonte ≥ 20 px (o iOS não dá zoom no foco).
+
+**Ferramentas:** `npm run audit` (12 telas + texto 200 %, movimento reduzido + tema claro, fontes
+bloqueadas, CLS), `npm run test:nav`, `npm run test:form`, `npm run serve` (porta 4173 ou `PORT`).
 
 ### Raio de borda
 
@@ -266,12 +314,12 @@ Legenda da coluna **Origem**:
 | 7 | Espelho d'água | Reflexo ondulado das letras na metade inferior | Clone do `h1` com `aria-hidden`, `transform: scaleY(-1)`, `mask-image: linear-gradient(to top, #000, transparent 95%)` (a máscara é aplicada antes do flip), `filter: blur(1px) url(#ripple)` | CSS+SVG |
 | 8 | Nav — menu | Hambúrguer de 3 traços, ~28×22 @1440, à esquerda | `button aria-expanded` com 3 `span`; vira X ao abrir. Abre o overlay (camada 17) | CSS |
 | 9 | Nav — logo | `ASAMI` / `SUSHI` centralizado, branco puro | `a` com 2 linhas; `SUSHI` com `letter-spacing:.48em` + `text-indent:.48em` para compensar | TEXTO |
-| 10 | Nav — pílula `432Hz` | Cápsula contornada com `432Hz` + ícone de alto-falante | **Sem áudio na v1 (D13).** Vira ornamento inerte: `span`, não `button`, sem `role`, `aria-hidden="true"`, sem hover nem foco. Se na revisão parecer um controle quebrado, remover — a nav sobrevive sem ela | CSS |
+| 10 | Nav — pílula `RESERVAR` | Cápsula contornada (era `432Hz` no mockup) | **D25:** `a.pill-cta` para `#ato-4`, texto `RESERVAR` + seta SVG, hover e foco visível. Só a seta em header estreito | CSS |
 | 11 | Trilho esquerdo | ~8 traços empilhados + botão circular `‹` | **Navegação por ato (D17).** `<nav aria-label="Atos">` com 4 `<a href="#ato-1…4">`; traço = `span` 1×6 px em `--text-faint`, ativo em `--chrome-100`. Os traços extras do mockup são decorativos e não entram | CSS |
 | 12 | Indicador direito | Linha vertical fina com ponto | **Progresso de scroll (D17).** `div` de 1 px + `span` circular posicionado por `--progress`; `aria-hidden` (é espelho do trilho, não controle) | CSS |
 | 13 | Barra de player | 3 botões circulares ⏮ ⏸ ⏭, canto inferior esquerdo | **Sem áudio (D13).** ⏸ vira `button aria-pressed` que **pausa/retoma as animações** (alterna `.is-paused` no `<html>`, que zera `animation-play-state` e desliga o parallax); ⏮ ⏭ **navegam entre os atos** (`scrollIntoView` no ato anterior/seguinte). Rótulos acessíveis: "Pausar animações", "Ato anterior", "Próximo ato" | SVG+CSS+JS |
 | 14 | HUD central | `DEPTH 0.4MM / TENSION / MA` — texto completo confirmado (D16) | `p` em Space Grotesk 500, `--fs-hud`, `--text-mid`. Decorativo em inglês (D7) → `aria-hidden="true"` | TEXTO |
-| 15 | Toggle inferior | Cápsula `432Hz` com knob claro deslizante | Mesmo destino da camada 10 (D13): ornamento inerte ou removido. Não implementar como `input` | CSS |
+| 15 | Toggle inferior | Cápsula `432Hz` com knob claro deslizante | **Removido (D25).** | — |
 | 16 | Grão | Ruído sutil sobre tudo | `::after` full-bleed com `feTurbulence` em `data:` URI, `opacity .04`, `mix-blend-mode:overlay` | SVG |
 | 17 | Overlay de menu | **Não existe no mockup** — tela cheia ao clicar no hambúrguer (D11) | `<dialog>` ou `div[role=dialog]` full-bleed, `background: rgb(4 5 7 / .96)` + `backdrop-filter: blur(20px)`. Itens em `--fs-title`: **Ato I · A Chegada**, **Ato II · Rodízio**, **Ato III · O Salão**, **Ato IV · Reservas** e **Cardápio** (D12 — link externo, PDF ou WhatsApp). Rótulos em PT-BR (D7). Foco preso dentro do overlay, `Esc` fecha, foco volta ao hambúrguer | CSS+JS |
 
@@ -447,8 +495,7 @@ hero seriam cobertos pelos atos seguintes.
 - **⏮ ⏭:** rolam até o ato vizinho com `scrollIntoView` — `smooth`, ou `auto` sob
   `prefers-reduced-motion`. Nas pontas ficam `aria-disabled="true"` (continuam focáveis).
 - **Âncoras:** `.section { scroll-margin-block: 0 }` — atos full-bleed encostam no topo.
-- **432Hz (D13):** as duas pílulas são `span aria-hidden`, com `pointer-events: none` e
-  `cursor: default`: sem hover, sem foco, sem cara de controle.
+- **Pílula do topo (D25):** link `RESERVAR` para `#ato-4`. O toggle inferior foi removido.
 
 **Menu (camada 17, D11).** Itens: **Rodízio** (`#ato-2`), **Ambiente** (`#ato-3`),
 **Reservas** (`#ato-4`), **Cardápio** (`wa.me` com "Olá! Gostaria de ver o cardápio.", mesma
@@ -634,6 +681,7 @@ o efeito que já foi aplicado nas seções acima.
 | **D21** ✅ | **Água do ACT IV procedural** (`feTurbulence`). Não existe `plate-water-tile`. | §4/04 camada 1, §6 |
 | **D22** ✅ | **`plate-board-left` é provisório** (mostra lula/polvo, fora do CLIENTE.md) e será substituído. Callouts só com texto do CLIENTE.md; a tábua esquerda fica sem rótulo. | §4/02 camadas 5 e 8, §6 |
 | **D23** ✅ | **Logo real só como favicon.** O rodapé usa o wordmark em texto até chegar um arquivo em alta. | §4/05 camada 7, §6 |
+| **D25** ✅ | **Substitui a D13.** A pílula `432Hz` do topo direito vira o link **`RESERVAR` → `#ato-4`**: mesmo visual de pílula, ícone de seta no lugar do alto-falante, hover (preenche em `--chrome-100`) e foco visível âmbar. O toggle `432Hz` inferior do hero **sai**. Continua sem áudio na v1; ⏸ alterna `html[data-motion="paused"]` e ⏮ ⏭ navegam entre atos. Em header estreito (< 19rem de conteúdo) a pílula mostra só a seta; o texto fica para leitor de tela. | §4/01 camadas 10 e 15, §4b |
 | **D24** ✅ | **`plate-room` no ACT III como imagem PROVISÓRIA** (substitui D5 e D20 para esta camada). É gerado por IA e **não corresponde ao salão real**: confirmar com o cliente ou trocar por foto real antes da entrega. Sem `screen` (não tem fundo preto): imagem normal escurecida, mascarada e com vinheta. Trocar = mudar `--room-img` em `css/sanctum.css`. | §4/03 camada 2, §6, assets.md |
 
 ### Comportamento
@@ -641,7 +689,7 @@ o efeito que já foi aplicado nas seções acima.
 | # | Decisão | Onde já está aplicado |
 |---|---|---|
 | **D9** ✅ | **Formulário sem backend.** Campos `DATA`, `HORÁRIO`, `PESSOAS`. No clique, monta a mensagem e abre `wa.me` com texto pré-preenchido. | §4/04 camadas 5–9 + bloco da mensagem |
-| **D13** ✅ | **Sem áudio na v1.** `432Hz` vira ornamento inerte (`span`, `aria-hidden`) ou é removido. ⏸ pausa/retoma as animações; ⏮ ⏭ navegam entre os atos. | §4/01 camadas 10, 13 e 15; §5 interruptores globais |
+| ~~D13~~ | **Substituída pela D25.** Sem áudio na v1; as pílulas `432Hz` eram ornamento inerte. ⏸ ⏮ ⏭ continuam como descritos na D25. | §4/01 camadas 10, 13 e 15 |
 | **D17** ✅ | **Trilho esquerdo = navegação por ato** (links reais). **Indicador direito = progresso de scroll** (decorativo, `aria-hidden`). | §4/01 camadas 11 e 12 |
 
 ### Técnicas

@@ -8,7 +8,9 @@
     "shots": "node scripts/screenshot.mjs",
     "assets": "py scripts/build_assets.py",
     "test:form": "node scripts/test-reserva.mjs",
-    "test:nav": "node scripts/test-nav.mjs"
+    "test:nav": "node scripts/test-nav.mjs",
+    "audit": "node scripts/audit.mjs",
+    "serve": "node scripts/serve.mjs"
   },
   "keywords": [],
   "author": "",

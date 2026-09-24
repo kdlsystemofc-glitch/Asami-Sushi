@@ -1,5 +1,45 @@
 /* Base: tipografia global, grid, utilitários. Valores só via tokens.css. */
 
+/* ── Fallbacks de fonte com métricas da Archivo / Space Grotesk ─────────────
+   Medidos no Chromium (texto de 100 caracteres do site, a 100px):
+   Archivo  → ascent .88 · descent .21 · 7% mais larga que Segoe UI, igual à Helvetica
+   Space G. → ascent .98 · descent .29 · igual à Segoe UI, 8% mais larga que Helvetica
+   ascent/descent-override são relativos ao tamanho já ajustado (÷ size-adjust).
+   Nenhuma fonte proibida pelo CLAUDE.md é nomeada: Segoe UI (Windows), Helvetica (Apple),
+   Liberation/DejaVu (Linux). No Android cai em system-ui. */
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Segoe UI");
+  size-adjust: 107%;
+  ascent-override: 82.2%;
+  descent-override: 19.6%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Archivo Fallback Helvetica";
+  src: local("Helvetica Neue"), local("Helvetica"), local("Liberation Sans"), local("DejaVu Sans");
+  size-adjust: 99.4%;
+  ascent-override: 88.5%;
+  descent-override: 21.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Space Grotesk Fallback";
+  src: local("Segoe UI");
+  size-adjust: 99.6%;
+  ascent-override: 98.4%;
+  descent-override: 29.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Space Grotesk Fallback Helvetica";
+  src: local("Helvetica Neue"), local("Helvetica"), local("Liberation Sans"), local("DejaVu Sans");
+  size-adjust: 92.5%;
+  ascent-override: 105.9%;
+  descent-override: 31.4%;
+  line-gap-override: 0%;
+}
+
 html {
   background: var(--ink-900);
   color-scheme: dark;
@@ -13,10 +53,14 @@ body {
   line-height: var(--lh-hud);
   letter-spacing: var(--ls-hud);
   text-transform: uppercase; /* todo texto da peça é caixa-alta (§2); HTML em caixa normal */
+  overflow-x: hidden;        /* fallback: Safari < 16 não conhece clip */
   overflow-x: clip;
 }
 
 ::selection { background: var(--salmon-500); color: var(--ink-900); }
+
+/* iOS: sem o flash cinza no toque — o foco visível é o contorno âmbar abaixo */
+a, button, input, select, label { -webkit-tap-highlight-color: transparent; }
 
 :focus-visible {
   outline: 2px solid var(--amber-400);
@@ -152,6 +196,9 @@ body {
   inset-inline-start: var(--gutter);
   z-index: 100;
   padding: var(--sp-1) var(--sp-2);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
   background: var(--chrome-100);
   color: var(--ink-900);
   border-radius: var(--r-sm);

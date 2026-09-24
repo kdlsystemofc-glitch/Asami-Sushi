@@ -1,6 +1,7 @@
 /* Nav do topo (§4/01 camadas 8, 9, 10). Overlay de menu e navegação entre atos: nav.css. */
 
 .site-header {
+  container-type: inline-size;
   position: absolute;
   inset: 0 0 auto;
   z-index: 20;
@@ -12,15 +13,17 @@
 
 /* ── 8 · hambúrguer ─────────────────────────────────────── */
 .menu-toggle {
+  --bars-w: clamp(1.25rem, 1.9vw, 1.75rem);
+  --bars-h: clamp(.875rem, 1.4vw, 1.3rem);
   justify-self: start;
   display: grid;
   align-content: space-between;
-  width: clamp(1.25rem, 1.9vw, 1.75rem);
-  height: clamp(.875rem, 1.4vw, 1.3rem);
-  /* área de toque ≥ 44 px sem mudar o desenho */
-  padding: clamp(.75rem, 1vw, .9rem);
-  box-sizing: content-box;
-  margin: calc(-1 * clamp(.75rem, 1vw, .9rem));
+  /* caixa de 44 × 44 (alvo de toque) com o desenho das barras no meio */
+  box-sizing: border-box;
+  width: var(--touch);
+  height: var(--touch);
+  padding: calc((var(--touch) - var(--bars-h)) / 2) calc((var(--touch) - var(--bars-w)) / 2);
+  margin-left: calc((var(--bars-w) - var(--touch)) / 2);
   color: var(--text-base);
 }
 
@@ -34,17 +37,20 @@
 
 /* aberto: as 3 barras viram X (as de fora giram até o centro, a do meio some) */
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(1) {
-  transform: translateY(calc(clamp(.875rem, 1.4vw, 1.3rem) / 2 - .75px)) rotate(45deg);
+  transform: translateY(calc(var(--bars-h) / 2 - .75px)) rotate(45deg);
 }
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(2) { opacity: 0; }
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(3) {
-  transform: translateY(calc(clamp(.875rem, 1.4vw, 1.3rem) / -2 + .75px)) rotate(-45deg);
+  transform: translateY(calc(var(--bars-h) / -2 + .75px)) rotate(-45deg);
 }
 
 /* ── 9 · logo ───────────────────────────────────────────── */
 .logo {
   display: grid;
   justify-items: center;
+  align-content: center;
+  min-height: var(--touch);  /* alvo de toque */
+  min-width: var(--touch);
   gap: clamp(.25rem, .6vw, .5rem);
   color: var(--chrome-100);
 }
@@ -69,36 +75,46 @@
   color: var(--text-base);
 }
 
-/* ── 10 / 15 · pílula 432Hz (ornamento inerte, D13) ─────── */
-.hz-pill {
+/* ── 10 · pílula "Reservar" (D25): link para #ato-4, visual da pílula do mockup ── */
+.pill-cta {
   justify-self: end;
   display: inline-flex;
   align-items: center;
-  gap: clamp(.5rem, 1vw, .9rem);
-  height: var(--ctl-size);
-  padding-inline: clamp(.75rem, 1.4vw, 1.25rem) clamp(.6rem, 1.1vw, 1rem);
+  gap: clamp(.5rem, 1vw, .8rem);
+  min-height: var(--ctl-size);
+  padding-inline: clamp(.85rem, 1.4vw, 1.25rem) clamp(.75rem, 1.1vw, 1rem);
   border: var(--border-hud);
   border-radius: var(--r-pill);
   font-family: var(--font-body);
-  font-weight: 400;
+  font-weight: 500;
   font-size: var(--fs-hud);
-  letter-spacing: .04em;
-  text-transform: none;
+  letter-spacing: var(--ls-hud);
+  line-height: 1;
+  white-space: nowrap;
   color: var(--text-base);
-  user-select: none;
-  /* D13: ornamento, não controle — sem cursor de clique, sem hover, sem foco */
-  cursor: default;
-  pointer-events: none;
+  transition: border-color var(--t-fast) var(--ease-soft), background-color var(--t-fast) var(--ease-soft), color var(--t-fast) var(--ease-soft);
 }
 
-.hz-pill__icon {
-  width: clamp(.875rem, 1.2vw, 1.1rem);
-  opacity: .8;
+.pill-cta:hover {
+  border-color: var(--chrome-100);
+  background: var(--chrome-100);
+  color: var(--ink-900);
 }
 
-.hz-pill__knob {
-  width: calc(var(--ctl-size) * .62);
-  aspect-ratio: 1;
-  border-radius: var(--r-full);
-  background: radial-gradient(circle at 35% 30%, var(--chrome-100), var(--mist-200) 60%, var(--steel-300));
+.pill-cta:focus-visible {
+  outline: 2px solid var(--amber-400);
+  outline-offset: 3px;
+  border-color: var(--chrome-100);
+}
+
+.pill-cta__icon { width: clamp(.875rem, 1.2vw, 1.1rem); flex: none; }
+
+/* header estreito (320 px, ou texto ampliado): a pílula fica só com a seta;
+   o texto continua no link para leitor de tela */
+@container (max-width: 19rem) {
+  .pill-cta { padding-inline: 0; width: var(--ctl-size); justify-content: center; }
+  .pill-cta span {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
 }

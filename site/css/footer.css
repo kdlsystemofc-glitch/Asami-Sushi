@@ -59,6 +59,10 @@
 }
 
 .site-footer__link {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--touch); /* alvo de toque */
   color: var(--text-base);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--text-base) 30%, transparent);

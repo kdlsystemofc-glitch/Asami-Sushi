@@ -35,11 +35,15 @@
   --place-warm: #E9D5C6; /* SÃO BERNARDO DO CAMPO // CENTRO (§4/03 camada 7) */
 
   /* ── §2 Famílias ──────────────────────────────────────── */
-  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  /* Fallbacks com métricas ajustadas (base.css): se a Google Fonts falhar ou demorar, o texto
+     ocupa quase o mesmo espaço e a troca não empurra o layout. */
+  --font-display: "Archivo", "Archivo Fallback", "Archivo Fallback Helvetica", system-ui, sans-serif;
+  --font-body: "Space Grotesk", "Space Grotesk Fallback", "Space Grotesk Fallback Helvetica", system-ui, sans-serif;
 
   /* ── §2 Escala tipográfica (topos ✔︎ reduzidos por D15) ── */
-  --fs-wordmark: clamp(4rem, 24.4vw, 22rem); /* mobile; desktop no media query */
+  /* retrato; paisagem no media query. min(…, 25vw): com texto a 200 % o piso de 4rem
+     estouraria a largura, então a largura manda */
+  --fs-wordmark: min(clamp(4rem, 24.4vw, 22rem), 25vw);
   --fw-wordmark: 500;
   --wdth-wordmark: 100;
   --cap-ratio: .7;                          /* altura de maiúscula da Archivo ÷ font-size */
@@ -87,7 +91,9 @@
   --grid-gap: var(--sp-3);
 
   /* ── §3 Alturas de seção ──────────────────────────────── */
-  --h-hero: 100svh;               /* mobile: tela cheia; desktop no media query */
+  /* retrato: tela cheia, com piso físico (em px: o conteúdo do hero não dobra com o texto,
+     o wordmark é limitado pela largura — um piso em rem dobraria à toa com texto a 200 %) */
+  --h-hero: max(100svh, 540px);
   --h-rodizio: max(80svh, 46vw);
   --h-sanctum: max(72svh, 41vw);
   --h-reserva-min: 60svh;
@@ -100,7 +106,8 @@
   --r-pill: 9999px;
   --r-full: 50%;
   --field-h: clamp(2.75rem, 4.6vw, 4.125rem); /* campos e botão do formulário: 66 px@1440, mín. 44 px (toque) */
-  --ctl-size: clamp(2rem, 3.1vw, 2.75rem); /* botões circulares e pílulas do HUD (24px@768) */
+  --touch: 44px;                           /* alvo de toque mínimo: medida física, não cresce com o texto */
+  --ctl-size: clamp(var(--touch), 3.1vw, 48px); /* botões circulares e pílulas (45px@1440) */
   --border-hud: 1px solid rgb(255 255 255 / .18);
   --border-strong: 1px solid rgb(234 238 242 / .85);
   --border-rule: 1px solid rgb(255 255 255 / .08);
@@ -119,9 +126,51 @@
 }
 
 @media (min-width: 48rem) {
+  :root { --grid-cols: 12; }
+}
+
+/* Composição em PAISAGEM (a do mockup): ≥ 768 px E mais largo que alto.
+   Retrato (celular, tablet em pé) usa a composição vertical, mesmo com 768 px ou mais.
+   Altura: o quadro 16:9 do mockup (56,9vw) limitado à tela — mas nunca menos que
+   min(56,9vw, 480px), para o hero não achatar em telas largas e baixas (celular deitado). */
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   :root {
-    --grid-cols: 12;
-    --h-hero: min(100svh, 56.9vw);
-    --fs-wordmark: clamp(4rem, 17.9vw, 22rem);
+    --h-hero: max(min(100svh, 56.9vw), min(56.9vw, 480px));
+    --fs-wordmark: min(clamp(4rem, 17.9vw, 22rem), 19vw);
+  }
+}
+
+/* Paisagem COM altura (nav fixo, ver nav.css): cada ato ocupa ao menos a tela inteira.
+   Com o player fixo no canto inferior esquerdo, um ato mais baixo que a tela deixaria o
+   rótulo do ato seguinte (canto superior esquerdo) aparecer embaixo do player. Pelo mesmo
+   motivo o hero passa a 100svh: a linha do player fica sempre na base do hero. */
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) and (min-height: 32rem) {
+  :root {
+    --h-hero: 100svh;
+    --h-rodizio: max(100svh, 46vw);
+    --h-sanctum: max(100svh, 41vw);
+    --h-reserva-min: 100svh;
+  }
+}
+
+/* Safari < 15.4 e afins não conhecem svh: sem isso a declaração inteira é descartada
+   e o hero perde a altura. */
+@supports not (height: 1svh) {
+  :root {
+    --h-hero: max(100vh, 540px);
+    --h-rodizio: max(80vh, 46vw);
+    --h-sanctum: max(72vh, 41vw);
+    --h-reserva-min: 60vh;
+  }
+  @media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
+    :root { --h-hero: max(min(100vh, 56.9vw), min(56.9vw, 480px)); }
+  }
+  @media (min-width: 48rem) and (min-aspect-ratio: 1/1) and (min-height: 32rem) {
+    :root {
+      --h-hero: 100vh;
+      --h-rodizio: max(100vh, 46vw);
+      --h-sanctum: max(100vh, 41vw);
+      --h-reserva-min: 100vh;
+    }
   }
 }

@@ -1,15 +1,17 @@
 /* ACT II — THE FEAST OF ABUNDANCE (§4/02, camadas 1–10). Layout estático: sem animação.
    O palco tem proporção fixa; tábuas, linhas-guia (SVG) e rótulos (HTML) usam o mesmo
-   sistema de coordenadas: 1440×662 no desktop, 390×600 no mobile. */
+   sistema de coordenadas: 1440×662 em paisagem, 390×560 em retrato (celular e tablet em pé —
+   mesmo regime do hero). */
 
 .rodizio {
   --waterline: 83%;       /* linha d'água dentro do palco (base da tábua direita) */
   position: relative;
+  overflow: hidden; /* fallback Safari < 16 */
   overflow: clip;
   padding-block: var(--gutter) var(--sp-6);
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   .rodizio {
     height: var(--h-rodizio);
     padding: 0;
@@ -37,7 +39,7 @@
   z-index: 6;
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   .rodizio__head { padding-top: var(--gutter); }
 }
 
@@ -47,11 +49,13 @@
 .rodizio__stage {
   position: relative;
   width: 100%;
+  max-width: 600px;      /* retrato em tela larga (tablet em pé, texto ampliado): não agigantar as tábuas */
+  margin-inline: auto;
   aspect-ratio: 390 / 560;
   margin-top: var(--sp-6);
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   .rodizio__stage {
     position: absolute;
     left: 0;
@@ -60,6 +64,8 @@
     top: 50%;
     margin-top: calc(-100vw * 331 / 1440);
     aspect-ratio: 1440 / 662;
+    max-width: none;
+    margin-inline: 0;
   }
 }
 
@@ -94,7 +100,7 @@
 .rodizio__steam-layer--b { left: 53%; top: -6%;  width: 24%; opacity: .3; transform: scaleX(-1); }
 .rodizio__steam-layer--c { left: 25%; top: 16%;  width: 14%; opacity: .28; transform: scaleX(-1); }
 
-@media (max-width: 47.99rem) {
+@media (max-width: 47.99rem), (max-aspect-ratio: 999/1000) {
   .rodizio__steam-layer--a { left: 22%; top: -14%; width: 50%; }
   .rodizio__steam-layer--b { left: 46%; top: -10%; width: 44%; }
   .rodizio__steam-layer--c { display: none; }
@@ -115,7 +121,7 @@
   filter: blur(.5px);
 }
 
-@media (max-width: 47.99rem) {
+@media (max-width: 47.99rem), (max-aspect-ratio: 999/1000) {
   /* no retrato, as faíscas ficam sobre a tábua direita */
   .rodizio__embers { inset: -4% 0 55%; }
 }
@@ -152,7 +158,7 @@
 .board--left  { --bx: -2%;  --by: 47.1%; --bw: 72%; }
 .board--right { --bx: 6%;   --by: 3%;  --bw: 90%; }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   .board--left  { --bx: 15.8%; --by: 36.4%; --bw: 32.4%; rotate: 6deg; }
   .board--right { --bx: 44%;   --by: 21.5%; --bw: 42%; }
 }
@@ -215,7 +221,7 @@
 
 .callouts--wide { display: none; }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   .callouts--wide { display: block; }
   .callouts--narrow { display: none; }
 }
@@ -237,11 +243,13 @@
 }
 
 .callout-label--price   { --lx: 15.4%; --ly: 90.7%; }
-.callout-label--sashimi { --lx: 76.9%; --ly: 46.3%; }
+/* retrato: ancorado à direita, no fim da linha-guia (x 352 de 390) — com texto grande
+   cresce para a esquerda em vez de sair da tela */
+.callout-label--sashimi { --ly: 46.3%; left: auto; right: 9.74%; text-align: right; }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   .callout-label--price   { --lx: 40.1%; --ly: 85.6%; }
-  .callout-label--sashimi { --lx: 79.9%; --ly: 68.5%; }
+  .callout-label--sashimi { --lx: 79.9%; --ly: 68.5%; left: var(--lx); right: auto; text-align: left; }
 }
 
 /* ── 9 · micro-label do topo ────────────────────────────── */
@@ -259,7 +267,8 @@
   letter-spacing: var(--ls-hud);
   line-height: 1;
   color: var(--text-mid);
-  white-space: nowrap;
+  flex-wrap: wrap;
+  row-gap: var(--sp-1);
 }
 
 .stage-tag__line {
@@ -269,6 +278,6 @@
   opacity: .7;
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
   .stage-tag { left: 18.2%; top: 24.9%; }
 }

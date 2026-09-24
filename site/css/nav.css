@@ -5,9 +5,8 @@
 /* ── posicionamento ─────────────────────────────────────────
    Mobile: absolutos no topo do documento, sobre o hero (fixos cobririam os cards).
    Desktop: fixos na viewport, acompanhando todos os atos. */
-.act-nav {
-  --hero-real: max(var(--h-hero), 34rem); /* o hero mobile tem min-height: 34rem */
-}
+.act-nav { --rail-y: .33; }              /* retrato: trilho no terço superior do hero */
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) { .act-nav { --rail-y: .515; } } /* paisagem: centro do trilho no mockup (225/437) */
 
 .rail,
 .progress,
@@ -19,22 +18,24 @@
 
 .rail {
   left: calc(var(--gutter) - var(--ctl-size) * .25);
-  top: calc(var(--hero-real) * .33);
+  top: calc(var(--h-hero) * var(--rail-y));
   translate: 0 -50%;
 }
 
 .progress {
   right: var(--gutter);
-  top: calc(var(--hero-real) * .33);
+  top: calc(var(--h-hero) * var(--rail-y));
   translate: 0 -50%;
 }
 
 .player {
   left: var(--gutter);
-  top: calc(var(--hero-real) - var(--gutter) - var(--ctl-size));
+  top: calc(var(--h-hero) - var(--gutter) - var(--ctl-size));
 }
 
-@media (min-width: 48rem) {
+/* fixos só em paisagem com altura: em telas baixas (celular deitado) o hero é mais alto
+   que a tela e um player fixo cairia em cima do wordmark */
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) and (min-height: 32rem) {
   .rail,
   .progress,
   .player { position: fixed; }
@@ -51,6 +52,14 @@
   :root[data-at-footer] .progress { opacity: 0; visibility: hidden; }
 }
 
+/* Regime retrato e baixo (< 50rem de altura: 360×740, 320×568, ou texto a 200 %): com alvos de 44 px o
+   trilho tem ~210 px e não cabe entre o rótulo e o wordmark. Ele duplica o menu e o player,
+   então sai de cena — junto com o progresso, que é o espelho dele. */
+@media (max-width: 47.99rem) and (max-height: 50rem), (max-aspect-ratio: 999/1000) and (max-height: 50rem) {
+  .rail,
+  .progress { display: none; }
+}
+
 /* ── 11 · trilho ────────────────────────────────────────── */
 .rail__list {
   display: grid;
@@ -61,7 +70,7 @@
   display: grid;
   place-items: center;
   width: var(--ctl-size);
-  height: clamp(1rem, 1.5vw, 1.4rem);
+  height: var(--touch); /* alvo de toque de 44 px (o traço visível continua curto) */
 }
 
 .rail__tick::before {
@@ -78,6 +87,8 @@
 }
 
 .rail__tick:hover::before { background: var(--text-base); }
+
+
 
 .rail__knob {
   display: grid;
@@ -147,6 +158,7 @@
   align-content: center;
   padding: calc(var(--gutter) * 2 + var(--ctl-size)) var(--gutter) var(--gutter);
   overflow: hidden auto;
+  overscroll-behavior: contain; /* iOS: a rolagem do overlay não arrasta a página */
   background: var(--ink-900);
   color: var(--text-base);
   isolation: isolate;
@@ -166,6 +178,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
+  overflow: hidden; /* fallback Safari < 16 */
   overflow: clip;
   pointer-events: none;
 }
@@ -197,7 +210,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--sp-3);
-  min-height: 2.75rem;        /* alvo de toque */
+  min-height: var(--touch);   /* alvo de toque */
   padding-block: var(--sp-2);
   border-bottom: var(--border-rule);
   font-family: var(--font-display);

@@ -65,14 +65,13 @@
       <span class="visually-hidden"> — início</span>
     </a>
 
-    <!-- Camada 10: ornamento inerte, sem áudio na v1 (D13) -->
-    <span class="hz-pill" aria-hidden="true">
-      <span>432Hz</span>
-      <svg class="hz-pill__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-        <path d="M2 6.5h2.2L7.5 4v8L4.2 9.5H2z"/>
-        <path d="M10 6.2c.6.5.6 3.1 0 3.6M12 4.8c1.3 1.2 1.3 5.2 0 6.4"/>
+    <!-- Camada 10 (D25, substitui a D13): pílula vira atalho para as reservas -->
+    <a class="pill-cta" href="#ato-4">
+      <span>Reservar</span>
+      <svg class="pill-cta__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 8h9.5M8.5 4l4 4-4 4"/>
       </svg>
-    </span>
+    </a>
   </header>
 
   <!-- Camada 17: overlay de menu (D11) -->
@@ -203,15 +202,10 @@
       <!-- saída em --ink-900: emenda com o ACT II -->
       <div class="hero__exit" aria-hidden="true"></div>
 
-      <!-- 14–15 · barra inferior (o player, camada 13, está em .act-nav) -->
+      <!-- 14 · HUD (o player, camada 13, está em .act-nav; o toggle 15 saiu pela D25) -->
       <div class="hero__bar">
         <p class="hero__hud" aria-hidden="true">Depth 0.4mm / Tension / Ma</p>
 
-        <!-- 15 · toggle inerte (D13) -->
-        <span class="hz-pill hz-pill--toggle" aria-hidden="true">
-          <span>432Hz</span>
-          <span class="hz-pill__knob"></span>
-        </span>
       </div>
     </section>
 

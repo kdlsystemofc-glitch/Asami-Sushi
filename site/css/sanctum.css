@@ -9,6 +9,7 @@
   position: relative;
   height: var(--h-sanctum);
   min-height: 30rem;
+  overflow: hidden; /* fallback Safari < 16 */
   overflow: clip;
 }
 
@@ -176,6 +177,8 @@
   text-align: center;
   color: var(--place-warm);
   /* halo escuro: garante AA onde o texto cruza o núcleo do neon */
+  /* fallback sem color-mix: o halo não pode sumir (é ele que garante o AA sobre o neon) */
+  text-shadow: 0 0 2px var(--ink-900), 0 0 4px var(--ink-900), 0 0 10px var(--ink-900), 0 0 24px var(--ink-900);
   text-shadow:
     0 0 2px var(--ink-900),
     0 0 4px var(--ink-900),
