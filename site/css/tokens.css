@@ -53,7 +53,8 @@
   --fs-value: clamp(1.25rem, 2.6vw, 2rem);
 
   --ls-wordmark: .045em;
-  --ls-display: .02em;
+  --ls-display: 0;
+  --wdth-display: 92;  /* medido: título de lugar mais estreito que a Archivo normal */
   --ls-title: .01em;
   --ls-eyebrow: .08em;
   --ls-logo: .03em;

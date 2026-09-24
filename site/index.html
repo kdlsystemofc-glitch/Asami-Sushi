@@ -10,7 +10,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 
   <link rel="preload" as="image" href="assets/plate-nigiri-800.webp"
         imagesrcset="assets/plate-nigiri-800.webp 800w, assets/plate-nigiri-1600.webp 1600w"
@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/rodizio.css">
+  <link rel="stylesheet" href="css/sanctum.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -86,15 +87,15 @@
 
       <!-- 2 · névoa: um plate, três camadas mascaradas no terço médio -->
       <div class="hero__smoke" aria-hidden="true">
-        <img class="plate hero__smoke-layer hero__smoke-layer--l"
+        <img width="800" height="447" class="plate hero__smoke-layer hero__smoke-layer--l"
              src="assets/plate-smoke-hero-800.webp"
              srcset="assets/plate-smoke-hero-800.webp 800w, assets/plate-smoke-hero-1600.webp 1600w"
              sizes="70vw" alt="" decoding="async">
-        <img class="plate hero__smoke-layer hero__smoke-layer--r"
+        <img width="800" height="447" class="plate hero__smoke-layer hero__smoke-layer--r"
              src="assets/plate-smoke-hero-800.webp"
              srcset="assets/plate-smoke-hero-800.webp 800w, assets/plate-smoke-hero-1600.webp 1600w"
              sizes="70vw" alt="" decoding="async">
-        <img class="plate hero__smoke-layer hero__smoke-layer--c"
+        <img width="800" height="447" class="plate hero__smoke-layer hero__smoke-layer--c"
              src="assets/plate-smoke-hero-800.webp"
              srcset="assets/plate-smoke-hero-800.webp 800w, assets/plate-smoke-hero-1600.webp 1600w"
              sizes="100vw" alt="" decoding="async">
@@ -119,7 +120,7 @@
       </div>
 
       <!-- 4 · nigiri -->
-      <img class="plate hero__nigiri"
+      <img width="800" height="597" class="plate hero__nigiri"
            src="assets/plate-nigiri-800.webp"
            srcset="assets/plate-nigiri-800.webp 800w, assets/plate-nigiri-1600.webp 1600w"
            sizes="(min-width: 48rem) 34vw, 70vw"
@@ -218,11 +219,11 @@
         <div class="rodizio__screen">
         <!-- 2 · vapor: um plate, espelhado -->
         <div class="rodizio__steam" aria-hidden="true">
-          <img class="plate rodizio__steam-layer rodizio__steam-layer--a"
+          <img width="800" height="1433" class="plate rodizio__steam-layer rodizio__steam-layer--a"
                src="assets/plate-smoke-thin-800.webp" alt="" loading="lazy" decoding="async">
-          <img class="plate rodizio__steam-layer rodizio__steam-layer--b"
+          <img width="800" height="1433" class="plate rodizio__steam-layer rodizio__steam-layer--b"
                src="assets/plate-smoke-thin-800.webp" alt="" loading="lazy" decoding="async">
-          <img class="plate rodizio__steam-layer rodizio__steam-layer--c"
+          <img width="800" height="1433" class="plate rodizio__steam-layer rodizio__steam-layer--c"
                src="assets/plate-smoke-thin-800.webp" alt="" loading="lazy" decoding="async">
         </div>
 
@@ -247,12 +248,12 @@
         <div class="rodizio__boards" aria-hidden="true">
           <!-- TODO D22: plate-board-left é provisório; o cliente vai substituir -->
           <div class="board board--left">
-            <img class="plate" src="assets/plate-board-left-800.webp"
+            <img width="800" height="597" class="plate" src="assets/plate-board-left-800.webp"
                  srcset="assets/plate-board-left-800.webp 800w, assets/plate-board-left-1600.webp 1600w"
                  sizes="(min-width: 48rem) 33vw, 72vw" alt="" loading="lazy" decoding="async">
           </div>
           <div class="board board--right">
-            <img class="plate" src="assets/plate-board-right-800.webp"
+            <img width="800" height="597" class="plate" src="assets/plate-board-right-800.webp"
                  srcset="assets/plate-board-right-800.webp 800w, assets/plate-board-right-1600.webp 1600w"
                  sizes="(min-width: 48rem) 42vw, 90vw" alt="" loading="lazy" decoding="async">
           </div>
@@ -260,8 +261,8 @@
 
         <!-- 10 · espelho d'água (clone estático + blur) -->
         <div class="rodizio__reflection" aria-hidden="true">
-          <div class="board board--left"><img class="plate" src="assets/plate-board-left-800.webp" alt="" loading="lazy" decoding="async"></div>
-          <div class="board board--right"><img class="plate" src="assets/plate-board-right-800.webp" alt="" loading="lazy" decoding="async"></div>
+          <div class="board board--left"><img width="800" height="597" class="plate" src="assets/plate-board-left-800.webp" alt="" loading="lazy" decoding="async"></div>
+          <div class="board board--right"><img width="800" height="597" class="plate" src="assets/plate-board-right-800.webp" alt="" loading="lazy" decoding="async"></div>
         </div>
         </div>
 
@@ -277,7 +278,7 @@
           <!-- sashimi -->
           <path d="M1030 420L1062 465H1140"/>
           <circle cx="1030" cy="420" r="2"/>
-          <!-- colchete direito -->
+          <!-- colchete direito: moldura da tábua, sem rótulo (só sashimi na foto) -->
           <path d="M1070 175H1210V405H1135"/>
         </svg>
 
@@ -293,7 +294,6 @@
         <div class="callout-labels" aria-hidden="true">
           <span class="callout-label callout-label--price">R$ 80–160 por pessoa</span>
           <span class="callout-label callout-label--sashimi">Sashimi</span>
-          <span class="callout-label callout-label--sushi">Sushi</span>
         </div>
 
         <!-- 9 · micro-label do topo (D6: sem "01 TO 18") -->
@@ -302,6 +302,60 @@
           <span class="stage-tag__line"></span>
         </p>
       </div>
+
+      <!-- saída em --ink-900: emenda com o ACT III -->
+      <div class="rodizio__exit" aria-hidden="true"></div>
+    </section>
+
+    <!-- ═══ ACT III — THE SANCTUM ════════════════════════════ -->
+    <section class="section sanctum" id="ato-3" aria-labelledby="ato-3-titulo">
+
+      <!-- 1 · fundo -->
+      <div class="sanctum__bg" aria-hidden="true"></div>
+
+      <!-- 2 · salão — PROVISÓRIO (D24): imagem gerada, trocar por foto real.
+           O arquivo é definido num único lugar: --room-img em css/sanctum.css -->
+      <div class="sanctum__room" aria-hidden="true"></div>
+
+      <!-- 4 · luz rebatida nas paredes laterais -->
+      <div class="sanctum__spill sanctum__spill--l" aria-hidden="true"></div>
+      <div class="sanctum__spill sanctum__spill--r" aria-hidden="true"></div>
+
+      <!-- 3 · neon vertical (posições e alturas medidas no mockup, 1440×591) -->
+      <div class="neon" aria-hidden="true">
+        <i class="neon__bar" style="--x:27.99%;--t:13.0%;--b:76.3%;--i:1"></i>
+        <i class="neon__bar" style="--x:31.94%;--t:15.2%;--b:71.7%;--i:1"></i>
+        <i class="neon__bar" style="--x:39.72%;--t:24.5%;--b:79.7%;--i:0.75"></i>
+        <i class="neon__bar" style="--x:59.79%;--t:22.8%;--b:79.9%;--i:0.85"></i>
+        <i class="neon__bar" style="--x:67.64%;--t:13.4%;--b:73.3%;--i:1"></i>
+        <i class="neon__bar" style="--x:71.74%;--t:12.7%;--b:76.6%;--i:1"></i>
+      </div>
+
+      <!-- 5 · névoa de chão (fundo preto → screen; filho direto da seção, sem stacking context no meio) -->
+      <img width="800" height="447" class="plate sanctum__fog"
+           src="assets/plate-smoke-floor-800.webp"
+           srcset="assets/plate-smoke-floor-800.webp 800w, assets/plate-smoke-floor-1600.webp 1600w"
+           sizes="110vw" alt="" loading="lazy" decoding="async">
+
+      <!-- 8 · gradiente de saída rumo ao ACT IV -->
+      <div class="sanctum__exit" aria-hidden="true"></div>
+
+      <!-- 6 · rótulo -->
+      <div class="grid sanctum__head">
+        <div class="act-label col-label">
+          <p class="act-label__eyebrow">Act III</p>
+          <h2 class="act-label__title" id="ato-3-titulo">
+            <span>The Sanctum</span>
+            <span>The Room</span>
+          </h2>
+        </div>
+      </div>
+
+      <!-- 7 · título de lugar (D1) -->
+      <p class="sanctum__place">
+        <span>São Bernardo do Campo</span>
+        <span><span aria-hidden="true">// </span>Centro</span>
+      </p>
     </section>
 
   </main>

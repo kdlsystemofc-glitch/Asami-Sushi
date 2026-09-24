@@ -29,6 +29,8 @@ PLATES = {
     "plate-nigiri":      ("plate-nigiri.jpeg.jpeg",      True),
     "plate-board-left":  ("plate-board-left.jpeg.jpeg",  True),
     "plate-board-right": ("plate-board-right.jpeg.jpeg", True),
+    # cena completa, sem fundo preto: sem black point, sem screen. PROVISÓRIO (D24)
+    "plate-room":        ("plate-room.jpeg.jpeg",        False),
 }
 
 LOGO = "imgi_2_412624567_893134862433209_6900609809336659314_n.jpg"

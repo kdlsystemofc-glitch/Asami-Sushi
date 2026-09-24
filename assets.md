@@ -14,7 +14,7 @@ Fonte de verdade dos slots: **DESIGN.md §4 e §6**.
 | `plate-nigiri.jpeg.jpeg` | 1200×896 | preto | Nigiri de salmão flutuando, luz de cima |
 | `plate-board-left.jpeg.jpeg` | 1200×896 | preto | Ardósia: camarão, lula, polvo, ervas |
 | `plate-board-right.jpeg.jpeg` | 1200×896 | preto | Ardósia: sashimi de salmão e atum, nabo, wasabi |
-| `plate-room.jpeg.jpeg` | 1376×768 | cena completa, sem fundo preto | Salão gerado. **Não convertido, não usado** (D20) |
+| `plate-room.jpeg.jpeg` | 1376×768 | cena completa, **sem fundo preto** | Salão gerado por IA. **Provisório** no ACT III (D24) |
 
 Extensão dupla `.jpeg.jpeg` mantida na origem; os arquivos de saída têm nome limpo.
 
@@ -42,6 +42,7 @@ nenhum canal alpha.
 | `plate-nigiri-800.webp` / `-1600.webp` | 800×597 / 1600×1195 | 26 / 65 KB |
 | `plate-board-left-800.webp` / `-1600.webp` | 800×597 / 1600×1195 | 41 / 113 KB |
 | `plate-board-right-800.webp` / `-1600.webp` | 800×597 / 1600×1195 | 30 / 79 KB |
+| `plate-room-800.webp` / `-1600.webp` | 800×447 / 1600×893 | 25 / 66 KB (sem black point, sem screen) |
 | `logo-asami-150.webp` | 150×150 | 5 KB (tamanho nativo, sem upscale; só favicon) |
 
 > **A variante 1600 é upscale.** As origens têm 768–1376 px de largura. Para fumaça em
@@ -69,16 +70,17 @@ no nigiri.
 | `plate-smoke-floor` | Sanctum, camada 5 | `plate-smoke-floor` | Névoa de chão. `screen`. |
 | `plate-smoke-low` | Reserva, camada 3 | `plate-smoke-floor` | Mesmo arquivo, reaproveitado como bruma do ACT IV. |
 | `logo-asami` | Favicon | `logo-asami-150` | **Só favicon (D23).** O rodapé usa o wordmark em texto. |
-| `plate-sala` | Sanctum, camada 2 | — | **Fora da v1 (D20).** ACT III só com neon + névoa. Slot comentado `.sanctum__room` no HTML/CSS para a foto real do salão. |
+| `plate-sala` | Sanctum, camada 2 | `plate-room` | ⚠️ **TODO — provisório (D24).** Imagem normal, **sem `screen`** (não tem fundo preto): escurecida, dessaturada, máscara nas bordas. Caminho único: `--room-img` em `site/css/sanctum.css`. |
 | `plate-water-tile` | Reserva, camada 1 | — | **Cancelado (D21).** Água procedural em `feTurbulence`. |
 
 ## 4. Decisões e TODOs
 
 Decididas em 24/09/2026 e registradas no DESIGN.md como D20–D23.
 
-- **D20 · ACT III** — só neon e névoa, sem `plate-room`. `plate-room` não é convertido.
-  Quando o cliente enviar foto real do salão: gravar em `design/plates/plate-sala.*`,
-  acrescentar ao `build_assets.py` e ativar o slot comentado.
+- **TODO D24 · `plate-room`** — plate-room é gerado por IA e não corresponde ao salão real.
+  Confirmar com o cliente ou trocar por foto real antes da entrega. Para trocar: gravar a foto
+  em `design/plates/`, acrescentar ao `build_assets.py` (sem black point), rodar
+  `npm run assets` e mudar `--room-img` em `site/css/sanctum.css`. (Substitui D20.)
 - **D21 · Água do ACT IV** — `feTurbulence` procedural. Sem arquivo.
 - **D22 · TODO `plate-board-left`** — provisório, será substituído pelo cliente. Callouts só
   com texto do CLIENTE.md; nada de lula/polvo. A tábua esquerda fica sem rótulo.

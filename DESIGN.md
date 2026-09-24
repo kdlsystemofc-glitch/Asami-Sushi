@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D23). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D24). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -145,7 +145,7 @@ Medida = altura de maiúscula (cap-height) no mockup; `font-size ≈ cap ÷ 0,72
 | Token | Uso | cap@768 | vw | @1440 | `clamp()` | Tracking | Line-height |
 |---|---|---|---|---|---|---|---|
 | `--fs-wordmark` | `ASAMI` do hero | **96** (remedido) | 12,5 | 180 px | mobile `clamp(4rem, 24.4vw, 22rem)` · ≥768 `clamp(4rem, 17.9vw, 22rem)` ✱ | `.045em` ✱ | `1` + `text-box: trim-both cap alphabetic` |
-| `--fs-display` | `SÃO BERNARDO DO CAMPO // CENTRO` | 15 | 2,71 | 39 px | `clamp(1.25rem, 2.7vw, 2.5rem)` | `.02em` | `1.1` |
+| `--fs-display` | `SÃO BERNARDO DO CAMPO // CENTRO` | 15 | 2,71 | 39 px | `clamp(1.25rem, 2.7vw, 2.5rem)` | `0` ✱ (`wdth 92`) | `1.1` |
 | `--fs-title` | `THE FEAST OF ABUNDANCE` | **9,5** ✱ | 1,78 | 25,6 px | `clamp(1.125rem, 1.78vw, 1.6rem)` ✱ | `.01em` | `1.2` ✱ |
 | `--fs-eyebrow` | *(não usado no rótulo de ato)* ✱ | 8 | 1,45 | 21 px | `clamp(.75rem, 1.45vw, 1.25rem)` | `.08em` | `1.2` |
 | `--fs-logo` | `ASAMI` da nav | 19 | 3,43 | 49 px | `clamp(1.375rem, 2.2vw, 1.75rem)` ✔︎ | `.03em` ✱ | `1` |
@@ -336,13 +336,13 @@ Todos os callouts levam `aria-hidden="true"` e cor `--text-mid`.
 | # | Camada | O que é | Como implementar | Origem |
 |---|---|---|---|---|
 | 1 | Fundo | Preto absoluto nas laterais, vinheta forte | `#040507` + `box-shadow: inset 0 0 200px 80px #040507` | CSS |
-| 2 | Salão | **Fora da v1 (D20).** Nenhuma foto do cliente mostra o salão e `plate-room` (gerado) está vetado por D5. O ACT III fica só com neon + névoa. Fica um **slot comentado** no HTML/CSS (`.sanctum__room`) para a foto real quando o cliente enviar: regrade noturno (`saturate(.55) contrast(1.15) brightness(.7)` + `--ink-900` em `multiply` a 35 %) e vinheta | — (slot vazio) |
-| 3 | Neon vertical | 6–7 barras âmbar verticais, núcleo claro + halo largo | **CSS puro:** `<i>` de 2–3 px com `background:var(--amber-200)` e `box-shadow: 0 0 6px var(--amber-200), 0 0 28px var(--amber-400), 0 0 90px rgb(253 212 160/.45)` | CSS |
+| 2 | Salão | **`plate-room`, PROVISÓRIO (D24)** — imagem gerada por IA, não é o salão real. **Imagem normal, sem `screen`** (não tem fundo preto): `background` de `.sanctum__room`, `filter: brightness(.42) saturate(.6) sepia(.25)` + `--ink-900` a 40 % em `multiply`, máscara em degradê nas 4 bordas (laterais quase pretas). **Um único caminho de arquivo:** `--room-img` em `css/sanctum.css` — trocar a foto real é mudar essa linha | PLATE (provisório) |
+| 3 | Neon vertical | 6 barras âmbar, simétricas em torno do centro (x 403, 460, 572, 861, 974, 1033 @1440; as duas do vão da porta mais suaves) | **CSS puro:** `<i>` de 3 px, núcleo `--amber-400` com fio `--amber-200`; halo em `::before` (faixa de ~30 px, `blur(10px)`) e `::after` (~120 px, `blur(22px)`) — `box-shadow` num elemento de 2 px quase não espalha luz. Mobile: 4 barras, afastadas do título | CSS |
 | 4 | Luz rebatida | Trapézios de luz nas paredes laterais | `clip-path: polygon(...)` com `linear-gradient` âmbar a 8 % de opacidade | CSS |
 | 5 | Névoa de chão | Fumaça densa cobrindo a base do salão | `plate-smoke-floor.webp`, `screen`, `mask-image` vertical, `opacity .5` | PLATE |
 | 6 | Rótulo | `ACT III` / `THE SANCTUM` / `THE ROOM` | `p` + `h2`, colunas 1–4 | TEXTO |
-| 7 | Título de lugar | `SÃO BERNARDO DO CAMPO // CENTRO` — corrigido (D1) | `p.place` em `--fs-display`, tom levemente quente (`#E9D5C6` medido). O `SANTO ANDRÉ // JARDIM BELA VISTA` do mockup é de outra unidade e não entra | TEXTO |
-| 8 | Gradiente de saída | Escurecimento total na base, rumo à água do ACT IV | `linear-gradient(180deg, transparent 60%, #040507 100%)` | CSS |
+| 7 | Título de lugar | `SÃO BERNARDO DO CAMPO // CENTRO` — corrigido (D1) | `p.place` em `--fs-display`, Archivo `wdth 92` ✱, tracking 0 ✱, `--place-warm`. Halo escuro em `text-shadow` garante AA onde cruza o neon (mínimo medido 6,05:1 @1440, 12,4:1 @390). Mobile: 2 linhas (`// CENTRO` embaixo). O `SANTO ANDRÉ // JARDIM BELA VISTA` do mockup é de outra unidade e não entra | TEXTO |
+| 8 | Entrada e saída | `--ink-900` no topo (emenda com o ACT II) e na base, rumo ao ACT IV | `linear-gradient(180deg, --ink-900 0%, transparent 11%, transparent 78%, --ink-900 100%)`. A névoa (camada 5) é filha direta da seção para o `screen` alcançar o fundo | CSS |
 
 **Resolvido (D1/D2):** o mockup traz a unidade *Santo André / Jardim Bela Vista*. O site é
 da unidade **São Bernardo do Campo** — Av. das Nações Unidas, 50, Centro, 09726-110.
@@ -520,11 +520,11 @@ Mapeamento completo e pesos em **`assets.md`**. Todos em WebP 800/1600 px, fundo
 | `plate-board-left` | Tábua esquerda do ACT II | ⚠️ provisório (D22) |
 | `plate-board-right` | Tábua direita do ACT II | ✅ |
 | `plate-water-tile` | — | ❌ cancelado: água procedural (D21) |
-| `plate-sala` / `plate-room` | — | ❌ fora da v1: ACT III sem foto (D20) |
+| `plate-room` | Salão do ACT III | ⚠️ **provisório (D24)** — gerado por IA |
 | `logo-asami-150` | Favicon | ✅ só favicon (D23) |
 
-`plate-room` (salão gerado do zero) segue **cancelado** (D5) e `plate-sala` não pôde ser feito,
-porque nenhuma foto mostra o salão (D20). Fumaça é plate sintético; água é procedural (D21).
+`plate-room` (salão gerado) entra como **provisório** (D24, substitui D5/D20 para o ACT III).
+Fumaça é plate sintético; água é procedural (D21).
 
 Feito só em CSS/SVG, sem asset nenhum: grade do piso, neon, bolhas, faíscas, grão, todos
 os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do ACT IV.
@@ -557,10 +557,11 @@ o efeito que já foi aplicado nas seções acima.
 |---|---|---|
 | **D4** ✅ | **Plates gerados a partir das fotos reais**, em `design/plates/`. A pasta `IMAGENS/` nunca é referenciada pelo site. | §6 |
 | **D5** ✅ | **Nada de ambiente inventado.** `plate-room` cancelado. Fumaça e água seguem sintéticas — são fenômeno, não ambiente. | §4/03 camada 2, §6 |
-| **D20** ✅ | **ACT III sem foto do salão.** Nenhuma foto do cliente mostra o salão (`imgi_23` é uma pessoa com uma travessa). O ato fica só com neon + névoa; slot comentado para a foto real futura. | §4/03 camada 2, §6 |
+| ~~D20~~ | **Substituída por D24.** ACT III sem foto do salão. Nenhuma foto do cliente mostra o salão (`imgi_23` é uma pessoa com uma travessa). O ato fica só com neon + névoa; slot comentado para a foto real futura. | §4/03 camada 2, §6 |
 | **D21** ✅ | **Água do ACT IV procedural** (`feTurbulence`). Não existe `plate-water-tile`. | §4/04 camada 1, §6 |
 | **D22** ✅ | **`plate-board-left` é provisório** (mostra lula/polvo, fora do CLIENTE.md) e será substituído. Callouts só com texto do CLIENTE.md; a tábua esquerda fica sem rótulo. | §4/02 camadas 5 e 8, §6 |
 | **D23** ✅ | **Logo real só como favicon.** O rodapé usa o wordmark em texto até chegar um arquivo em alta. | §4/05 camada 7, §6 |
+| **D24** ✅ | **`plate-room` no ACT III como imagem PROVISÓRIA** (substitui D5 e D20 para esta camada). É gerado por IA e **não corresponde ao salão real**: confirmar com o cliente ou trocar por foto real antes da entrega. Sem `screen` (não tem fundo preto): imagem normal escurecida, mascarada e com vinheta. Trocar = mudar `--room-img` em `css/sanctum.css`. | §4/03 camada 2, §6, assets.md |
 
 ### Comportamento
 
