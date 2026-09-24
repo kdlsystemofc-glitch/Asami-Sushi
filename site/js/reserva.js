@@ -1,8 +1,6 @@
 // Reserva pelo WhatsApp (D9) — sem backend: o formulário só compõe a mensagem.
 
-// ⚠️ CONFIRMAR COM O CLIENTE: este é o telefone do CLIENTE.md, que parece ser FIXO.
-// O wa.me só funciona se o número tiver WhatsApp. Trocar aqui atualiza link, botão e mensagem.
-const WHATSAPP = { ddi: "55", ddd: "11", numero: "26697175" };
+// Número de WhatsApp: constante WHATSAPP em js/config.js (compartilhada com o menu).
 
 // CLIENTE.md: "Aberto · Fecha 23:00". O horário de abertura NÃO consta lá (DESIGN.md §8.2),
 // então a validação só limita pelo fechamento.
@@ -19,9 +17,8 @@ if (form) {
   const erro = $("res-erro");
 
   const pad = (n) => String(n).padStart(2, "0");
-  const telefone = `(${WHATSAPP.ddd}) ${WHATSAPP.numero.slice(0, -4)}-${WHATSAPP.numero.slice(-4)}`;
-  const waBase = `https://wa.me/${WHATSAPP.ddi}${WHATSAPP.ddd}${WHATSAPP.numero}`;
-  const rotulo = `Reservar pelo WhatsApp // ${telefone}`;
+  const waBase = waLink();
+  const rotulo = `Reservar pelo WhatsApp // ${TELEFONE}`;
 
   // ── progressive enhancement: o link vira botão de envio ──
   const link = form.querySelector("[data-wa]");
@@ -135,6 +132,6 @@ if (form) {
     const msg =
       `Olá! Gostaria de reservar uma mesa para o dia ${pad(r.data.getDate())}/${pad(r.data.getMonth() + 1)} ` +
       `às ${pad(r.h)}:${pad(r.min)}, ${plural(r.a, "adulto", "adultos")} e ${plural(r.c, "criança", "crianças")}.`;
-    window.open(`${waBase}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+    window.open(waLink(msg), "_blank", "noopener");
   });
 }

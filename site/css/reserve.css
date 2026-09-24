@@ -289,3 +289,12 @@
 
 /* a réplica flipa em torno do próprio centro: a base do card fica colada no topo do reflexo */
 .reserve__reflection .reserve__card { transform-origin: 50% 50%; }
+
+/* saída em --ink-900: emenda com o rodapé */
+.reserve__exit {
+  position: absolute;
+  inset: auto 0 0;
+  height: 14%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--ink-900));
+}

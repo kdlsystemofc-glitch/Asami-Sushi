@@ -30,6 +30,9 @@ body {
   isolation: isolate;
 }
 
+/* atos são full-bleed: a âncora encosta no topo (anula o scroll-margin do :target do reset) */
+.section { scroll-margin-block: 0; }
+
 /* §4/01 camada 16 · grão: o mesmo em todos os atos, para a emenda não aparecer */
 .section::after {
   content: "";

@@ -16,6 +16,8 @@
         imagesrcset="assets/plate-nigiri-800.webp 800w, assets/plate-nigiri-1600.webp 1600w"
         imagesizes="(min-width: 48rem) 34vw, 70vw">
 
+  <script>document.documentElement.classList.add("js")</script>
+
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/base.css">
@@ -24,6 +26,8 @@
   <link rel="stylesheet" href="css/rodizio.css">
   <link rel="stylesheet" href="css/sanctum.css">
   <link rel="stylesheet" href="css/reserve.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/nav.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -47,12 +51,13 @@
   </svg>
 
   <header class="site-header">
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">
+    <!-- Sem JS: link para #menu (o overlay abre por :target). Com JS vira <button> (js/menu.js). -->
+    <a class="menu-toggle" href="#menu" data-menu-toggle>
       <span class="menu-toggle__bar"></span>
       <span class="menu-toggle__bar"></span>
       <span class="menu-toggle__bar"></span>
-      <span class="visually-hidden">Abrir menu</span>
-    </button>
+      <span class="visually-hidden" data-menu-label>Abrir menu</span>
+    </a>
 
     <a class="logo" href="#ato-1">
       <span class="logo__name">Asami</span>
@@ -70,19 +75,59 @@
     </span>
   </header>
 
-  <!-- Camada 17: overlay de menu (D11). Estilo e transições entram na etapa de motion. -->
-  <dialog class="menu" id="menu" aria-label="Menu">
-    <nav>
+  <!-- Camada 17: overlay de menu (D11) -->
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="menu__bg" aria-hidden="true">
+      <img width="1600" height="893" class="plate menu__mist"
+           src="assets/plate-smoke-floor-800.webp"
+           srcset="assets/plate-smoke-floor-800.webp 800w, assets/plate-smoke-floor-1600.webp 1600w"
+           sizes="120vw" alt="" loading="eager" fetchpriority="low" decoding="async">
+    </div>
+    <nav class="menu__nav" aria-label="Seções">
       <ol role="list" class="menu__list">
-        <li><a href="#ato-1">Ato I · A Chegada</a></li>
-        <li><a href="#ato-2">Ato II · Rodízio</a></li>
-        <li><a href="#ato-3">Ato III · O Salão</a></li>
-        <li><a href="#ato-4">Ato IV · Reservas</a></li>
-        <li><a href="tel:+551126697175">Cardápio</a></li>
+        <li><a class="menu__link" href="#ato-2"><span class="menu__num" aria-hidden="true">II</span>Rodízio</a></li>
+        <li><a class="menu__link" href="#ato-3"><span class="menu__num" aria-hidden="true">III</span>Ambiente</a></li>
+        <li><a class="menu__link" href="#ato-4"><span class="menu__num" aria-hidden="true">IV</span>Reservas</a></li>
+        <li><a class="menu__link" href="https://wa.me/551126697175?text=Ol%C3%A1!%20Gostaria%20de%20ver%20o%20card%C3%A1pio." target="_blank" rel="noopener" data-wa-menu><span class="menu__num" aria-hidden="true">↗</span>Cardápio <span class="menu__hint">no WhatsApp</span></a></li>
       </ol>
     </nav>
-    <button class="menu__close" type="button">Fechar menu</button>
-  </dialog>
+    <!-- só sem JS; com JS o próprio hambúrguer (em X) fecha -->
+    <a class="menu__close" href="#ato-1">Fechar menu</a>
+  </div>
+
+  <!-- Navegação entre atos: fora das seções (cada seção é um stacking context isolado;
+       como filhos do hero, trilho e player ficariam por baixo dos atos seguintes). -->
+  <div class="act-nav">
+    <!-- 11 · trilho de atos (D17): o traço do ato visível recebe aria-current (js/nav.js) -->
+    <nav class="rail" aria-label="Atos">
+      <ol role="list" class="rail__list">
+        <li><a class="rail__tick" href="#ato-1" aria-label="Ato I · A Chegada" aria-current="location"></a></li>
+        <li><a class="rail__tick" href="#ato-2" aria-label="Ato II · Rodízio"></a></li>
+        <li class="rail__knob" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M7 3.5 4.5 6 7 8.5"/></svg>
+        </li>
+        <li><a class="rail__tick" href="#ato-3" aria-label="Ato III · Ambiente"></a></li>
+        <li><a class="rail__tick" href="#ato-4" aria-label="Ato IV · Reservas"></a></li>
+      </ol>
+    </nav>
+
+    <!-- 12 · progresso de scroll (decorativo, espelho do trilho) -->
+    <div class="progress" aria-hidden="true"><span class="progress__dot"></span></div>
+
+    <!-- 13 · player: ⏮ ⏭ navegam entre atos; ⏸ alterna html[data-motion="paused"] (D13) -->
+    <div class="player" role="group" aria-label="Controles da página">
+      <button class="player__btn" type="button" data-act="prev" aria-label="Ato anterior">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 4h1.2v8H4.5zM11.5 4.2v7.6L6.6 8z"/></svg>
+      </button>
+      <button class="player__btn" type="button" data-pause aria-pressed="false" aria-label="Pausar animações">
+        <svg class="player__icon-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.2 4h1.4v8H5.2zM9.4 4h1.4v8H9.4z"/></svg>
+        <svg class="player__icon-play" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.5 4v8l6-4z"/></svg>
+      </button>
+      <button class="player__btn" type="button" data-act="next" aria-label="Próximo ato">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 4.2v7.6L9.4 8zM10.3 4h1.2v8h-1.2z"/></svg>
+      </button>
+    </div>
+  </div>
 
   <main id="conteudo">
 
@@ -153,39 +198,13 @@
         <h2 class="act-label__title">The Arrival</h2>
       </div>
 
-      <!-- 11 · trilho de atos (D17) -->
-      <nav class="rail" aria-label="Atos">
-        <ol role="list" class="rail__list">
-          <li><a class="rail__tick" href="#ato-1" aria-current="true"><span class="visually-hidden">Ato I · A Chegada</span></a></li>
-          <li><a class="rail__tick" href="#ato-2"><span class="visually-hidden">Ato II · Rodízio</span></a></li>
-          <li class="rail__knob" aria-hidden="true">
-            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M7 3.5 4.5 6 7 8.5"/></svg>
-          </li>
-          <li><a class="rail__tick" href="#ato-3"><span class="visually-hidden">Ato III · O Salão</span></a></li>
-          <li><a class="rail__tick" href="#ato-4"><span class="visually-hidden">Ato IV · Reservas</span></a></li>
-        </ol>
-      </nav>
 
-      <!-- 12 · progresso de scroll (decorativo) -->
-      <div class="progress" aria-hidden="true" style="--progress:0"><span class="progress__dot"></span></div>
 
       <!-- saída em --ink-900: emenda com o ACT II -->
       <div class="hero__exit" aria-hidden="true"></div>
 
-      <!-- 13–15 · barra inferior -->
+      <!-- 14–15 · barra inferior (o player, camada 13, está em .act-nav) -->
       <div class="hero__bar">
-        <div class="player" role="group" aria-label="Controles da página">
-          <button class="player__btn" type="button" data-act="prev" aria-label="Ato anterior">
-            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 4h1.2v8H4.5zM11.5 4.2v7.6L6.6 8z"/></svg>
-          </button>
-          <button class="player__btn" type="button" data-pause aria-pressed="false" aria-label="Pausar animações">
-            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.2 4h1.4v8H5.2zM9.4 4h1.4v8H9.4z"/></svg>
-          </button>
-          <button class="player__btn" type="button" data-act="next" aria-label="Próximo ato">
-            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 4.2v7.6L9.4 8zM10.3 4h1.2v8h-1.2z"/></svg>
-          </button>
-        </div>
-
         <p class="hero__hud" aria-hidden="true">Depth 0.4mm / Tension / Ma</p>
 
         <!-- 15 · toggle inerte (D13) -->
@@ -474,15 +493,42 @@
         </div>
         </div>
       </div>
+
+      <!-- saída em --ink-900: emenda com o rodapé -->
+      <div class="reserve__exit" aria-hidden="true"></div>
     </section>
 
   </main>
 
-  <footer class="site-footer">
-    <!-- rodapé (§4/05) -->
+  <!-- ═══ CODA — rodapé (§4/05). Só dados do CLIENTE.md ═══ -->
+  <footer class="section site-footer" id="rodape">
+    <div class="grid site-footer__grid">
+      <div class="site-footer__col site-footer__brand">
+        <p class="site-footer__mark" aria-hidden="true"><span class="logo__name">Asami</span> <span class="logo__sub">Sushi</span></p>
+        <p class="site-footer__text">Asami Sushi São Bernardo</p>
+        <p class="site-footer__label">Restaurante japonês · rodízio e à la carte</p>
+      </div>
+
+      <div class="site-footer__col">
+        <h2 class="site-footer__label">Endereço</h2>
+        <address class="site-footer__text">
+          <a class="site-footer__link" href="https://www.google.com/maps/search/?api=1&amp;query=Asami%20Sushi%2C%20Av.%20das%20Na%C3%A7%C3%B5es%20Unidas%2C%2050%20-%20Centro%2C%20S%C3%A3o%20Bernardo%20do%20Campo%20-%20SP%2C%2009726-110" target="_blank" rel="noopener">Av. das Nações Unidas, 50 – Centro<br>São Bernardo do Campo – SP, 09726-110<span class="site-footer__label site-footer__maps">Ver no Google Maps ↗</span></a>
+        </address>
+      </div>
+
+      <div class="site-footer__col">
+        <dl class="site-footer__facts">
+          <div><dt class="site-footer__label">Horário</dt><dd class="site-footer__text">Fecha às 23:00</dd></div>
+          <div><dt class="site-footer__label">Por pessoa</dt><dd class="site-footer__text">R$ 80–160</dd></div>
+          <div><dt class="site-footer__label">Telefone</dt><dd class="site-footer__text"><a class="site-footer__link" href="tel:+551126697175" data-tel>(11) 2669-7175</a></dd></div>
+        </dl>
+      </div>
+    </div>
   </footer>
 
+  <script src="js/config.js" defer></script>
   <script src="js/menu.js" defer></script>
+  <script src="js/nav.js" defer></script>
   <script src="js/reserva.js" defer></script>
 </body>
 </html>

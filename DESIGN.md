@@ -418,8 +418,52 @@ registro visual — preto, hairlines, caixa-alta com tracking largo, nenhuma cai
 | 7 | Marca | Wordmark `ASAMI` / `SUSHI` **em texto**, no mesmo desenho do logo da nav (D23). O logo real (`imgi_2`, 150 px) é pequeno demais e fica **só como favicon** até chegar um arquivo melhor | TEXTO |
 | 8 | Créditos | Linha final discreta | `p` em `--fs-label`, `--text-dim` | TEXTO |
 
-Layout: grid de 12 colunas — endereço nas colunas 1–5, horário e preço nas 6–8, Instagram
-e wordmark nas 9–12, alinhados à direita. Em mobile, empilha em 1 coluna com o wordmark por último.
+Layout **como construído** (id `#rodape`): **3 colunas iguais** no desktop — (1) wordmark
+`ASAMI SUSHI` em texto + nome + "restaurante japonês · rodízio e à la carte"; (2) endereço, um
+link único para o Google Maps (`maps/search`, sem iframe) com "Ver no Google Maps ↗";
+(3) horário (`Fecha às 23:00`), preço (`R$ 80–160`) e telefone (`tel:`, montado da constante
+`WHATSAPP`). Empilha em 1 coluna no mobile, na mesma ordem. **Sem Instagram** (não consta no
+CLIENTE.md), sem CNPJ, sem créditos. Começa em `--ink-900` puro (o ACT IV termina num degradê
+de saída) e usa o mesmo grão global (`.section::after`).
+
+---
+
+## 4b. Navegação e menu (como construídos)
+
+**Onde fica cada peça.** Trilho (camada 11), progresso (12) e player (13) ficam num
+`<div class="act-nav">` no nível do `<body>`, **fora das seções**: cada ato é um stacking
+context isolado (`isolation: isolate`, necessário para o `screen` dos plates), e como filhos do
+hero seriam cobertos pelos atos seguintes.
+
+| Peça | Desktop (≥ 768 px) | Mobile |
+|---|---|---|
+| Trilho | `fixed`, centro a 51,5 % da altura; some quando o rodapé invade a faixa central | `absolute` sobre o hero (fixo cobriria os cards) |
+| Progresso | `fixed`, ponto em `top: calc(var(--progress) * 100%)`; `--progress` = scroll ÷ (altura − viewport) | idem, sobre o hero |
+| Player | `fixed` no canto inferior esquerdo; **sobe junto com o rodapé** (`--nav-lift`) para nunca cobri-lo nem sumir | `absolute`, na linha inferior do hero |
+
+- **Trilho (D17):** 4 links reais `#ato-1…4` com `aria-label` ("Ato III · Ambiente"…). O ato que
+  cruza a **linha do meio da viewport** (`IntersectionObserver`, `rootMargin -50% 0 -50% 0`)
+  recebe `aria-current="location"` e o traço longo em `--chrome-100`.
+- **⏮ ⏭:** rolam até o ato vizinho com `scrollIntoView` — `smooth`, ou `auto` sob
+  `prefers-reduced-motion`. Nas pontas ficam `aria-disabled="true"` (continuam focáveis).
+- **Âncoras:** `.section { scroll-margin-block: 0 }` — atos full-bleed encostam no topo.
+- **432Hz (D13):** as duas pílulas são `span aria-hidden`, com `pointer-events: none` e
+  `cursor: default`: sem hover, sem foco, sem cara de controle.
+
+**Menu (camada 17, D11).** Itens: **Rodízio** (`#ato-2`), **Ambiente** (`#ato-3`),
+**Reservas** (`#ato-4`), **Cardápio** (`wa.me` com "Olá! Gostaria de ver o cardápio.", mesma
+constante `WHATSAPP` de `js/config.js`; nova aba). Overlay `div[role=dialog][aria-modal]` em
+`--ink-900` com `plate-smoke-floor` em `screen` (recortado por `.menu__bg`, que não cria stacking
+context), itens em `--fs-display`, fade de 200 ms na abertura.
+- Com JS: o hambúrguer vira `<button aria-expanded aria-controls="menu">` e se transforma em X;
+  o header fica `fixed` acima do overlay; foco preso (X → itens → X), `Esc` fecha e devolve o foco
+  ao botão, o resto da página fica `inert`, rolagem travada (`overflow: hidden` + `padding-right`
+  da largura da barra, para nada se deslocar). Clicar num item fecha e segue o link.
+- **Sem JS:** o hambúrguer é `<a href="#menu">`, o overlay abre por `:target`, os itens são
+  links comuns e há um link "Fechar menu"; o trilho continua com links reais.
+
+Testes: `npm run test:nav` (menu por teclado e clique, foco preso, Esc, scroll travado,
+⏮ ⏭ + trilho, ⏸, progresso, sem JS, overflow, console, requests) e `npm run test:form`.
 
 ---
 
@@ -434,8 +478,17 @@ sem parallax, sem loop de fumaça/água, sem contador — só `opacity` em 200 m
 
 **Dois interruptores globais além desse:**
 
-- **Pausa manual (D13).** O ⏸ do player alterna `.is-paused` no `<html>`, que aplica
-  `animation-play-state: paused` a tudo e desliga o handler de parallax. É o mesmo estado
+- **Pausa manual (D13) — gancho pronto, ainda sem efeito visual.** O ⏸ do player
+  (`[data-pause]`, `js/nav.js`) alterna **`<html data-motion="paused">`** e `aria-pressed`
+  (o ícone vira ▶ quando pressionado). Hoje não há animação para pausar. **Contrato para a etapa
+  de motion:** toda animação/loop deve respeitar o atributo, por exemplo
+  ```css
+  :root[data-motion="paused"] *, :root[data-motion="paused"] *::before, :root[data-motion="paused"] *::after {
+    animation-play-state: paused !important;
+  }
+  ```
+  e todo JS de parallax/`requestAnimationFrame` deve checar
+  `document.documentElement.dataset.motion === "paused"` antes de mover algo. É o mesmo estado
   visual do `prefers-reduced-motion`, só que por escolha do visitante. O botão inicia em
   `aria-pressed="false"` e reflete o estado real.
 - **Corte em mobile (D18).** Abaixo de **768 px**, todos os reflexos perdem o

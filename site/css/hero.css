@@ -8,7 +8,6 @@
   --nigiri-w: 76%;
   --wm-top: 49%;          /* topo da maiúscula */
   --label-y: 12%;
-  --side-y: 33%;          /* trilho e progresso */
 
   position: relative;
   height: var(--h-hero);
@@ -24,7 +23,6 @@
     --nigiri-w: 33.5%;
     --wm-top: 52.6%;      /* 226 / 437, +0.9% compensa o overshoot de S/A da Archivo */
     --label-y: 18%;
-    --side-y: 51.5%;      /* centro do trilho: 225 / 437 */
     --floor-h: 30%;
     min-height: 0;
   }
@@ -206,79 +204,7 @@
   top: var(--label-y);
 }
 
-/* ── 11 · trilho de atos ────────────────────────────────── */
-.rail {
-  position: absolute;
-  z-index: 10;
-  left: calc(var(--gutter) - var(--ctl-size) * .25);
-  top: var(--side-y);
-  translate: 0 -50%;
-}
-
-.rail__list {
-  display: grid;
-  justify-items: center;
-  gap: 0;
-}
-
-.rail__tick {
-  display: grid;
-  place-items: center;
-  width: var(--ctl-size);
-  height: clamp(1rem, 1.5vw, 1.4rem);
-}
-
-.rail__tick::before {
-  content: "";
-  width: 1.5px;
-  height: clamp(4px, .45vw, 7px);
-  border-radius: var(--r-pill);
-  background: var(--text-faint);
-}
-
-.rail__tick[aria-current="true"]::before {
-  height: clamp(9px, 1vw, 14px);
-  background: var(--chrome-100);
-}
-
-.rail__knob {
-  display: grid;
-  place-items: center;
-  width: calc(var(--ctl-size) * .5);
-  aspect-ratio: 1;
-  margin-block: clamp(.25rem, .5vw, .5rem);
-  border: var(--border-hud);
-  border-radius: var(--r-full);
-  color: var(--text-mid);
-}
-.rail__knob svg { width: 70%; }
-
-/* ── 12 · progresso de scroll ───────────────────────────── */
-.progress {
-  position: absolute;
-  z-index: 10;
-  right: var(--gutter);
-  top: var(--side-y);
-  translate: 0 -50%;
-  width: 1px;
-  height: clamp(6rem, 11.7vw, 11rem);
-  background: color-mix(in srgb, var(--mist-200) 45%, transparent);
-}
-
-.progress__dot {
-  position: absolute;
-  left: 50%;
-  top: calc(var(--progress) * 100%);
-  translate: -50% -50%;
-  width: calc(var(--ctl-size) * .5);
-  aspect-ratio: 1;
-  border: var(--border-hud);
-  border-color: color-mix(in srgb, var(--mist-200) 55%, transparent);
-  border-radius: var(--r-full);
-  background: radial-gradient(circle, var(--chrome-100) 0 18%, var(--ink-900) 22%);
-}
-
-/* ── 13–15 · barra inferior ─────────────────────────────── */
+/* ── 14–15 · barra inferior (o player, camada 13, vive em .act-nav — ver nav.css) ── */
 .hero__bar {
   position: absolute;
   z-index: 10;
@@ -296,19 +222,6 @@
     grid-template-areas: "player hud toggle";
   }
 }
-
-.player { grid-area: player; display: flex; gap: clamp(.5rem, 1vw, 1rem); }
-
-.player__btn {
-  display: grid;
-  place-items: center;
-  width: var(--ctl-size);
-  aspect-ratio: 1;
-  border: var(--border-hud);
-  border-radius: var(--r-full);
-  color: var(--text-base);
-}
-.player__btn svg { width: 38%; }
 
 .hero__hud {
   grid-area: hud;

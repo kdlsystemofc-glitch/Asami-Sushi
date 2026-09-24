@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "shots": "node scripts/screenshot.mjs",
     "assets": "py scripts/build_assets.py",
-    "test:form": "node scripts/test-reserva.mjs"
+    "test:form": "node scripts/test-reserva.mjs",
+    "test:nav": "node scripts/test-nav.mjs"
   },
   "keywords": [],
   "author": "",

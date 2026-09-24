@@ -1,4 +1,4 @@
-/* Nav do topo (§4/01 camadas 8, 9, 10) + overlay de menu (camada 17, estático). */
+/* Nav do topo (§4/01 camadas 8, 9, 10). Overlay de menu e navegação entre atos: nav.css. */
 
 .site-header {
   position: absolute;
@@ -29,6 +29,16 @@
   height: 1.5px;
   background: currentColor;
   border-radius: var(--r-pill);
+  transform-origin: center;
+}
+
+/* aberto: as 3 barras viram X (as de fora giram até o centro, a do meio some) */
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(1) {
+  transform: translateY(calc(clamp(.875rem, 1.4vw, 1.3rem) / 2 - .75px)) rotate(45deg);
+}
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(2) { opacity: 0; }
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(3) {
+  transform: translateY(calc(clamp(.875rem, 1.4vw, 1.3rem) / -2 + .75px)) rotate(-45deg);
 }
 
 /* ── 9 · logo ───────────────────────────────────────────── */
@@ -76,6 +86,9 @@
   text-transform: none;
   color: var(--text-base);
   user-select: none;
+  /* D13: ornamento, não controle — sem cursor de clique, sem hover, sem foco */
+  cursor: default;
+  pointer-events: none;
 }
 
 .hz-pill__icon {
@@ -88,35 +101,4 @@
   aspect-ratio: 1;
   border-radius: var(--r-full);
   background: radial-gradient(circle at 35% 30%, var(--chrome-100), var(--mist-200) 60%, var(--steel-300));
-}
-
-/* ── 17 · overlay de menu (estático; transições na etapa de motion) ── */
-.menu {
-  width: 100%;
-  max-width: none;
-  height: 100%;
-  max-height: none;
-  padding: var(--sp-8) var(--gutter);
-  border: 0;
-  background: color-mix(in srgb, var(--ink-900) 96%, transparent);
-  color: var(--text-base);
-}
-
-.menu::backdrop { backdrop-filter: blur(20px); background: transparent; }
-
-.menu__list {
-  display: grid;
-  gap: var(--sp-3);
-  font-family: var(--font-display);
-  font-variation-settings: "wdth" 112;
-  font-size: var(--fs-title);
-  letter-spacing: var(--ls-title);
-}
-
-.menu__close {
-  position: absolute;
-  inset: var(--gutter) var(--gutter) auto auto;
-  font-size: var(--fs-label);
-  letter-spacing: var(--ls-label);
-  color: var(--text-mid);
 }
