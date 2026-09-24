@@ -119,6 +119,11 @@
   --t-mid: 600ms;
   --t-slow: 1200ms;
   --t-cine: 2400ms;
+  --t-enter: 800ms;       /* entrada da página: véu #040507 → conteúdo (D28) */
+  --t-fade: 200ms;        /* único movimento no modo "reduced": fade curto */
+  --reveal-y: 1.5rem;     /* data-reveal="up": deslocamento inicial */
+  --reveal-scale: .96;    /* data-reveal="scale": escala inicial */
+  --reveal-at: .35;       /* data-reveal: fração visível que dispara a entrada */
 
   /* ── Plates (uso definido pelo cliente; ver assets.md) ── */
   --plate-blend: screen;

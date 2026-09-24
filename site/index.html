@@ -16,7 +16,49 @@
         imagesrcset="assets/plate-nigiri-800.webp 800w, assets/plate-nigiri-1600.webp 1600w"
         imagesizes="(min-width: 48rem) 34vw, 70vw">
 
-  <script>document.documentElement.classList.add("js")</script>
+  <!-- Antes da pintura (DESIGN.md §5, D26–D29): classe js, qualidade do aparelho, estado
+       inicial do motion e o carregador do motion. GSAP/Lenis/núcleo só são pedidos depois do
+       load, na 1ª interação ou 2,5 s depois (o que vier antes), para não disputar banda com o
+       LCP. Se o motion não subir em 6 s, js-motion/motion-enter saem e tudo aparece. -->
+  <script>
+    (function (h, n) {
+      var q = /[?&]quality=(low|high)(?:&|$)/.exec(location.search);
+      h.classList.add("js");
+      h.setAttribute("data-quality", q ? q[1] : n.hardwareConcurrency <= 4 || n.deviceMemory <= 4 ||
+        (n.connection && n.connection.saveData) || innerWidth < 768 ? "low" : "high");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) h.classList.add("js-motion", "motion-enter");
+      // véu de entrada (CSS puro, motion.css): ao terminar, a classe sai
+      addEventListener("animationend", function (e) {
+        if (e.animationName === "motion-veil") h.classList.remove("motion-enter");
+      });
+      addEventListener("load", function () {
+        var eventos = ["scroll", "wheel", "touchstart", "pointerdown", "keydown"], pedido = false;
+        var desistir = function () {
+          if (h.hasAttribute("data-motion-ready")) return;
+          h.classList.remove("js-motion", "motion-enter");
+          h.setAttribute("data-motion-ready", "failed");
+        };
+        var carregar = function () {
+          if (pedido) return;
+          pedido = true;
+          eventos.forEach(function (e) { removeEventListener(e, carregar, true); });
+          ["js/vendor/gsap.min.js", "js/vendor/ScrollTrigger.min.js", "js/vendor/lenis.min.js", "js/motion/core.js"]
+            .forEach(function (src, i, fila) {
+              var s = document.createElement("script");
+              s.src = src;
+              s.async = false; // executa na ordem da fila
+              // só o núcleo decide: sem GSAP ele mesmo desliga; sem Lenis segue sem rolagem suave
+              if (i === fila.length - 1) s.onload = s.onerror = desistir;
+              document.head.appendChild(s);
+            });
+          setTimeout(desistir, 6000);
+        };
+        eventos.forEach(function (e) { addEventListener(e, carregar, { capture: true, passive: true }); });
+        // aberta numa âncora ou já rolada: pode haver data-reveal na tela, carrega já
+        if (scrollY > 0 || location.hash) carregar(); else setTimeout(carregar, 2500);
+      });
+    })(document.documentElement, navigator);
+  </script>
 
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/reset.css">
@@ -28,6 +70,7 @@
   <link rel="stylesheet" href="css/reserve.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/motion.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -75,7 +118,7 @@
   </header>
 
   <!-- Camada 17: overlay de menu (D11) -->
-  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu" data-lenis-prevent>
     <div class="menu__bg" aria-hidden="true">
       <img width="1600" height="893" class="plate menu__mist"
            src="assets/plate-smoke-floor-800.webp"

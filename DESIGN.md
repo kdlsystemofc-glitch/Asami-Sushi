@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D25). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D30). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -516,33 +516,146 @@ Testes: `npm run test:nav` (menu por teclado e clique, foco preso, Esc, scroll t
 
 ## 5. Animação por seção
 
-Base global:
+Base global (tokens em `css/tokens.css`):
 `--ease-out: cubic-bezier(.16,1,.3,1)` · `--ease-soft: cubic-bezier(.4,0,.2,1)` ·
-durações `--t-fast:220ms` `--t-mid:600ms` `--t-slow:1200ms` `--t-cine:2400ms`.
+durações `--t-fast:220ms` `--t-mid:600ms` `--t-slow:1200ms` `--t-cine:2400ms` ·
+`--t-enter:800ms` (véu de entrada) · `--t-fade:200ms` (único movimento do modo "reduced") ·
+`--reveal-y:1.5rem` · `--reveal-scale:.96` · `--reveal-at:.35` (fração visível que dispara a entrada).
 
-Tudo dentro de `@media (prefers-reduced-motion: no-preference)`. Com movimento reduzido:
-sem parallax, sem loop de fumaça/água, sem contador — só `opacity` em 200 ms.
+### 5.0 Infraestrutura (etapa "motion base", 24/09/2026)
 
-**Dois interruptores globais além desse:**
+Arquivos:
+- `js/motion/core.js`: o núcleo;
+- `css/motion.css`: estados iniciais, pausa, véu e Lenis;
+- `js/vendor/`: GSAP 3.15 core + ScrollTrigger e Lenis 1.3, builds UMD/IIFE copiados por
+  `npm run vendor`;
+- o script inline do `<head>`.
 
-- **Pausa manual (D13) — gancho pronto, ainda sem efeito visual.** O ⏸ do player
-  (`[data-pause]`, `js/nav.js`) alterna **`<html data-motion="paused">`** e `aria-pressed`
-  (o ícone vira ▶ quando pressionado). Hoje não há animação para pausar. **Contrato para a etapa
-  de motion:** toda animação/loop deve respeitar o atributo, por exemplo
-  ```css
-  :root[data-motion="paused"] *, :root[data-motion="paused"] *::before, :root[data-motion="paused"] *::after {
-    animation-play-state: paused !important;
-  }
-  ```
-  e todo JS de parallax/`requestAnimationFrame` deve checar
-  `document.documentElement.dataset.motion === "paused"` antes de mover algo. É o mesmo estado
-  visual do `prefers-reduced-motion`, só que por escolha do visitante. O botão inicia em
-  `aria-pressed="false"` e reflete o estado real.
-- **Corte em mobile (D18).** Abaixo de **768 px**, todos os reflexos perdem o
-  `filter: url(#ripple)` e ficam **estáticos com `blur(3px)`**; a distorção por
-  `feTurbulence` roda só a partir de 768 px. Vale para os 3 reflexos (hero, rodízio,
-  reserva) e para a ondulação da água do ACT IV, que em mobile vira gradiente fixo.
-  `feTurbulence` animado é caro demais para GPU de celular.
+Tudo em scripts clássicos: o site continua abrindo por duplo clique (`file://`). Testes:
+`npm run test:motion`.
+
+**Modos (D26).** `core.js` é a fonte única de verdade. Precedência: `paused` > `reduced` > `full`.
+
+| Modo | Quando | O que acontece |
+|---|---|---|
+| `full` | padrão | Lenis ligado, parallax (se `quality="high"`), loops, revelações completas |
+| `reduced` | `prefers-reduced-motion: reduce` (ouvido em tempo real) | Sem Lenis, sem parallax, sem loops (`motion.loop` recusa). Revelação vira fade de `--t-fade`. `html.js-motion` sai: nada fica escondido antes da pintura |
+| `paused` | ⏸ do player → `html[data-motion="paused"]` (observado em tempo real) | `gsap.globalTimeline` pausada, `animation-play-state: paused` em tudo (CSS), Lenis desligado (rolagem nativa), parallax em `y = 0`. Revelações pendentes aparecem na hora. Uma rolagem suave em andamento termina no destino. Ao sair, tudo continua de onde parou |
+
+Com a aba escondida (`document.hidden`) tudo pausa também (`html[data-page-hidden]` + timeline
+global) e volta ao reaparecer, salvo se o visitante tiver pausado.
+
+**API (`window.motion`).**
+
+| Membro | Uso |
+|---|---|
+| `motion.mode` | `"full"`, `"reduced"` ou `"paused"` |
+| `motion.base` | `"full"` ou `"reduced"`: o que as animações registradas montaram (a pausa não muda a base) |
+| `motion.quality` | `"high"` ou `"low"` (D27) |
+| `motion.on("mode", fn)` | `fn(mode, anterior)` a cada troca; devolve a função que cancela |
+| `motion.register(setup)` | ver abaixo; devolve a função que desregistra |
+| `motion.loop(el, anim)` | animação GSAP contínua: pausada com `el` fora da tela; em `reduced` é morta e devolve `null` |
+| `motion.scrollTo(alvo, { imediato })` | rola até elemento/seletor com offset zero (Lenis se ativo, senão nativo) |
+| `motion.scan()` | relê `data-reveal`, `data-parallax` e `data-loop` (conteúdo inserido depois) |
+| `motion.ease`, `motion.easeSoft`, `motion.dur("--t-mid")` | tokens já convertidos para o GSAP |
+| `motion.lenis` | instância do Lenis ou `null` |
+
+**Como cada animação futura se registra** (contrato das próximas etapas). O script da seção
+entra na fila do carregador do `<head>`, depois de `core.js` (D29):
+
+```js
+// js/motion/rodizio.js
+motion.register((m) => {
+  // roda dentro de um gsap.context: tweens e ScrollTriggers criados aqui são desfeitos
+  // sozinhos quando m.base muda (full ↔ reduced) e refeitos com a nova base
+  if (m.base === "reduced") return;                 // nada de loop/parallax/entrada longa
+  gsap.from(".rodizio__board", { y: 40, duration: m.dur("--t-slow"), ease: m.ease,
+    scrollTrigger: { trigger: "#ato-2", start: "top 65%" } });
+  m.loop(document.querySelector(".rodizio__boards"),   // pausa fora da tela
+    gsap.to(".rodizio__board", { y: 6, duration: 9, yoyo: true, repeat: -1, ease: "sine.inOut" }));
+  if (m.quality === "low") return;                  // camadas caras só em "high" (D27)
+  // …
+  return () => { /* limpeza do que não for GSAP (listeners etc.) */ };
+});
+```
+
+Regras:
+- **Só `transform` e `opacity`.** `filter` e `clip-path` pontualmente. Nunca `width`, `height`,
+  `top`, `left`, `margin`.
+- **Estados iniciais escondidos só sob `html.js-motion`** (CSS) ou criados dentro do `register`
+  (desfeitos pelo `gsap.context`). Sem JS, com falha ou em `reduced`, o conteúdo aparece.
+- **A pausa é global:** não é preciso tratar `paused` em cada animação. Só reaja a
+  `motion.on("mode")` se algo precisar voltar ao repouso (como o parallax faz). Escritas de
+  estado durante a pausa vão direto no `style`: `gsap.set` entra na timeline global, que está
+  pausada, e não seria aplicado.
+- **Loops CSS** ficam dentro de um elemento com `data-loop`: fora da tela ele recebe
+  `data-offscreen` e as animações dentro dele pausam. **Loops GSAP** passam por `motion.loop`.
+- **`will-change` só durante a animação:** os utilitários põem e tiram. Nunca em CSS fixo.
+- **Nada na primeira tela depende do GSAP (D29).** Entradas do hero são `@keyframes` em CSS
+  sob `html.js-motion`, como o véu.
+
+**Atributos declarativos** (lidos por `core.js`; nenhum elemento usa ainda):
+
+| Atributo | Efeito |
+|---|---|
+| `data-reveal="up"` · `"fade"` · `"scale"` | Entra uma vez quando `--reveal-at` (35 %) do elemento está visível: `opacity` 0 → 1, mais `translateY(--reveal-y)` ou `scale(--reveal-scale)` → repouso, em `--t-mid` com `--ease-out`. Em `reduced`, só fade de `--t-fade`, e só para quem ainda está abaixo da tela. Ao terminar: `data-revealed`, estilos inline limpos |
+| `data-reveal-delay="120"` | Atraso em ms (só no modo `full`) |
+| `data-parallax="0.12"` | `y = fator × (scroll − repouso)`, só `transform`. **Repouso = ato alinhado ao topo da tela**, então cada ato parado por ⏮ ⏭ ou âncora mostra exatamente o layout estático. Desligado em `reduced`, `paused` e `quality="low"` |
+| `data-loop` | Container de loops CSS: pausa fora da tela (`IntersectionObserver`, margem de 10 %) |
+
+Não combine `data-reveal` e `data-parallax` no mesmo elemento nem use em elementos que já têm
+`transform` próprio: os dois escrevem em `transform`. Use um wrapper.
+
+**Qualidade (D27).** O `<head>` marca `html[data-quality="low"]` quando o aparelho tem
+`hardwareConcurrency ≤ 4`, `deviceMemory ≤ 4`, `saveData` ou tela com menos de 768 px; senão
+`"high"`. Fixo por carga (não muda ao girar a tela). `?quality=low|high` força para testes.
+**Contrato para as próximas etapas: em `"low"`, degradar as camadas caras**, na linha da D18:
+- `feTurbulence` e reflexos animados passam a estáticos;
+- parallax desligado (já feito);
+- menos camadas de fumaça e bolhas;
+- sem `backdrop-filter` animado;
+- neon sem pulsação de `box-shadow`, que vira `opacity`.
+
+**Entrada da página (D28).** Véu `--ink-900` (`body::before` sob `html.motion-enter`) que se
+desfaz em `--t-enter` (800 ms), só `opacity`. É CSS puro: não espera JS, e o conteúdo (e o LCP)
+pinta por baixo desde o primeiro quadro. Não existe em `reduced` e ignora a pausa (pausado, ficaria
+preto).
+
+**Carregamento tardio (D29).** GSAP, ScrollTrigger, Lenis e `core.js` somam 51 KB gzip (164 KB
+sem compressão). Pedidos com `defer`, disputavam banda com a imagem de LCP no 4G simulado: o
+Lighthouse mobile caiu de 80 para 76 e o LCP subiu de 3,7 s para 4,4 s. Por isso o carregador do
+`<head>` só os pede depois do `load`, na 1ª interação (`scroll`, `wheel`, `touchstart`,
+`pointerdown`, `keydown`) ou 2,5 s depois, o que vier antes. Se a página abrir numa âncora ou já
+rolada, carrega na hora. Se o núcleo não ficar pronto em 6 s, `js-motion`/`motion-enter` saem,
+tudo aparece e o núcleo não religa depois. Consequência: o primeiro gesto de rolagem pode ainda
+ser nativo, e **nada da primeira tela pode depender do GSAP**.
+
+**Rolagem suave (D30).** Lenis só no modo `full`, sincronizado com o ScrollTrigger
+(`lenis.on("scroll", ScrollTrigger.update)` + `gsap.ticker`).
+- **Âncoras da página** (trilho, menu, skip link, `#ato-*`): clique interceptado e
+  `lenis.scrollTo` com offset zero. Por teclado, o foco acompanha o alvo, como na âncora nativa.
+- **Navegação programada** (⏮ ⏭, âncoras): duração fixa `--t-slow` com `--ease-soft`, não o
+  `lerp`. A cauda sub-pixel do `lerp` desfaria uma rolagem nativa feita logo depois.
+- **⏮ ⏭ contam a partir do destino pedido** enquanto a rolagem está a caminho (`js/nav.js`).
+  Antes, cliques rápidos voltavam para um ato atravessado. O destino é descartado quando o
+  visitante rola por conta própria.
+- **Menu:** `lenis.stop()` ao abrir e `start()` ao fechar (observando `html.menu-open`). O
+  overlay tem `data-lenis-prevent` e rola nativo.
+- **Tab** para um campo fora da tela rola nativamente, e o Lenis se sincroniza.
+
+**Pausa manual (antes D13, agora D25/D26).** O ⏸ (`[data-pause]`, `js/nav.js`) alterna
+`<html data-motion="paused">` e `aria-pressed`; `core.js` observa o atributo e aplica o modo
+`paused` acima.
+
+**Corte em mobile (D18).** Abaixo de **768 px**, todos os reflexos perdem o
+`filter: url(#ripple)` e ficam **estáticos com `blur(3px)`**; a distorção por
+`feTurbulence` roda só a partir de 768 px. Vale para os 3 reflexos (hero, rodízio,
+reserva) e para a ondulação da água do ACT IV, que em mobile vira gradiente fixo.
+`feTurbulence` animado é caro demais para GPU de celular. Telas < 768 px já são
+`quality="low"` (D27).
+
+As tabelas abaixo são o plano por seção, a implementar nas próximas etapas sobre esta base.
+Onde elas pedem entrada no hero, vale a D29: CSS, não GSAP.
 
 ### Hero
 | Elemento | Animação |
@@ -654,7 +767,8 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates. Cada uma vira uma regra, com
+inventário de plates, D24–D25 na construção dos atos e D26–D30 na base de motion. Cada uma
+vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
 ### Conteúdo e marca
@@ -701,6 +815,11 @@ o efeito que já foi aplicado nas seções acima.
 | **D16** ✅ | **HUD do hero: `DEPTH 0.4MM / TENSION / MA`**, texto completo. Decorativo em inglês → `aria-hidden`. | §2, §4/01 camada 14 |
 | **D18** ✅ | **Abaixo de 768 px, reflexo estático com blur.** `feTurbulence` animado só a partir de 768 px, nos 3 reflexos e na água do ACT IV. | §5 interruptores globais, §4/04 camada 10 |
 | **D19** ✅ | **Piso de `--text-mid` para todo texto informativo.** `--text-faint` deixa de ser cor de texto e fica só para traços, ticks e bordas. | §1 nota de contraste, §4/02 camada 8 |
+| **D26** ✅ | **Modos de motion `full` / `reduced` / `paused`** com fonte única em `js/motion/core.js`, reagindo em tempo real a `prefers-reduced-motion` e ao ⏸. API `motion.mode`, `motion.on`, `motion.register` (+ `loop`, `scrollTo`, `scan`). | §5.0 |
+| **D27** ✅ | **Camada de qualidade** `html[data-quality]` = `low` ou `high` (núcleos ≤ 4, memória ≤ 4 GB, `saveData`, tela < 768 px; `?quality=` força). Em `low` as próximas etapas degradam as camadas caras. | §5.0 |
+| **D28** ✅ | **Entrada da página = véu `--ink-900` em CSS puro**, 800 ms, só `opacity`; não espera JS nem atrasa o LCP. | §5.0 |
+| **D29** ✅ | **Motion carregado fora do caminho do LCP**: depois do `load`, na 1ª interação ou 2,5 s depois. Nada da primeira tela depende do GSAP; entradas do hero em CSS. | §5.0 |
+| **D30** ✅ | **Lenis só no modo `full`**; âncoras e ⏮ ⏭ com offset zero e duração fixa dos tokens; menu para o Lenis; ⏮ ⏭ contam a partir do destino pedido. | §5.0, §4b |
 
 ---
 
