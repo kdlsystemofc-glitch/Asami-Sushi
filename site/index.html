@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asami Sushi São Bernardo — Rodízio e à la carte</title>
+  <meta name="description" content="Culinária japonesa em rodízio e à la carte no Centro de São Bernardo do Campo. Av. das Nações Unidas, 50. R$ 80–160 por pessoa.">
+  <meta name="theme-color" content="#040507">
+  <link rel="icon" href="assets/logo-asami-150.webp" type="image/webp">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="preload" as="image" href="assets/plate-nigiri-800.webp"
+        imagesrcset="assets/plate-nigiri-800.webp 800w, assets/plate-nigiri-1600.webp 1600w"
+        imagesizes="(min-width: 48rem) 34vw, 70vw">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/hero.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- Filtros SVG compartilhados (ondulação estática; animação entra na etapa de motion) -->
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <filter id="wave" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.004 0.012" numOctaves="1" seed="4"/>
+      <feDisplacementMap in="SourceGraphic" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="ripple" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.004 0.09" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <header class="site-header">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+      <span class="visually-hidden">Abrir menu</span>
+    </button>
+
+    <a class="logo" href="#ato-1">
+      <span class="logo__name">Asami</span>
+      <span class="logo__sub">Sushi</span>
+      <span class="visually-hidden"> — início</span>
+    </a>
+
+    <!-- Camada 10: ornamento inerte, sem áudio na v1 (D13) -->
+    <span class="hz-pill" aria-hidden="true">
+      <span>432Hz</span>
+      <svg class="hz-pill__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+        <path d="M2 6.5h2.2L7.5 4v8L4.2 9.5H2z"/>
+        <path d="M10 6.2c.6.5.6 3.1 0 3.6M12 4.8c1.3 1.2 1.3 5.2 0 6.4"/>
+      </svg>
+    </span>
+  </header>
+
+  <!-- Camada 17: overlay de menu (D11). Estilo e transições entram na etapa de motion. -->
+  <dialog class="menu" id="menu" aria-label="Menu">
+    <nav>
+      <ol role="list" class="menu__list">
+        <li><a href="#ato-1">Ato I · A Chegada</a></li>
+        <li><a href="#ato-2">Ato II · Rodízio</a></li>
+        <li><a href="#ato-3">Ato III · O Salão</a></li>
+        <li><a href="#ato-4">Ato IV · Reservas</a></li>
+        <li><a href="tel:+551126697175">Cardápio</a></li>
+      </ol>
+    </nav>
+    <button class="menu__close" type="button">Fechar menu</button>
+  </dialog>
+
+  <main id="conteudo">
+
+    <!-- ═══ ACT I — THE ARRIVAL ═══════════════════════════════ -->
+    <section class="section hero" id="ato-1" aria-labelledby="ato-1-titulo">
+
+      <!-- 1 · fundo -->
+      <div class="hero__bg" aria-hidden="true"></div>
+
+      <!-- 2 · névoa: um plate, três camadas mascaradas no terço médio -->
+      <div class="hero__smoke" aria-hidden="true">
+        <img class="plate hero__smoke-layer hero__smoke-layer--l"
+             src="assets/plate-smoke-hero-800.webp"
+             srcset="assets/plate-smoke-hero-800.webp 800w, assets/plate-smoke-hero-1600.webp 1600w"
+             sizes="70vw" alt="" decoding="async">
+        <img class="plate hero__smoke-layer hero__smoke-layer--r"
+             src="assets/plate-smoke-hero-800.webp"
+             srcset="assets/plate-smoke-hero-800.webp 800w, assets/plate-smoke-hero-1600.webp 1600w"
+             sizes="70vw" alt="" decoding="async">
+        <img class="plate hero__smoke-layer hero__smoke-layer--c"
+             src="assets/plate-smoke-hero-800.webp"
+             srcset="assets/plate-smoke-hero-800.webp 800w, assets/plate-smoke-hero-1600.webp 1600w"
+             sizes="100vw" alt="" decoding="async">
+      </div>
+
+      <!-- 3 · bolhas (posições medidas no mockup, % do quadro) -->
+      <div class="hero__bubbles" aria-hidden="true">
+        <i style="--x:37.4%;--y:8.7%;--d:.5"></i>
+        <i style="--x:58.5%;--y:3.9%;--d:.6"></i>
+        <i style="--x:60.2%;--y:14.6%;--d:.8"></i>
+        <i style="--x:67.4%;--y:13.3%;--d:.55"></i>
+        <i style="--x:30.9%;--y:29.3%;--d:.45"></i>
+        <i style="--x:64.1%;--y:31.1%;--d:.7"></i>
+        <i style="--x:69%;--y:37.1%;--d:.4"></i>
+        <i style="--x:58.1%;--y:39.4%;--d:.5"></i>
+        <i style="--x:35.2%;--y:47.8%;--d:.45"></i>
+        <i style="--x:44%;--y:48.1%;--d:.6"></i>
+        <i style="--x:53.3%;--y:45.8%;--d:.4"></i>
+        <i style="--x:38.7%;--y:22.2%;--d:.35"></i>
+        <i style="--x:26.3%;--y:40.5%;--d:.3"></i>
+        <i style="--x:72.9%;--y:22.4%;--d:.35"></i>
+      </div>
+
+      <!-- 4 · nigiri -->
+      <img class="plate hero__nigiri"
+           src="assets/plate-nigiri-800.webp"
+           srcset="assets/plate-nigiri-800.webp 800w, assets/plate-nigiri-1600.webp 1600w"
+           sizes="(min-width: 48rem) 34vw, 70vw"
+           alt="" fetchpriority="high" decoding="async">
+
+      <!-- 6 · piso em grade -->
+      <div class="hero__floor" aria-hidden="true"><div class="hero__floor-plane"></div></div>
+
+      <!-- 5 · wordmark (texto real) -->
+      <h1 class="hero__wordmark" id="ato-1-titulo">
+        <span class="hero__wordmark-text" data-text="Asami">Asami</span>
+        <span class="visually-hidden"> Sushi São Bernardo</span>
+      </h1>
+
+      <!-- 7 · espelho d'água -->
+      <div class="hero__reflection" aria-hidden="true">
+        <span class="hero__wordmark-text" data-text="Asami">Asami</span>
+      </div>
+
+      <!-- 3b · rótulo do ato (D8) -->
+      <div class="act-label hero__label">
+        <p class="act-label__eyebrow">Act I</p>
+        <h2 class="act-label__title">The Arrival</h2>
+      </div>
+
+      <!-- 11 · trilho de atos (D17) -->
+      <nav class="rail" aria-label="Atos">
+        <ol role="list" class="rail__list">
+          <li><a class="rail__tick" href="#ato-1" aria-current="true"><span class="visually-hidden">Ato I · A Chegada</span></a></li>
+          <li><a class="rail__tick" href="#ato-2"><span class="visually-hidden">Ato II · Rodízio</span></a></li>
+          <li class="rail__knob" aria-hidden="true">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M7 3.5 4.5 6 7 8.5"/></svg>
+          </li>
+          <li><a class="rail__tick" href="#ato-3"><span class="visually-hidden">Ato III · O Salão</span></a></li>
+          <li><a class="rail__tick" href="#ato-4"><span class="visually-hidden">Ato IV · Reservas</span></a></li>
+        </ol>
+      </nav>
+
+      <!-- 12 · progresso de scroll (decorativo) -->
+      <div class="progress" aria-hidden="true" style="--progress:0"><span class="progress__dot"></span></div>
+
+      <!-- 13–15 · barra inferior -->
+      <div class="hero__bar">
+        <div class="player" role="group" aria-label="Controles da página">
+          <button class="player__btn" type="button" data-act="prev" aria-label="Ato anterior">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 4h1.2v8H4.5zM11.5 4.2v7.6L6.6 8z"/></svg>
+          </button>
+          <button class="player__btn" type="button" data-pause aria-pressed="false" aria-label="Pausar animações">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.2 4h1.4v8H5.2zM9.4 4h1.4v8H9.4z"/></svg>
+          </button>
+          <button class="player__btn" type="button" data-act="next" aria-label="Próximo ato">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 4.2v7.6L9.4 8zM10.3 4h1.2v8h-1.2z"/></svg>
+          </button>
+        </div>
+
+        <p class="hero__hud" aria-hidden="true">Depth 0.4mm / Tension / Ma</p>
+
+        <!-- 15 · toggle inerte (D13) -->
+        <span class="hz-pill hz-pill--toggle" aria-hidden="true">
+          <span>432Hz</span>
+          <span class="hz-pill__knob"></span>
+        </span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <!-- rodapé (§4/05) -->
+  </footer>
+
+  <script src="js/menu.js" defer></script>
+</body>
+</html>

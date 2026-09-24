@@ -1,0 +1,122 @@
+/* Nav do topo (§4/01 camadas 8, 9, 10) + overlay de menu (camada 17, estático). */
+
+.site-header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: var(--gutter) var(--gutter) 0;
+}
+
+/* ── 8 · hambúrguer ─────────────────────────────────────── */
+.menu-toggle {
+  justify-self: start;
+  display: grid;
+  align-content: space-between;
+  width: clamp(1.25rem, 1.9vw, 1.75rem);
+  height: clamp(.875rem, 1.4vw, 1.3rem);
+  /* área de toque ≥ 44 px sem mudar o desenho */
+  padding: clamp(.75rem, 1vw, .9rem);
+  box-sizing: content-box;
+  margin: calc(-1 * clamp(.75rem, 1vw, .9rem));
+  color: var(--text-base);
+}
+
+.menu-toggle__bar {
+  display: block;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: var(--r-pill);
+}
+
+/* ── 9 · logo ───────────────────────────────────────────── */
+.logo {
+  display: grid;
+  justify-items: center;
+  gap: clamp(.25rem, .6vw, .5rem);
+  color: var(--chrome-100);
+}
+
+.logo__name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-variation-settings: "wdth" 100;
+  font-size: var(--fs-logo);
+  letter-spacing: var(--ls-logo);
+  text-indent: var(--ls-logo); /* compensa o tracking à direita */
+  line-height: 1;
+}
+
+.logo__sub {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-logo-sub);
+  letter-spacing: var(--ls-logo-sub);
+  text-indent: var(--ls-logo-sub);
+  line-height: 1;
+  color: var(--text-base);
+}
+
+/* ── 10 / 15 · pílula 432Hz (ornamento inerte, D13) ─────── */
+.hz-pill {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(.5rem, 1vw, .9rem);
+  height: var(--ctl-size);
+  padding-inline: clamp(.75rem, 1.4vw, 1.25rem) clamp(.6rem, 1.1vw, 1rem);
+  border: var(--border-hud);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--fs-hud);
+  letter-spacing: .04em;
+  text-transform: none;
+  color: var(--text-base);
+  user-select: none;
+}
+
+.hz-pill__icon {
+  width: clamp(.875rem, 1.2vw, 1.1rem);
+  opacity: .8;
+}
+
+.hz-pill__knob {
+  width: calc(var(--ctl-size) * .62);
+  aspect-ratio: 1;
+  border-radius: var(--r-full);
+  background: radial-gradient(circle at 35% 30%, var(--chrome-100), var(--mist-200) 60%, var(--steel-300));
+}
+
+/* ── 17 · overlay de menu (estático; transições na etapa de motion) ── */
+.menu {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  padding: var(--sp-8) var(--gutter);
+  border: 0;
+  background: color-mix(in srgb, var(--ink-900) 96%, transparent);
+  color: var(--text-base);
+}
+
+.menu::backdrop { backdrop-filter: blur(20px); background: transparent; }
+
+.menu__list {
+  display: grid;
+  gap: var(--sp-3);
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 112;
+  font-size: var(--fs-title);
+  letter-spacing: var(--ls-title);
+}
+
+.menu__close {
+  position: absolute;
+  inset: var(--gutter) var(--gutter) auto auto;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--text-mid);
+}

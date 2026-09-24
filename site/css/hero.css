@@ -1,0 +1,337 @@
+/* ACT I — THE ARRIVAL (§4/01, camadas 1–16). Layout estático: sem animação.
+   Posições em % do quadro, medidas em design/secoes/01-hero.png (768×437). */
+
+.hero {
+  /* geometria — mobile primeiro (quadro retrato) */
+  --nigiri-x: 12%;
+  --nigiri-y: 21%;
+  --nigiri-w: 76%;
+  --wm-top: 49%;          /* topo da maiúscula */
+  --label-y: 12%;
+  --side-y: 33%;          /* trilho e progresso */
+
+  position: relative;
+  height: var(--h-hero);
+  min-height: 34rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (min-width: 48rem) {
+  .hero {
+    --nigiri-x: 33.7%;
+    --nigiri-y: 8.7%;
+    --nigiri-w: 33.5%;
+    --wm-top: 52.6%;      /* 226 / 437, +0.9% compensa o overshoot de S/A da Archivo */
+    --label-y: 18%;
+    --side-y: 51.5%;      /* centro do trilho: 225 / 437 */
+    --floor-h: 30%;
+    min-height: 0;
+  }
+}
+
+/* ── 1 · fundo ──────────────────────────────────────────── */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    /* lâmina d'água abaixo da linha de base */
+    linear-gradient(180deg, transparent 0 calc(var(--wm-top) + var(--fs-wordmark) * var(--cap-ratio) * .9),
+      color-mix(in srgb, var(--steel-400) 22%, transparent) calc(var(--wm-top) + var(--fs-wordmark) * var(--cap-ratio) * 1.02),
+      color-mix(in srgb, var(--ink-700) 45%, transparent) 86%, var(--ink-900) 100%),
+    radial-gradient(120% 90% at 50% 28%, var(--ink-700) 0%, var(--ink-850) 45%, var(--ink-900) 100%);
+}
+
+/* ── 2 · névoa ──────────────────────────────────────────── */
+.hero__smoke { position: absolute; inset: 0; z-index: -1; }
+
+.hero__smoke-layer {
+  position: absolute;
+  max-width: none;
+  opacity: var(--smoke-hero-opacity);
+  filter: grayscale(.75) brightness(.9);
+  /* faixa no terço médio × esmaecimento lateral */
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent 0%, #000 45%, #000 70%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent 0%, #000 45%, #000 70%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.hero__smoke-layer--l { width: 58%; left: -12%; top: 24%; }
+.hero__smoke-layer--r { width: 58%; right: -12%; top: 22%; transform: scaleX(-1); }
+.hero__smoke-layer--c { width: 110%; left: -5%; top: 30%; opacity: calc(var(--smoke-hero-opacity) * .35); }
+
+@media (max-width: 47.99rem) {
+  .hero__smoke-layer--l,
+  .hero__smoke-layer--r { width: 130%; top: 36%; }
+  .hero__smoke-layer--l { left: -60%; }
+  .hero__smoke-layer--r { right: -60%; }
+  .hero__smoke-layer--c { width: 220%; left: -60%; top: 36%; }
+}
+
+/* ── 3 · bolhas ─────────────────────────────────────────── */
+.hero__bubbles { position: absolute; inset: 19% 0 42%; z-index: 1; pointer-events: none; }
+@media (min-width: 48rem) { .hero__bubbles { inset: 0; } }
+
+.hero__bubbles i {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: max(4px, calc(var(--d) * 1.25vw));
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--chrome-100) 60%, transparent);
+  border-radius: var(--r-full);
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--chrome-100) 85%, transparent) 0 16%, color-mix(in srgb, var(--mist-200) 12%, transparent) 40%, transparent 70%);
+}
+
+/* ── 4 · nigiri ─────────────────────────────────────────── */
+.hero__nigiri {
+  position: absolute;
+  z-index: 2;
+  left: var(--nigiri-x);
+  top: var(--nigiri-y);
+  width: var(--nigiri-w);
+  rotate: -14deg;
+}
+
+/* ── 5 · wordmark cromado ───────────────────────────────── */
+.hero__wordmark {
+  position: absolute;
+  z-index: 4;
+  inset-inline: 0;
+  top: var(--wm-top);
+  display: flex;
+  justify-content: center;
+}
+
+.hero__wordmark-text {
+  position: relative;
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--fw-wordmark);
+  font-variation-settings: "wdth" var(--wdth-wordmark);
+  font-size: var(--fs-wordmark);
+  letter-spacing: var(--ls-wordmark);
+  line-height: 1;
+  text-box: trim-both cap alphabetic; /* caixa = altura da maiúscula; base = linha d'água */
+  text-transform: uppercase;
+  /* camada de baixo = aresta do bisel */
+  color: var(--steel-400);
+  filter:
+    drop-shadow(0 2px 0 var(--ink-800))
+    drop-shadow(0 0 40px color-mix(in srgb, var(--mist-200) 25%, transparent));
+}
+
+/* camada de cima = cromo, deslocada 1 px para revelar o bisel */
+.hero__wordmark-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  text-box: inherit;
+  translate: -1px -1px;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--mist-100) 70%, transparent);
+  background: linear-gradient(180deg,
+    var(--chrome-100) 0%,
+    var(--mist-200) 16%,
+    var(--steel-400) 42%,
+    var(--chrome-900) 55%,
+    var(--mist-100) 68%,
+    var(--steel-300) 84%,
+    var(--chrome-900) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── 6 · piso em grade ──────────────────────────────────── */
+.hero__floor {
+  position: absolute;
+  z-index: 3;
+  left: 8%;
+  width: 84%;
+  /* centro do plano na linha d'água */
+  top: calc(var(--wm-top) + var(--fs-wordmark) * var(--cap-ratio) * .82);
+  height: var(--floor-h, 16%);
+  perspective: 24rem;
+  perspective-origin: 50% 0%;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(52% 70% at 50% 18%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(52% 70% at 50% 18%, #000 45%, transparent 100%);
+}
+
+.hero__floor-plane {
+  position: absolute;
+  inset: 0;
+  --grid-line: color-mix(in srgb, var(--mist-200) 38%, transparent);
+  --cell: clamp(8px, 1.1vw, 16px);
+  background:
+    repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px var(--cell)),
+    repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px var(--cell));
+  transform: rotateX(70deg);
+  transform-origin: 50% 0%;
+  filter: url(#wave);
+}
+
+/* ── 7 · espelho d'água ─────────────────────────────────── */
+.hero__reflection {
+  position: absolute;
+  z-index: 3;
+  inset-inline: 0;
+  /* começa na linha de base do wordmark */
+  top: calc(var(--wm-top) + var(--fs-wordmark) * var(--cap-ratio));
+  display: flex;
+  justify-content: center;
+  transform: scaleY(-1);
+  opacity: .62;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 95%);
+  mask-image: linear-gradient(to top, #000 0%, transparent 95%);
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+@media (min-width: 48rem) {
+  .hero__reflection { filter: blur(1px) url(#ripple); }
+}
+
+/* ── 3b · rótulo do ato ─────────────────────────────────── */
+.hero__label {
+  position: absolute;
+  z-index: 5;
+  left: var(--gutter);
+  top: var(--label-y);
+}
+
+/* ── 11 · trilho de atos ────────────────────────────────── */
+.rail {
+  position: absolute;
+  z-index: 10;
+  left: calc(var(--gutter) - var(--ctl-size) * .25);
+  top: var(--side-y);
+  translate: 0 -50%;
+}
+
+.rail__list {
+  display: grid;
+  justify-items: center;
+  gap: 0;
+}
+
+.rail__tick {
+  display: grid;
+  place-items: center;
+  width: var(--ctl-size);
+  height: clamp(1rem, 1.5vw, 1.4rem);
+}
+
+.rail__tick::before {
+  content: "";
+  width: 1.5px;
+  height: clamp(4px, .45vw, 7px);
+  border-radius: var(--r-pill);
+  background: var(--text-faint);
+}
+
+.rail__tick[aria-current="true"]::before {
+  height: clamp(9px, 1vw, 14px);
+  background: var(--chrome-100);
+}
+
+.rail__knob {
+  display: grid;
+  place-items: center;
+  width: calc(var(--ctl-size) * .5);
+  aspect-ratio: 1;
+  margin-block: clamp(.25rem, .5vw, .5rem);
+  border: var(--border-hud);
+  border-radius: var(--r-full);
+  color: var(--text-mid);
+}
+.rail__knob svg { width: 70%; }
+
+/* ── 12 · progresso de scroll ───────────────────────────── */
+.progress {
+  position: absolute;
+  z-index: 10;
+  right: var(--gutter);
+  top: var(--side-y);
+  translate: 0 -50%;
+  width: 1px;
+  height: clamp(6rem, 11.7vw, 11rem);
+  background: color-mix(in srgb, var(--mist-200) 45%, transparent);
+}
+
+.progress__dot {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--progress) * 100%);
+  translate: -50% -50%;
+  width: calc(var(--ctl-size) * .5);
+  aspect-ratio: 1;
+  border: var(--border-hud);
+  border-color: color-mix(in srgb, var(--mist-200) 55%, transparent);
+  border-radius: var(--r-full);
+  background: radial-gradient(circle, var(--chrome-100) 0 18%, var(--ink-900) 22%);
+}
+
+/* ── 13–15 · barra inferior ─────────────────────────────── */
+.hero__bar {
+  position: absolute;
+  z-index: 10;
+  inset: auto var(--gutter) var(--gutter);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "hud hud" "player toggle";
+  align-items: center;
+  row-gap: var(--sp-3);
+}
+
+@media (min-width: 48rem) {
+  .hero__bar {
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas: "player hud toggle";
+  }
+}
+
+.player { grid-area: player; display: flex; gap: clamp(.5rem, 1vw, 1rem); }
+
+.player__btn {
+  display: grid;
+  place-items: center;
+  width: var(--ctl-size);
+  aspect-ratio: 1;
+  border: var(--border-hud);
+  border-radius: var(--r-full);
+  color: var(--text-base);
+}
+.player__btn svg { width: 38%; }
+
+.hero__hud {
+  grid-area: hud;
+  justify-self: center;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-hud);
+  letter-spacing: var(--ls-hud);
+  line-height: var(--lh-hud);
+  color: var(--text-mid);
+  white-space: nowrap;
+}
+
+.hz-pill--toggle { grid-area: toggle; padding-inline-end: calc(var(--ctl-size) * .19); }
+
+/* ── 16 · grão ──────────────────────────────────────────── */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: .04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}

@@ -1,0 +1,148 @@
+/* Base: tipografia global, grid, utilitários. Valores só via tokens.css. */
+
+html {
+  background: var(--ink-900);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--ink-900);
+  color: var(--text-base);
+  font-family: var(--font-body);
+  font-size: var(--fs-hud);
+  line-height: var(--lh-hud);
+  letter-spacing: var(--ls-hud);
+  text-transform: uppercase; /* todo texto da peça é caixa-alta (§2); HTML em caixa normal */
+  overflow-x: clip;
+}
+
+::selection { background: var(--salmon-500); color: var(--ink-900); }
+
+:focus-visible {
+  outline: 2px solid var(--amber-400);
+  outline-offset: 3px;
+}
+
+/* ── Grid de 12 colunas (§3) ───────────────────────────── */
+.section {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  gap: var(--grid-gap);
+  padding-inline: var(--gutter);
+}
+
+/* Bloco de rótulo: colunas 1–4 */
+.col-label { grid-column: 1 / -1; }
+/* Card de reserva: colunas 4–11 */
+.col-card { grid-column: 1 / -1; }
+/* Rodapé */
+.col-1-5 { grid-column: 1 / -1; }
+.col-6-8 { grid-column: 1 / -1; }
+.col-9-12 { grid-column: 1 / -1; }
+
+@media (min-width: 48rem) {
+  .col-label { grid-column: 1 / span 4; }
+  .col-card { grid-column: 4 / span 8; }
+  .col-1-5 { grid-column: 1 / span 5; }
+  .col-6-8 { grid-column: 6 / span 3; }
+  .col-9-12 { grid-column: 9 / span 4; }
+}
+
+/* ── Papéis tipográficos (§2) ──────────────────────────── */
+.t-wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" 125;
+  font-size: var(--fs-wordmark);
+  letter-spacing: var(--ls-wordmark);
+  line-height: var(--lh-wordmark);
+}
+
+.t-display,
+.t-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-variation-settings: "wdth" 112;
+}
+.t-display { font-size: var(--fs-display); letter-spacing: var(--ls-display); line-height: var(--lh-display); }
+.t-title   { font-size: var(--fs-title);   letter-spacing: var(--ls-title);   line-height: var(--lh-title); }
+
+.t-eyebrow,
+.t-hud,
+.t-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+.t-eyebrow { font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); line-height: var(--lh-eyebrow); }
+.t-hud     { font-size: var(--fs-hud);     letter-spacing: var(--ls-hud);     line-height: var(--lh-hud);     color: var(--text-mid); }
+.t-label   { font-size: var(--fs-label);   letter-spacing: var(--ls-label);   line-height: var(--lh-label);   color: var(--text-dim); }
+
+.t-value {
+  font-family: var(--font-body);
+  font-size: var(--fs-value);
+  letter-spacing: var(--ls-value);
+  line-height: var(--lh-value);
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Rótulo de ato (ACT I–IV) ──────────────────────────── */
+.act-label {
+  display: grid;
+  gap: var(--sp-1);
+  color: var(--text-base);
+}
+.act-label__eyebrow {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  line-height: var(--lh-eyebrow);
+}
+.act-label__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-variation-settings: "wdth" 112;
+  font-size: var(--fs-title);
+  letter-spacing: var(--ls-title);
+  line-height: var(--lh-title);
+}
+
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ── Plate de fundo preto: sempre screen, nunca recorte ── */
+.plate {
+  mix-blend-mode: var(--plate-blend);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Utilitários ───────────────────────────────────────── */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-block-start: var(--sp-2);
+  inset-inline-start: var(--gutter);
+  z-index: 100;
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--chrome-100);
+  color: var(--ink-900);
+  border-radius: var(--r-sm);
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible { transform: none; }
