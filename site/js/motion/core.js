@@ -217,7 +217,7 @@
     });
 
     // ── loops: pausados fora da tela ──────────────────────────
-    // Loops: pausados fora da tela. Num grupo exclusivo, só roda o do elemento mais visível
+    // Loops: pausados fora da tela (com 10 % de margem). Num grupo exclusivo, só roda o do elemento mais visível
     // (D34: um feTurbulence animado por vez — hero e ACT II se tocam na emenda).
     const loops = (() => {
       const anims = new Map();  // el → Set({ anim, grupo })
@@ -237,10 +237,16 @@
       };
       const io = new IntersectionObserver((entradas) => {
         for (const { target, isIntersecting, intersectionRatio } of entradas) {
-          target.toggleAttribute("data-offscreen", !isIntersecting); // loops CSS (motion.css)
-          visivel.set(target, isIntersecting ? Math.max(intersectionRatio, 0.001) : 0);
+          // só encostar na borda da tela (área 0) conta como "intersecting" para o observador: não
+          // para os loops — senão o ACT II rodaria com o hero ocupando a tela inteira
+          const naTela = isIntersecting && intersectionRatio > 0;
+          target.toggleAttribute("data-offscreen", !naTela); // loops CSS (motion.css)
+          visivel.set(target, naTela ? intersectionRatio : 0);
         }
         decidir();
+      // margem de 10 %: o loop já está rodando quando a seção aparece — com margem 0 as camadas de
+      // dezenas de animações eram criadas no meio da rolagem, na tela (medido: +2,5 pontos de
+      // quadros descartados na página inteira)
       }, { rootMargin: "10% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
       return {
         observar: (el) => io.observe(el),
@@ -337,12 +343,12 @@
           for (const { el, st, y, posicionar } of itens) {
             // pausado: sem transform nenhum (nem translate(0,0)), para o elemento sair da camada
             // do compositor e voltar a ser desenhado exatamente como no estático
-            if (m === "paused") { st.disable(false); y(0); limparEstilo(el, "transform", "will-change"); }
+            if (m === "paused") { st.disable(false); y(0); limparEstilo(el, "transform", "will-change", "translate", "rotate", "scale"); }
             else { st.enable(); posicionar(st); }
           }
         };
         if (modo === "paused") alternar(modo);
-        limpezas.push(api.on("mode", alternar), () => itens.forEach(({ el }) => limparEstilo(el, "transform", "will-change")));
+        limpezas.push(api.on("mode", alternar), () => itens.forEach(({ el }) => limparEstilo(el, "transform", "will-change", "translate", "rotate", "scale")));
         return limpar;
       },
     };

@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D40). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D44). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -688,7 +688,7 @@ Testes e medição: `npm run test:motion` (`scripts/test-motion-hero.mjs`), com 
 | Parallax | Wordmark `× .25` (`h1`), fumaça `× .10` (`.hero__smoke`), água `× .40` (wrapper novo `.hero__water` com piso + reflexo, porque o reflexo já tem `scaleY(-1)`). Repouso no topo da página. Desligado em `reduced`, `paused` e `low` | `data-parallax` (§5.0) |
 | Trilho | Traço em duas camadas (`::before` apagado, `::after` aceso) com a altura do ativo; inativo `scaleY(.45)` ≈ 6,3 de 14 px; ativo cresce para `scaleY(1)` e acende por `opacity`, 300 ms `--ease-out` | CSS (`nav.css`) |
 | ⏮ ⏭ | Ver D30 | — |
-| Overlay de menu | Não mexido nesta etapa (fica o fade de 200 ms) | — |
+| Overlay de menu | Ver "Menu, player e rodapé" (etapa final) | — |
 
 **Modos.**
 - **`reduced`:** sem `html.js-motion` → nenhuma entrada, nenhum loop, nenhum parallax, e o hero
@@ -1005,12 +1005,92 @@ Teste e medição: `scripts/test-motion-ato4.mjs`, com saída em `screenshots/mo
 
 Tarefas longas: no máximo 2 isoladas, sem script.
 
-### Rodapé
-| Elemento | Animação |
-|---|---|
-| Entrada | Bloco inteiro em fade + `translateY(12px)`, 500 ms, ao atingir 20 % de visibilidade. Sem parallax — o rodapé é o ponto de repouso da página |
-| Links | Sublinhado cresce da esquerda (`background-size: 0 1px → 100% 1px`), 200 ms |
-| Wordmark | Apenas `opacity .85 → 1` no hover. Nunca escalar nem colorir |
+### Menu, player e rodapé — construído (etapa "motion final", 24/09/2026)
+
+Testes: `scripts/test-motion-final.mjs`. Inventário completo de todas as animações do site:
+`motion-inventario.md`.
+
+**Menu overlay (D43).**
+- **Abertura:** o overlay fica sempre em `display: grid`. Abrir liga `visibility: visible` na
+  hora e faz o fade de `opacity` em 320 ms `--ease-out`.
+- **Fechamento:** fade de 200 ms (`--t-fade`, `--ease-soft`), e só **depois** dele entra o
+  `visibility: hidden`. Por isso o leitor de tela e o Tab não alcançam o menu fechado, e nunca há
+  `display: none` no meio da transição.
+- **Itens:** `translateY(16px)` + fade, 500 ms `--ease-out`, com 60 ms entre eles, só na abertura.
+  Com ⏸ entram direto: parados no 1º quadro ficariam invisíveis.
+- **Hambúrguer → X:** `transform` nos traços, 320 ms ao abrir e 200 ms ao fechar; em reduced,
+  instantâneo.
+- **Névoa:** deriva de 40 s em `translate`, só com o menu aberto (fechado não há animação nem
+  pintura); estática em low.
+- **Utilizável desde o 1º quadro:** sem `inert` nem `pointer-events: none` na transição. Um item
+  clicado fecha o menu e a rolagem começa na hora (medido: clique em 150 ms, já rolando).
+- **Interrupções:** a acessibilidade continua toda no `js/menu.js` (foco preso, `aria-expanded`,
+  Esc, foco devolvido, trava de rolagem só com o menu aberto) e é instantânea — a animação é só
+  CSS por cima. 20 ciclos abre/fecha seguidos (mouse e teclado) terminam coerentes, sem nada
+  travado.
+- **Reduced:** só o fade de 200 ms.
+- **Sem JS:** `:target` continua abrindo o overlay.
+- **Contraste dos itens durante a entrada:** pior quadro 10,86:1.
+
+**Player.** Com o ⏸ ativo o ícone vira ▶ (`aria-pressed="true"`) e o `aria-label` passa a
+"Retomar animações"; ao retomar, volta a "Pausar animações". ⏮ ⏭ e o trilho: sem regressão
+(`test:nav`). Com ⏸ ativo, até as transições do traço ativo do trilho ficam instantâneas.
+
+**Rodapé.**
+- **Entrada:** `translateY(16px)` + fade, 600 ms `--t-mid` `--ease-out`, uma vez, a 35 % de
+  visibilidade (`motion.entrada`), na grade do rodapé. Só se ele ainda estiver abaixo da tela
+  quando o motion se instala (D35): abrir em `#rodape` ou chegar ao fim da página nunca o deixa
+  escondido (testado).
+- **Links:** com `(hover: hover)`, um traço cresce da esquerda (`scaleX`, 220 ms `--ease-soft`)
+  num `span` que abraça o texto — o link tem 44 px de altura, então o traço na base dele ficaria
+  longe do texto. O traço aparece no hover e no foco; o contorno âmbar de foco não muda e o
+  sublinhado discreto de antes continua. O `config.js` escreve o telefone dentro do `span`.
+- **Estado final × estático aprovado:** 0,000 % em 1440 e 390.
+- **Mudanças em relação à tabela original:** 16 px e 600 ms (pedido desta etapa) em vez de 12 px e
+  500 ms; o wordmark do rodapé não ganhou hover.
+
+**Card do ACT IV (pendência da parte 5): o fade no próprio card foi testado e revertido.**
+- **Medido:** no fim da entrada a camada criada pelo fade é desfeita e o card com
+  `backdrop-filter` é redesenhado — 0,514 % dos pixels mudam entre quadros de 30 ms, acima do
+  limite de 0,5 %.
+- **Resultado:** o card continua entrando só por `translate` (D40).
+
+### Coerência global (etapa final)
+
+- **Curvas.** Entradas usam `--ease-out`; transições de estado (hover, foco, fechar, rolagem
+  programada) usam `--ease-soft`; loops, curvas de oscilação. Corrigidos:
+  - HUD e player do hero, luz rebatida do ACT III e linhas-guia e rótulos do ACT II usavam
+    `--ease-soft` numa entrada;
+  - os pontos das linhas-guia não tinham curva (caíam no `power1.out` do GSAP);
+  - a ondulação de confirmação tinha 600 ms literal, agora `--t-mid`.
+- **Durações fora dos tokens:** todas vêm de pedido explícito das etapas e ficaram como estão
+  (lista em `motion-inventario.md`).
+- **Loops simultâneos (D41).** Medidos em passos de 25 % da tela:
+  - **1440 high:** pico de 34, do topo até a emenda hero + ACT II (a margem de 10 % inclui o ACT II).
+  - **390 low:** pico de 14.
+  - **Orçamento:** até 36 em high e 16 em low, no máximo 2 seções com loops ao mesmo tempo e 1
+    `feTurbulence` (D34).
+  - **Margem mantida:** o observador dos loops tem 10 % de margem, então os loops já estão rodando
+    quando a seção aparece.
+  - **Tentativa revertida:** margem 0 derrubava 2,5 pontos a mais de quadros na rolagem da página
+    inteira, porque as camadas de dezenas de animações eram criadas na tela, no meio da rolagem.
+  - **Ajuste mantido:** é preciso área visível > 0; só encostar na borda não conta mais como
+    visível.
+- **⏸ na página inteira:** em todas as posições, nenhuma animação CSS rodando e a timeline GSAP
+  pausada; ao retomar, tudo volta.
+- **Reduced na página inteira (D42):** nenhum loop, parallax ou entrada animada. O `reset.css`
+  fazia **toda propriedade de todo elemento** transicionar em 200 ms em reduced — o ponto do
+  progresso animava `top` e o trilho, `transform`. Agora só `opacity` e `visibility` transicionam
+  (os "fades de 200 ms" do contrato).
+- **Limpeza:** depois de todas as entradas, nenhum `will-change`, `filter`, `transform` ou
+  `opacity` esquecido inline em nenhum elemento.
+  - **Corrigido:** o GSAP deixava `transform-origin` e `data-svg-origin` nas linhas-guia (SVG) do
+    ACT II, e o parallax, `translate/rotate/scale: none`.
+  - **Ouvintes:** os de `scroll` saem quando as animações se desfazem (full 5 → reduced 2 → full
+    5 → reduced 2).
+- **Âncora na abertura (D44):** com a página aberta em `#…`, o carregador também espera a
+  rolagem até a âncora terminar antes de pedir o motion. Registrado no meio dela, o ScrollTrigger
+  a interrompia e o rodapé ficava abaixo da tela, com a entrada escondida.
 
 ---
 
@@ -1066,7 +1146,7 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II, D37–D39 no motion do ACT III e D40 no motion do ACT IV. Cada uma
+inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II, D37–D39 no motion do ACT III, D40 no motion do ACT IV e D41–D44 na etapa final. Cada uma
 vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
@@ -1129,6 +1209,10 @@ o efeito que já foi aplicado nas seções acima.
 | **D38** ✅ | **Espaçamento de letras sem animar `letter-spacing`:** cópia `aria-hidden` com as letras nas posições medidas do texto original (com kerning), convergindo por `translateX`; o original, um nó só, fica transparente e volta intacto no fim. Sem JS e em "low": não existe. | §5 Sanctum |
 | **D39** ✅ | **Loops caros pausam durante a rolagem por classe no próprio elemento**, nunca por atributo no `<html>`, que força recálculo de estilo da página inteira a cada gesto. O núcleo ganhou `motion.entrada()` e `motion.abaixo()` (padrão D35 compartilhado pelos atos). | §5.0, §5 Sanctum |
 | **D40** ✅ | **O formulário vence qualquer animação.** Foco, clique, tecla ou digitação concluem a entrada e cancelam o contador na hora; o contador é uma camada visual `aria-hidden` que nunca toca o `value`; a confirmação só toca depois do `window.open`. O card entra só por `translate` no wrapper: opacity num ancestral do `backdrop-filter` faz o blur perder o fundo e voltar de uma vez (medido). | §5 Reserva |
+| **D41** ✅ | **Orçamento de loops simultâneos:** até 36 em high e 16 em low (medido: 34 e 14), no máximo 2 seções com loops ao mesmo tempo e 1 `feTurbulence`. O observador dos loops tem 10 % de margem (margem 0 criava as camadas na tela, no meio da rolagem: medido) e exige área visível > 0. | §5 Coerência global |
+| **D42** ✅ | **Reduced = só fades:** em `prefers-reduced-motion: reduce`, só `opacity` e `visibility` transicionam (200 ms); antes o reset fazia toda propriedade animar. | §5 Coerência global, `reset.css` |
+| **D43** ✅ | **Menu por `visibility` + `opacity`:** sempre em `display: grid`; `visibility: hidden` só depois do fade de saída (200 ms); abertura em 320 ms com os itens em sequência; a acessibilidade (JS) é instantânea e independente da animação. | §5 Menu, player e rodapé |
+| **D44** ✅ | **Âncora na abertura:** com `#…` na URL, o motion só é pedido depois que a rolagem até a âncora termina (complementa a D33). | §5.0, §5 Coerência global |
 
 ---
 

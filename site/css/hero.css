@@ -298,7 +298,7 @@
 
 .js-motion .hero__label { animation: hero-rise-in var(--t-mid) var(--ease-out) 2000ms backwards; }
 .js-motion .hero__hud,
-.js-motion .player { animation: hero-fade-in var(--t-mid) var(--ease-soft) 1600ms backwards; }
+.js-motion .player { animation: hero-fade-in var(--t-mid) var(--ease-out) 1600ms backwards; }
 
 /* ── loops (fumaça, bolhas, nigiri): em css/hero-loops.css, pedido junto com o motion,
    depois do load (medido: qualquer pedido antes do LCP o atrasava de 3,6 s para 3,8 s) ── */

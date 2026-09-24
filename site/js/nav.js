@@ -89,6 +89,7 @@ addEventListener("keydown", (e) => { if (/^(Arrow(Up|Down)|Page(Up|Down)|Home|En
 pause?.addEventListener("click", () => {
   const pausado = pause.getAttribute("aria-pressed") !== "true";
   pause.setAttribute("aria-pressed", String(pausado));
+  pause.setAttribute("aria-label", pausado ? "Retomar animações" : "Pausar animações"); // ícone ▶ via CSS
   if (pausado) document.documentElement.dataset.motion = "paused";
   else delete document.documentElement.dataset.motion;
 });

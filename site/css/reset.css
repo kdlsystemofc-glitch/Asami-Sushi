@@ -53,6 +53,9 @@ p { text-wrap: pretty; }
   *::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
+    /* só fades (§5.0 "reduced"): antes toda propriedade de todo elemento transicionava em 200 ms,
+       e o ponto do progresso animava top e o trilho, transform */
+    transition-property: opacity, visibility !important;
     transition-duration: 200ms !important;
     scroll-behavior: auto !important;
   }

@@ -105,7 +105,7 @@
           ease: "none",
         }, k * 0.09));
         // 6 · luz rebatida: depois que a 3ª barra acende, 1200 ms
-        if (luzes.length) tl.fromTo(luzes, { opacity: 0 }, { opacity: 1, duration: m.dur("--t-slow"), ease: m.easeSoft }, 2 * 0.09 + 0.2);
+        if (luzes.length) tl.fromTo(luzes, { opacity: 0 }, { opacity: 1, duration: m.dur("--t-slow"), ease: m.ease }, 2 * 0.09 + 0.2);
         // 5 · título: fade + espaçamento por transform; em "low", só fade
         if (soFade) {
           tl.fromTo(titulo, { opacity: 0 }, { opacity: 1, duration: TD, ease: m.ease }, T0);

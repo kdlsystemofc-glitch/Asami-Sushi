@@ -74,6 +74,9 @@
       // água durante o fade e volta de uma vez no fim (medido com opacity .99: 2,8 % dos pixels do
       // card mudam > 6/255, contra 0,46 % com translate). Ver D40.
       tl.fromTo(slot, { y: 24, willChange: "transform" }, { y: 0, duration: 0.9, ease: m.ease }, 0);
+      // Fade no próprio card (o elemento com backdrop-filter) foi testado na etapa final e
+      // revertido: no fim da entrada a camada criada pelo fade é desfeita e o card com blur é
+      // redesenhado — 0,514 % dos pixels mudam entre quadros de 30 ms, acima do limite de 0,5 %
       // reflexo: 250 ms depois, opacity 0 → valor estático (lido do CSS)
       if (reflexo) {
         const final = parseFloat(getComputedStyle(reflexo).opacity) || 1;
@@ -142,7 +145,7 @@
       ato.insertBefore(onda, um(".reserve__layout"));
       const raio = Math.max(b.width, 320) / 20; // o círculo tem 40 px
       gsap.fromTo(onda, { scale: 1, opacity: 0.8 }, {
-        scale: raio, opacity: 0, duration: 0.6, ease: m.ease, onComplete: () => onda.remove(),
+        scale: raio, opacity: 0, duration: m.dur("--t-mid"), ease: m.ease, onComplete: () => onda.remove(),
       });
       dbg.confirmacoes = (dbg.confirmacoes || 0) + 1;
     };

@@ -46,9 +46,12 @@ const esperarAtivo = async (page, alvo) => {
   for (let i = 0; i < 40; i++) { if ((await ativo(page)) === alvo) return true; await page.waitForTimeout(100); }
   return false;
 };
-// espera a rolagem suave assentar e devolve o topo da seção. "Assentou" = 5 leituras iguais
-// (~400 ms): sem GPU, durante a entrada do hero (blur), a rolagem pode levar ~350 ms para começar
+// espera a rolagem suave assentar e devolve o topo da seção. Primeiro espera ela COMEÇAR (até
+// 1,5 s): sem GPU, durante a entrada do hero, a rolagem leva 200–550 ms para sair do lugar
+// (medido); depois, "assentou" = 5 leituras iguais (~400 ms)
 const assentar = async (page, sel) => {
+  const inicio = await topoDe(page, sel);
+  for (let i = 0; i < 19 && Math.abs((await topoDe(page, sel)) - inicio) < 1 && Math.abs(inicio) > 2; i++) await page.waitForTimeout(80);
   let antes = null, iguais = 0;
   for (let i = 0; i < 80; i++) {
     const t = await topoDe(page, sel);
@@ -72,7 +75,7 @@ const topoDe = (page, sel) => page.evaluate((s) => Math.round(document.querySele
   await page.keyboard.press("Enter");
   await page.waitForTimeout(250);
   const estado = await page.evaluate(() => ({
-    visivel: getComputedStyle(document.getElementById("menu")).display !== "none",
+    visivel: getComputedStyle(document.getElementById("menu")).visibility === "visible",
     exp: document.querySelector("[aria-controls=menu]").getAttribute("aria-expanded"),
     travado: getComputedStyle(document.documentElement).overflow === "hidden",
     inerte: document.getElementById("conteudo").inert,
@@ -189,12 +192,13 @@ const topoDe = (page, sel) => page.evaluate((s) => Math.round(document.querySele
   const t = await page.evaluate(() => { const a = document.querySelector(".menu-toggle"); return [a.tagName, a.getAttribute("href")]; });
   ok(t[0] === "A" && t[1] === "#menu", "hambúrguer é <a href=\"#menu\">");
   await page.click(".menu-toggle"); await page.waitForTimeout(200);
-  const vis = await page.evaluate(() => getComputedStyle(document.getElementById("menu")).display);
+  const vis = await page.evaluate(() => getComputedStyle(document.getElementById("menu")).visibility);
   const links = await page.$$eval(".menu__link", (as) => as.map((a) => a.getAttribute("href").slice(0, 16)));
-  ok(vis !== "none" && links.length === 4, `overlay abre por :target com ${links.length} links: ${links.join(", ")}`);
+  ok(vis === "visible" && links.length === 4, `overlay abre por :target com ${links.length} links: ${links.join(", ")}`);
   await page.screenshot({ path: "screenshots/1440-menu-sem-js.png" });
   await page.click(".menu__link[href='#ato-4']"); await page.waitForTimeout(300);
-  ok(await page.evaluate(() => getComputedStyle(document.getElementById("menu")).display) === "none", "sem JS: clicar num item fecha o overlay (sai do :target)");
+  await page.waitForTimeout(300); // visibility: hidden só depois do fade de saída (200 ms)
+  ok(await page.evaluate(() => getComputedStyle(document.getElementById("menu")).visibility) === "hidden", "sem JS: clicar num item fecha o overlay (sai do :target)");
   const trilho = await page.$$eval(".rail__tick", (as) => as.map((a) => a.getAttribute("href")));
   ok(trilho.join() === "#ato-1,#ato-2,#ato-3,#ato-4", "sem JS: trilho continua com links reais");
   await ctx.close();

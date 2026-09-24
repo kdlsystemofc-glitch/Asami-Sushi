@@ -161,3 +161,46 @@ LF, 5 execuções cada.
   foco suave e a varredura do botão, com comentários. O `index.html` cresce 0,7 KB.
 - **Custo de CPU e GPU:** está no DESIGN.md, §5 Reserva.
 
+
+## Depois da etapa "motion final"
+
+Comparação com o commit `75b53d5` (motion do ACT IV). As duas versões foram servidas com LF, em duas rodadas de 5 execuções
+cada, e a segunda rodada inverteu a ordem.
+
+| 5 execuções, mediana | Desempenho | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|
+| Referência (`75b53d5`), rodada 1 | 84 | 3,0 s | 3,6 s | 14 ms | 0,000 |
+| Motion final, rodada 1 | 82 | 3,0 s | 3,8 s | 14 ms | 0,000 |
+| Motion final, rodada 2 | 82 | 3,0 s | 3,8 s | 41 ms | 0,000 |
+| Referência (`75b53d5`), rodada 2 | 82 | 3,0 s | 3,8 s | 15 ms | 0,000 |
+
+- **Diferença é ruído:** na rodada 2 as duas versões empatam (82 e 3,8 s). Contra a linha de base
+  estática (80, LCP 3,7 s), o motion inteiro custa zero no desempenho.
+- **Acessibilidade, boas práticas e SEO:** 100.
+- **JS total (gzip -9, 13 arquivos):** 75,6 KB, contra 74,6 KB na referência.
+  - Vendor (GSAP + ScrollTrigger + Lenis): 50,5 KB.
+  - Motion (`core`, `hero`, `rodizio`, `sanctum`, `reserva`, `rodape`): 18,6 KB.
+  - Interface (`config`, `menu`, `nav`, `reserva`): 6,5 KB.
+  - Só os 4 arquivos de interface (6,5 KB) entram antes do `load`; o resto é pedido depois
+    (D29, D33, D44).
+- **Arquivo novo:** `js/motion/rodape.js`, 0,65 KB gzip.
+- **Custo de CPU e GPU da página inteira** (quadros descartados na rolagem de cima a baixo, contra o
+  controle estático da mesma rodada):
+  - 1440 high: 11,5 % (controle, 12,3 %);
+  - 1440 low: 4,5 %;
+  - 390: 0,0 %.
+  - Loops simultâneos e o orçamento: DESIGN.md §5 "Coerência global" (D41).
+
+### Conferir em aparelho real
+- **iPhone (Safari):**
+  - `backdrop-filter` do card do ACT IV durante a entrada;
+  - névoa do menu;
+  - rolagem com Lenis e trava de rolagem com o menu aberto.
+- **Android de entrada:**
+  - se a detecção cai em `low`;
+  - quadros na emenda hero + ACT II (34 loops em high).
+- **Leitores de tela:**
+  - VoiceOver e TalkBack no menu (foco preso e devolvido);
+  - ⏸/▶ anunciando "Pausar animações" / "Retomar animações".
+- **Sistema com "reduzir movimento" ativo:** só fades, em iOS e Android.
+- **Trackpad e mouse de roda:** ritmo das entradas com a rolagem suave.

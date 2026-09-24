@@ -81,15 +81,22 @@
         const t0 = 0.4 + k * 0.12;
         seusCaminhos.forEach((l) => {
           const c = naTela(l);
-          tl.fromTo(l, { strokeDasharray: c, strokeDashoffset: c }, { strokeDashoffset: 0, duration: 0.7, ease: m.easeSoft }, t0);
+          tl.fromTo(l, { strokeDasharray: c, strokeDashoffset: c }, { strokeDashoffset: 0, duration: 0.7, ease: m.ease }, t0);
         });
         const seusPontos = pontos.filter((p) => p.dataset.callout === nome);
-        if (seusPontos.length) tl.fromTo(seusPontos, { opacity: 0 }, { opacity: 1, duration: m.dur("--t-fast") }, t0);
+        if (seusPontos.length) tl.fromTo(seusPontos, { opacity: 0 }, { opacity: 1, duration: m.dur("--t-fast"), ease: m.ease }, t0);
         const seuRotulo = rotulos.filter((r) => r.dataset.callout === nome);
-        if (seuRotulo.length) tl.fromTo(seuRotulo, { opacity: 0 }, { opacity: 1, duration: m.dur("--t-fast"), ease: m.easeSoft }, t0 + 0.7 + 0.2);
+        if (seuRotulo.length) tl.fromTo(seuRotulo, { opacity: 0 }, { opacity: 1, duration: m.dur("--t-fast"), ease: m.ease }, t0 + 0.7 + 0.2);
         k++;
       }
-      dbg.entrada = m.entrada(palco, tl, () => { gsap.set(tudo, { clearProps: "transform,opacity,strokeDasharray,strokeDashoffset" }); flutuar(); });
+      // clearProps "all" nas linhas/pontos: em SVG o GSAP também escreve transform-origin inline
+      dbg.entrada = m.entrada(palco, tl, () => {
+        gsap.set([...tabuas, ...coadjuvantes, ...rotulos], { clearProps: "transform,opacity" });
+        gsap.set([...linhas, ...pontos], { clearProps: "all" });
+        // em SVG o GSAP ainda deixa transform-origin e data-svg-origin: saem à mão
+        for (const el of [...linhas, ...pontos]) { el.style.removeProperty("transform-origin"); el.removeAttribute("data-svg-origin"); if (!el.getAttribute("style")) el.removeAttribute("style"); }
+        flutuar();
+      });
     } else {
       flutuar(); // já estava à vista quando o motion chegou: sem entrada, flutuação já
     }

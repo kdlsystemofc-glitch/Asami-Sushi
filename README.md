@@ -13,7 +13,7 @@ mockup em quatro "atos" + rodapé. HTML/CSS/JS estático, sem framework nem buil
 
 | Pasta / arquivo | O que é |
 |---|---|
-| `site/` | O site publicável: `index.html`, `css/` (um arquivo por seção + `tokens.css` + `motion.css`), `js/` (`config.js`, `menu.js`, `nav.js`, `reserva.js`, `motion/core.js`, `vendor/`), `assets/` (WebP gerados) |
+| `site/` | O site publicável: `index.html`, `css/` (um arquivo por seção + `tokens.css` + `motion.css`), `js/` (`config.js`, `menu.js`, `nav.js`, `reserva.js`, `motion/` com `core.js` e um arquivo por seção, `vendor/`), `assets/` (WebP gerados) |
 | `DESIGN.md` | Especificação: paleta, tipografia, grid, camadas de cada ato, regimes responsivos e o registro de decisões (D1–D25) |
 | `CLIENTE.md` | Dados do restaurante (endereço, horário, telefone, preço). Única fonte de texto factual do site |
 | `assets.md` | Inventário de imagens, mapeamento slot → arquivo e pendências |
@@ -36,7 +36,7 @@ npm run shots               # screenshots em 1440 e 390 → screenshots/
 npm run audit               # 12 telas + texto 200 %, movimento reduzido/tema claro, fontes bloqueadas, CLS
 npm run test:nav            # menu, teclado, trilho de atos, ⏮ ⏭ ⏸
 npm run test:form           # validação e mensagem do formulário de reserva
-npm run test:motion         # motion: base (modos, Lenis, âncoras, data-*, sem JS, file://) + os 4 atos (quadros, vídeo, custo; no ACT IV, o formulário durante a animação)
+npm run test:motion         # motion: base (modos, Lenis, âncoras, data-*, sem JS, file://) + os 4 atos (quadros, vídeo, custo; no ACT IV, o formulário durante a animação) + final (menu, player, rodapé, loops, ⏸, reduced, limpeza, página inteira)
 npm run vendor              # copia os builds de GSAP/Lenis de node_modules para site/js/vendor
 npm run lh                  # Lighthouse mobile, 3 execuções, mediana
 ```
@@ -54,9 +54,9 @@ Em resumo:
 - **Reserva pelo WhatsApp**: o formulário monta a mensagem e abre `wa.me`. O número fica numa
   única constante em `site/js/config.js`. **Falta confirmar com o cliente que o número tem WhatsApp.**
 - **Sem áudio na v1**: a pílula do topo é o link `RESERVAR` (D25); ⏸ pausa todas as animações.
-- **Motion (D26–D30)**: modos `full` / `reduced` / `paused` em `js/motion/core.js`, qualidade
+- **Motion (D26–D44)**: modos `full` / `reduced` / `paused` em `js/motion/core.js`, qualidade
   `low`/`high` por aparelho, rolagem suave com Lenis, GSAP carregado fora do caminho do LCP. Ver
-  DESIGN.md §5.0.
+  DESIGN.md §5.0 e §5; todas as animações do site estão em `motion-inventario.md`.
 - **Responsivo por orientação**: retrato usa a composição vertical, paisagem a do mockup.
   Alvos de toque de 44 px.
 - **Tudo é texto HTML real**; cores, fontes e espaçamentos só por variáveis de `tokens.css`.
@@ -75,4 +75,4 @@ Auto-hospedadas em `site/js/vendor/` (sem CDN), copiadas de `node_modules` por `
 - Confirmar o WhatsApp de (11) 2669-7175 e o horário de abertura (hoje só "fecha 23:00").
 - Trocar ou aprovar as imagens provisórias geradas por IA (D22, D24).
 - Testes em iPhone e Android reais (lista no fim da passada responsiva, `DESIGN.md` §3b).
-- Etapas de animação por seção (a base de motion está pronta: DESIGN.md §5.0).
+- Conferir o motion em aparelhos reais (lista em `motion-baseline.md`, "Depois da etapa motion final").

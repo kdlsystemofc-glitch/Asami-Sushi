@@ -54,7 +54,8 @@
           removeEventListener("scroll", rolagem);
           ["js/vendor/gsap.min.js", "js/vendor/ScrollTrigger.min.js", "js/vendor/lenis.min.js", "js/motion/core.js",
            "js/motion/hero.js", "js/motion/rodizio.js",
-           "js/motion/sanctum.js", "js/motion/reserva.js"]
+           "js/motion/sanctum.js", "js/motion/reserva.js",
+           "js/motion/rodape.js"]
             .forEach(function (src) {
               var s = document.createElement("script");
               s.src = src;
@@ -75,8 +76,9 @@
         // o 1º gesto pede o motion; carregar() espera a interação assentar
         var gesto = function () { mexeu = Date.now(); agendar(600); };
         eventos.forEach(function (e) { addEventListener(e, gesto, { capture: true, passive: true }); });
-        // aberta numa âncora ou já rolada: pode haver data-reveal na tela, carrega já
-        if (scrollY > 0 || location.hash) carregar(); else agendar(2500);
+        // aberta numa âncora ou já rolada: carrega logo, mas carregar() ainda espera a rolagem até
+        // a âncora (suave) terminar — registrado no meio dela, o ScrollTrigger a interromperia (D33)
+        agendar(scrollY > 0 || location.hash ? 300 : 2500);
       });
     })(document.documentElement, navigator);
   </script>
@@ -594,7 +596,7 @@
       <div class="site-footer__col">
         <h2 class="site-footer__label">Endereço</h2>
         <address class="site-footer__text">
-          <a class="site-footer__link" href="https://www.google.com/maps/search/?api=1&amp;query=Asami%20Sushi%2C%20Av.%20das%20Na%C3%A7%C3%B5es%20Unidas%2C%2050%20-%20Centro%2C%20S%C3%A3o%20Bernardo%20do%20Campo%20-%20SP%2C%2009726-110" target="_blank" rel="noopener">Av. das Nações Unidas, 50 – Centro<br>São Bernardo do Campo – SP, 09726-110<span class="site-footer__label site-footer__maps">Ver no Google Maps ↗</span></a>
+          <a class="site-footer__link" href="https://www.google.com/maps/search/?api=1&amp;query=Asami%20Sushi%2C%20Av.%20das%20Na%C3%A7%C3%B5es%20Unidas%2C%2050%20-%20Centro%2C%20S%C3%A3o%20Bernardo%20do%20Campo%20-%20SP%2C%2009726-110" target="_blank" rel="noopener"><span class="site-footer__sub">Av. das Nações Unidas, 50 – Centro<br>São Bernardo do Campo – SP, 09726-110</span><span class="site-footer__label site-footer__maps">Ver no Google Maps ↗</span></a>
         </address>
       </div>
 
@@ -602,7 +604,7 @@
         <dl class="site-footer__facts">
           <div><dt class="site-footer__label">Horário</dt><dd class="site-footer__text">Fecha às 23:00</dd></div>
           <div><dt class="site-footer__label">Por pessoa</dt><dd class="site-footer__text">R$ 80–160</dd></div>
-          <div><dt class="site-footer__label">Telefone</dt><dd class="site-footer__text"><a class="site-footer__link" href="tel:+551126697175" data-tel>(11) 2669-7175</a></dd></div>
+          <div><dt class="site-footer__label">Telefone</dt><dd class="site-footer__text"><a class="site-footer__link" href="tel:+551126697175" data-tel><span class="site-footer__sub">(11) 2669-7175</span></a></dd></div>
         </dl>
       </div>
     </div>

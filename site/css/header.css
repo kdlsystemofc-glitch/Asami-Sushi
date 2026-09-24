@@ -33,7 +33,11 @@
   background: currentColor;
   border-radius: var(--r-pill);
   transform-origin: center;
+  /* fechar: 200 ms (--t-fade); abrir: 320 ms, como o overlay */
+  transition: transform var(--t-fade) var(--ease-soft), opacity var(--t-fade) var(--ease-soft);
 }
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar { transition-duration: 320ms; transition-timing-function: var(--ease-out); }
+@media (prefers-reduced-motion: reduce) { .menu-toggle__bar { transition: none !important; } }
 
 /* aberto: as 3 barras viram X (as de fora giram até o centro, a do meio some) */
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(1) {

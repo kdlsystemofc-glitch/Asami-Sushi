@@ -100,6 +100,10 @@
 
 .rail__tick:hover::before { background: var(--text-base); }
 
+/* ⏸: nada se move — o traço ativo troca na hora */
+:root[data-motion="paused"] .rail__tick::before,
+:root[data-motion="paused"] .rail__tick::after { transition: none; }
+
 
 
 .rail__knob {
@@ -174,15 +178,32 @@
   background: var(--ink-900);
   color: var(--text-base);
   isolation: isolate;
+  /* Fechado: invisível e fora da árvore de acessibilidade (visibility: hidden) — aplicado só
+     DEPOIS do fade de saída (200 ms, --t-fade), nunca display: none no meio dele */
+  display: grid;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--t-fade) var(--ease-soft), visibility 0s linear var(--t-fade);
 }
 
-/* sem JS o overlay abre por :target (link #menu); com JS, pela classe */
+/* sem JS o overlay abre por :target (link #menu); com JS, pela classe. Abertura: fade de
+   320 ms e visibility na hora — os itens são clicáveis desde o 1º quadro */
 :root:not(.js) .menu:target,
-.menu.is-open { display: grid; }
+.menu.is-open {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 320ms var(--ease-out), visibility 0s;
+}
 
-.menu.is-open { animation: menu-fade 200ms var(--ease-soft); }
-
-@keyframes menu-fade { from { opacity: 0; } }
+/* itens em sequência: translateY(16px) + fade, 500 ms, 60 ms entre eles. Só na abertura; o
+   fechamento é só o fade do overlay. Em "reduced" o reset.css zera a animação (fica o fade) */
+@keyframes menu-item { from { transform: translateY(16px); opacity: 0; } }
+.menu.is-open .menu__list > li { animation: menu-item 500ms var(--ease-out) backwards; }
+.menu.is-open .menu__list > li:nth-child(2) { animation-delay: 60ms; }
+.menu.is-open .menu__list > li:nth-child(3) { animation-delay: 120ms; }
+.menu.is-open .menu__list > li:nth-child(4) { animation-delay: 180ms; }
+/* ⏸ congela animações: parados no 1º quadro os itens ficariam invisíveis — entram direto */
+:root[data-motion="paused"] .menu.is-open .menu__list > li { animation: none; }
 
 /* névoa sutil: plate de fundo preto em screen sobre o próprio fundo do overlay.
    O wrapper recorta (overflow não cria stacking context, então o screen ainda vê o fundo). */
@@ -205,6 +226,11 @@
   filter: grayscale(.8);
   pointer-events: none;
 }
+
+/* deriva lenta só com o menu aberto (fechado, nada anima nem é pintado); estática em "low" */
+@keyframes menu-nevoa { to { translate: -4% 0; } }
+.js-motion .menu.is-open .menu__mist { animation: menu-nevoa 40s ease-in-out infinite alternate; }
+.js-motion[data-quality="low"] .menu.is-open .menu__mist { animation: none; }
 
 @media (max-width: 47.99rem) {
   /* no retrato o plate fica baixo demais: mais largo, para a névoa subir na tela */

@@ -15,5 +15,5 @@ const waLink = (texto) =>
 // o rodapé mostra o mesmo número
 document.querySelectorAll("[data-tel]").forEach((a) => {
   a.href = `tel:+${WHATSAPP.ddi}${WHATSAPP.ddd}${WHATSAPP.numero}`;
-  a.textContent = TELEFONE;
+  (a.querySelector(".site-footer__sub") || a).textContent = TELEFONE; // o span leva o sublinhado do hover
 });

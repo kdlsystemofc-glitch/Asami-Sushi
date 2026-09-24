@@ -213,7 +213,12 @@ for (const [w, h] of [[1440, 810], [390, 844]]) {
 {
   console.log("\n— Custo (10 s parado no ACT II / rolagem hero → ACT II → ACT III) —");
   const gpu = await chromium.launch({ args: GPU_ARGS });
-  const noOrcamento = (m) => m.loaf50 <= 2 && m.compositor.descartados / Math.max(1, m.compositor.quadros) <= 0.05;
+  // Orçamento: até 2 quadros longos isolados e até 5 % de quadros descartados — ou, na rolagem,
+  // até 2 pontos acima do controle medido na mesma execução (mesmo critério do ACT III e do ACT
+  // IV: o ambiente tem rajadas do tamanho do próprio orçamento até no site aprovado)
+  let controleRol = 0;
+  const pctD = (m) => m.compositor.descartados / Math.max(1, m.compositor.quadros);
+  const noOrcamento = (m, rol = false) => m.loaf50 <= 2 && (pctD(m) <= 0.05 || (rol && pctD(m) <= controleRol + 0.02));
   const casos = [
     ["high — controle: site aprovado, sem o motion do ACT II", "?quality=high", 1440, 810, srvRef.url],
     ["high", "?quality=high", 1440, 810],
@@ -224,9 +229,9 @@ for (const [w, h] of [[1440, 810], [390, 844]]) {
     const controle = !!urlCaso;
     const { ctx, page } = await abrir(urlCaso || atual.url, { width: w, height: h, query, nav: gpu });
     await esperarMotion(page);
-    const fase = async (fn) => {
+    const fase = async (fn, rol = false) => {
       const a = await comTrace(gpu, page, fn);
-      if (controle || noOrcamento(a)) return a;
+      if (controle || noOrcamento(a, rol)) return a;
       const b = await comTrace(gpu, page, fn);
       b.repetida = `1ª: ${a.compositor.descartados}/${a.compositor.quadros} descartados, ${a.loaf50} longos`;
       return b;
@@ -241,14 +246,15 @@ for (const [w, h] of [[1440, 810], [390, 844]]) {
       const passos = Math.round((await page.evaluate(() => document.getElementById("ato-3").offsetTop)) / 90);
       for (let i = 0; i < passos; i++) { await page.mouse.wheel(0, 90); await page.waitForTimeout(Math.floor(9000 / passos)); }
       return m;
-    });
+    }, true);
+    if (controle) controleRol = pctD(rol);
     medidas[`custo-${rotulo}`] = { parado, rolando: rol };
     const linha = (m) => `rAF ${m.fps} fps (p95 ${m.p95} ms, máx ${m.max} ms) · compositor ${m.compositor.quadros - m.compositor.descartados}/${m.compositor.quadros} apresentados, ${m.compositor.descartados} descartados · LoAF > 50 ms: ${m.loaf50} (máx ${m.loafMax} ms)${m.repetida ? ` [repetida; ${m.repetida}]` : ""}${m.longos.length ? "\n      " + m.longos.join("\n      ") : ""}`;
     console.log(`  ${rotulo}\n    parado:  ${linha(parado)}\n    rolando: ${linha(rol)}`);
     const pct = (m) => m.compositor.descartados / Math.max(1, m.compositor.quadros);
     if (controle) { await ctx.close(); continue; }
-    ok(noOrcamento(parado) && noOrcamento(rol),
-      `${rotulo}: dentro do orçamento (longos ${parado.loaf50}/${rol.loaf50}, descartados ${(pct(parado) * 100).toFixed(1)} % / ${(pct(rol) * 100).toFixed(1)} %)`);
+    ok(noOrcamento(parado) && noOrcamento(rol, true),
+      `${rotulo}: dentro do orçamento (longos ${parado.loaf50}/${rol.loaf50}, descartados ${(pct(parado) * 100).toFixed(1)} % / ${(pct(rol) * 100).toFixed(1)} %; controle rolando ${(controleRol * 100).toFixed(1)} %)`);
     await ctx.close();
   }
   await gpu.close();
