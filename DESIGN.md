@@ -208,8 +208,8 @@ aplicar `text-transform: uppercase` no CSS (leitor de tela e SEO agradecem).
   `margin-top: var(--sp-4)`.
 - **Palco** (composição visual): sangra de borda a borda, com o conteúdo ocupando os ~70 %
   centrais.
-- **Card de reserva**: x 165→604 de 768 = 21,5 %→78,6 %, largura **57 %** → colunas
-  **4–11**, centralizado.
+- **Card de reserva**: x 165→604 de 768 = 21,5 %→78,6 %, largura **57 %**, centralizado →
+  **colunas 3–10** (8 colunas centradas; "4–11" também são 8, mas ficariam fora do centro).
 - Mobile (< 768 px): 1 coluna, rótulo acima do palco, card a 100 % menos gutter.
 
 ### Alturas de seção
@@ -367,18 +367,38 @@ CLIENTE.md. O texto do mockup serve só como referência de posição e peso vis
 | 9 | Botão WhatsApp | Contorno claro, largura total | `button type="submit"` (não `<a>`: o texto é montado no clique). No `submit`, monta a mensagem e abre `https://wa.me/55<DDD><numero>?text=<encodeURIComponent(msg)>` em `_blank` (D9). **Número: só o do CLIENTE.md — (11) 2669-7175** (D2); ver §8.1. Rótulo em PT-BR: `RESERVAR PELO WHATSAPP`. `--border-strong`, `--r-md`, altura 66 px, `--fs-hud`. Hover: preenche em `--chrome-100`, texto em `--ink-900` | TEXTO+CSS+JS |
 | 10 | Reflexo do card | O card inteiro espelhado e distorcido na água abaixo | Clone `aria-hidden`, `scaleY(-1)`, `mask-image: linear-gradient(#000 0%, transparent 65%)`, `filter: blur(2px) url(#ripple)`, `opacity .5`. Abaixo de 768 px vira reflexo estático (D18) | CSS+SVG |
 
+#### Formulário como construído (ACT IV)
+
+| Campo | Controle | Regras |
+|---|---|---|
+| **DATA** | 2 `select` com bisel metálico e chevron SVG (máscara colorida por token): **dia** e **mês** | Só de hoje até hoje + 60 dias; o select de dia se refaz ao trocar o mês. Padrão: hoje (amanhã se já passou das 20:00) |
+| **HORÁRIO** | 2 `input` numéricos `HH` : `MM` (`inputmode="numeric"`, 2 dígitos) | HH 0–23, MM 0–59; **antes das 23:00** (único dado do CLIENTE.md, ver §8.2); se a data for hoje, depois de agora |
+| **PESSOAS** | 2 `input` numéricos **ADULTOS** : **CRIANÇAS** | Pelo menos 1 adulto; crianças ≥ 0 |
+
+- Cada grupo é `fieldset` + `legend` visível (`DATA`, `HORÁRIO`, `PESSOAS`); cada campo tem
+  `label for` próprio (visualmente oculto: Dia, Mês, Hora, Minutos, Adultos, Crianças).
+- Erros em PT-BR num `p[role=alert]` dentro do card, campo com `aria-invalid`, foco no primeiro
+  inválido, borda âmbar. Sem `alert()`.
+- Botão: `RESERVAR PELO WHATSAPP // (11) 2669-7175`, montado da constante `WHATSAPP` no topo de
+  `js/reserva.js`. Abaixo: "A reserva é confirmada pelo restaurante no WhatsApp."
+- **Sem JS**, o botão é um `<a href="https://wa.me/551126697175">` simples, sem mensagem; o JS o
+  troca por `<button type="submit">`. (O número aparece no HTML só nesse fallback.)
+- **Reflexo:** réplica visual do card (só `span`), `aria-hidden` + `inert`, sem ids nem campos;
+  o JS espelha os valores digitados nela.
+- **Água:** `feTurbulence` estático (`#water`) usado só como alfa das cristas; a cor vem do
+  `fill` por token. < 768 px: faixas em gradiente + `blur` (D18).
+- **Emenda:** o ACT IV começa em `--ink-900` (o mockup começa em água clara) por uma entrada em
+  degradê; a página termina no reflexo do card.
+- Testes: `npm run test:form` (envio, texto do wa.me, erros, sem JS, ids, Tab, foco).
+
 #### Mensagem do WhatsApp (D9)
 
-Sem backend: o formulário só compõe o texto. Modelo, em PT-BR, com os valores dos três
-campos e nada mais:
-
 ```
-Olá! Gostaria de reservar uma mesa no Asami Sushi São Bernardo.
-Data: 05/03  ·  Horário: 20:00  ·  Pessoas: 2
+Olá! Gostaria de reservar uma mesa para o dia 27/09 às 20:30, 2 adultos e 1 criança.
 ```
 
-Se algum campo estiver vazio, a validação nativa bloqueia o envio — o link não é montado
-pela metade. Estado de foco e de erro usam `--amber-400`, nunca vermelho de sistema.
+Plural correto (`1 adulto`, `2 adultos`, `0 crianças`), `encodeURIComponent`, aberto com
+`window.open(…, "_blank", "noopener")`.
 
 ---
 
@@ -588,16 +608,17 @@ o efeito que já foi aplicado nas seções acima.
 Nenhuma bloqueia o início do desenvolvimento — todas têm um caminho padrão definido. São
 dados que o CLIENTE.md simplesmente não tem.
 
-**8.1 — O número do CLIENTE.md é um fixo.** `(11) 2669-7175` é telefone fixo, e `wa.me`
-exige uma linha habilitada no WhatsApp. Decisão D2 proíbe inventar outro número, então:
-enquanto o cliente não confirmar um número de WhatsApp, **o botão do ACT IV aponta para
-`tel:+551126697175`** com o rótulo `LIGAR PARA RESERVAR`, e a montagem da mensagem (D9)
-fica pronta no código, atrás de uma constante. Trocar a constante habilita o fluxo de
-WhatsApp inteiro, sem mexer no layout.
+**8.1 — O número do CLIENTE.md parece ser fixo.** `(11) 2669-7175` tem cara de telefone fixo,
+e `wa.me` exige uma linha com WhatsApp. **Por decisão do cliente (24/09/2026), o botão já usa
+`wa.me` com esse número**, que está numa única constante (`WHATSAPP`, topo de
+`js/reserva.js`) com um aviso para confirmar. Se não for WhatsApp, basta trocar a constante
+(e o `href` do fallback sem JS no `index.html`).
 
 **8.2 — Horário de abertura.** O CLIENTE.md só registra "Aberto · Fecha 23:00" e o gráfico
 de movimento indo das 06h às 21h, o que não é horário de funcionamento. Até haver
-confirmação, o rodapé exibe apenas `Fecha às 23:00`, sem afirmar dias nem hora de abertura.
+confirmação, o rodapé exibe apenas `Fecha às 23:00`, sem afirmar dias nem hora de abertura, e
+**o formulário só valida o limite superior (antes das 23:00)** — não há limite inferior. Quando
+a abertura for confirmada, é uma constante (`FECHA` → acrescentar `ABRE`) em `js/reserva.js`.
 
 **8.3 — Instagram.** As fotos vêm claramente do Instagram, mas o CLIENTE.md não traz o
 `@`. O link do rodapé fica atrás da mesma constante; sem ele, o item simplesmente não

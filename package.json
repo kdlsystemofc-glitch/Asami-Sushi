@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "shots": "node scripts/screenshot.mjs",
-    "assets": "py scripts/build_assets.py"
+    "assets": "py scripts/build_assets.py",
+    "test:form": "node scripts/test-reserva.mjs"
   },
   "keywords": [],
   "author": "",

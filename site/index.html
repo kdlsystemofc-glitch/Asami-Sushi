@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/rodizio.css">
   <link rel="stylesheet" href="css/sanctum.css">
+  <link rel="stylesheet" href="css/reserve.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -32,6 +33,12 @@
     <filter id="wave" x="-10%" y="-10%" width="120%" height="120%">
       <feTurbulence type="fractalNoise" baseFrequency="0.004 0.012" numOctaves="1" seed="4"/>
       <feDisplacementMap in="SourceGraphic" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="water" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0028 0.075" numOctaves="2" seed="11" result="n"/>
+      <!-- alfa = cristas: só os picos do ruído acendem, em linhas finas -->
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 5 0 0 -2.75" result="a"/>
+      <feComposite in="SourceGraphic" in2="a" operator="in"/>
     </filter>
     <filter id="ripple" x="-5%" y="-5%" width="110%" height="110%">
       <feTurbulence type="fractalNoise" baseFrequency="0.004 0.09" numOctaves="2" seed="7"/>
@@ -358,6 +365,117 @@
       </p>
     </section>
 
+    <!-- ═══ ACT IV — THE RITUAL OF CONNECTION ════════════════ -->
+    <section class="section reserve" id="ato-4" aria-labelledby="ato-4-titulo">
+
+      <!-- 1–2 · água procedural estática (D21); < 768 px vira gradiente + blur (D18) -->
+      <div class="reserve__water" aria-hidden="true">
+        <svg class="reserve__water-svg" viewBox="0 0 1440 600" preserveAspectRatio="none" focusable="false">
+          <rect width="1440" height="600" filter="url(#water)"/>
+        </svg>
+      </div>
+
+      <!-- 3 · bruma baixa (plate-smoke-floor, D21/assets.md): filho direto da seção, em screen -->
+      <img width="1600" height="893" class="plate reserve__mist"
+           src="assets/plate-smoke-floor-800.webp"
+           srcset="assets/plate-smoke-floor-800.webp 800w, assets/plate-smoke-floor-1600.webp 1600w"
+           sizes="110vw" alt="" loading="lazy" decoding="async">
+
+      <!-- entrada em --ink-900: emenda com o ACT III -->
+      <div class="reserve__entry" aria-hidden="true"></div>
+
+      <div class="grid reserve__layout">
+        <!-- 4 · rótulo -->
+        <div class="act-label col-label">
+          <p class="act-label__eyebrow">Act IV</p>
+          <h2 class="act-label__title" id="ato-4-titulo">The Ritual of Connection</h2>
+        </div>
+
+        <!-- 5–9 · card de reserva (sem backend, D9) -->
+        <div class="reserve__slot col-card">
+        <form class="reserve__card" id="reserva" action="https://wa.me/551126697175" method="get" target="_blank" aria-label="Reservar mesa">
+          <div class="reserve__fields">
+          <fieldset class="field-group field-group--date">
+            <legend class="field-group__legend">Data</legend>
+            <div class="field-group__row">
+              <label class="visually-hidden" for="res-dia">Dia</label>
+              <span class="select"><select id="res-dia" name="dia" required aria-describedby="res-erro">
+                <option value="">DD</option>
+              </select></span>
+              <label class="visually-hidden" for="res-mes">Mês</label>
+              <span class="select"><select id="res-mes" name="mes" required aria-describedby="res-erro">
+                <option value="">MM</option>
+              </select></span>
+            </div>
+          </fieldset>
+          <fieldset class="field-group field-group--time">
+            <legend class="field-group__legend">Horário</legend>
+            <div class="field-group__row field-group__row--pair">
+              <label class="visually-hidden" for="res-hh">Hora (HH)</label>
+              <input class="num" id="res-hh" name="hh" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="20" required aria-describedby="res-erro">
+              <span class="field-group__sep" aria-hidden="true">:</span>
+              <label class="visually-hidden" for="res-mm">Minutos (MM)</label>
+              <input class="num" id="res-mm" name="mm" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="00" required aria-describedby="res-erro">
+            </div>
+          </fieldset>
+          <fieldset class="field-group field-group--people">
+            <legend class="field-group__legend">Pessoas</legend>
+            <div class="field-group__row field-group__row--pair">
+              <label class="visually-hidden" for="res-adultos">Adultos</label>
+              <input class="num" id="res-adultos" name="adultos" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="02" required aria-describedby="res-erro">
+              <span class="field-group__sep" aria-hidden="true">:</span>
+              <label class="visually-hidden" for="res-criancas">Crianças</label>
+              <input class="num" id="res-criancas" name="criancas" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="00" required aria-describedby="res-erro">
+            </div>
+          </fieldset>
+          </div>
+
+          <p class="reserve__error" id="res-erro" role="alert" hidden></p>
+
+          <!-- Sem JS: link simples para o wa.me, sem mensagem. O JS troca por <button type="submit">
+               e reescreve número e rótulo a partir da constante WHATSAPP (js/reserva.js). -->
+          <a class="btn-wa" href="https://wa.me/551126697175" target="_blank" rel="noopener" data-wa>
+            Reservar pelo WhatsApp // (11) 2669-7175
+          </a>
+          <p class="reserve__note">A reserva é confirmada pelo restaurante no WhatsApp.</p>
+        </form>
+        </div>
+
+        <!-- 10 · reflexo: cópia visual, sem campos nem ids, fora da ordem de foco -->
+        <div class="reserve__reflection col-card" aria-hidden="true" inert>
+        <div class="reserve__card">
+          <div class="reserve__fields">
+          <div class="field-group field-group--date">
+            <span class="field-group__legend">Data</span>
+            <div class="field-group__row">
+              <span class="select"><span class="select__value" data-mirror="res-dia">DD</span></span>
+              <span class="select"><span class="select__value" data-mirror="res-mes">MM</span></span>
+            </div>
+          </div>
+          <div class="field-group field-group--time">
+            <span class="field-group__legend">Horário</span>
+            <div class="field-group__row field-group__row--pair">
+              <span class="num" data-mirror="res-hh">20</span>
+              <span class="field-group__sep">:</span>
+              <span class="num" data-mirror="res-mm">00</span>
+            </div>
+          </div>
+          <div class="field-group field-group--people">
+            <span class="field-group__legend">Pessoas</span>
+            <div class="field-group__row field-group__row--pair">
+              <span class="num" data-mirror="res-adultos">02</span>
+              <span class="field-group__sep">:</span>
+              <span class="num" data-mirror="res-criancas">00</span>
+            </div>
+          </div>
+          </div>
+          <span class="btn-wa" data-mirror="wa-label">Reservar pelo WhatsApp // (11) 2669-7175</span>
+          <p class="reserve__note">A reserva é confirmada pelo restaurante no WhatsApp.</p>
+        </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -365,5 +483,6 @@
   </footer>
 
   <script src="js/menu.js" defer></script>
+  <script src="js/reserva.js" defer></script>
 </body>
 </html>
