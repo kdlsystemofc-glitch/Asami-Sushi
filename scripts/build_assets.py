@@ -2,9 +2,13 @@
 # Uso: py scripts/build_assets.py
 #
 # Regras:
-# - Plates saem em 2 larguras: 800 e 1600 px (lado horizontal), Lanczos.
-#   Os originais tem 768-1376 px de largura, entao a variante 1600 e upscale
+# - Plates saem nas larguras que algum srcset usa (lado horizontal), Lanczos (D48):
+#   600 serve vapor, nigiri e tabuas no celular (1,75x); 1200, telas 3x e 2x.
+#   As fumacas nunca aparecem com menos de ~800 px; a sala (fundo em CSS) so em
+#   1600. Os originais tem 768-1376 px de largura, entao a variante 1600 e upscale
 #   (ver assets.md).
+# - Qualidade 70 (era 82): medido contra os WebP aprovados, no pior plate 0,26 %
+#   dos pixels mudam mais de 24 niveis (limite dos testes: 0,5 %), media ~2 niveis.
 # - Plates de fundo preto passam por um "black point" leve: tudo abaixo de
 #   BLACK_POINT vira 0, para que mix-blend-mode: screen nao deixe a borda do
 #   retangulo aparecer sobre --ink-900. Nada de recorte / alpha.
@@ -17,8 +21,13 @@ SRC = ROOT / "design" / "plates"
 IMG = ROOT / "IMAGENS"
 OUT = ROOT / "site" / "assets"
 
-WIDTHS = (800, 1600)
-QUALITY = 82
+WIDTHS = (600, 800, 1200, 1600)
+WIDTHS_ESPECIAIS = {
+    "plate-smoke-hero": (800, 1200, 1600),
+    "plate-smoke-floor": (800, 1200, 1600),
+    "plate-room": (1600,),      # fundo em CSS (sanctum.css), sem srcset
+}
+QUALITY = 70
 BLACK_POINT = 8
 
 # nome final -> (arquivo de origem, aplicar black point?)
@@ -44,11 +53,13 @@ def crush_blacks(im: Image.Image) -> Image.Image:
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    for velho in OUT.glob("plate-*.webp"):  # larguras que deixaram de existir não ficam para trás
+        velho.unlink()
     for name, (src, crush) in PLATES.items():
         im = Image.open(SRC / src).convert("RGB")
         if crush:
             im = crush_blacks(im)
-        for w in WIDTHS:
+        for w in WIDTHS_ESPECIAIS.get(name, WIDTHS):
             h = round(im.height * w / im.width)
             dst = OUT / f"{name}-{w}.webp"
             im.resize((w, h), Image.LANCZOS).save(dst, "WEBP", quality=QUALITY, method=6)

@@ -1,8 +1,9 @@
 # Asami Sushi — São Bernardo do Campo
 
 Landing page do **Asami Sushi São Bernardo** (rodízio, Centro de SBC), construída a partir de um
-mockup em quatro "atos" + rodapé. HTML/CSS/JS estático, sem framework nem build: o que está em
-`site/` é o que vai para o ar.
+mockup em quatro "atos" + rodapé. HTML/CSS/JS estático, sem framework: o que está em `site/` é o
+que vai para o ar. O único build é o do CSS (`npm run build`, D46), e o resultado dele fica
+commitado em `site/` — a hospedagem não roda nada. Ver `DEPLOY.md`.
 
 > **Repositório privado.** Contém material do cliente (fotos, dados do restaurante) e imagens
 > **geradas por IA, provisórias**, que não podem ir para produção sem aprovação:
@@ -13,8 +14,10 @@ mockup em quatro "atos" + rodapé. HTML/CSS/JS estático, sem framework nem buil
 
 | Pasta / arquivo | O que é |
 |---|---|
-| `site/` | O site publicável: `index.html`, `css/` (um arquivo por seção + `tokens.css` + `motion.css`), `js/` (`config.js`, `menu.js`, `nav.js`, `reserva.js`, `motion/` com `core.js` e um arquivo por seção, `vendor/`), `assets/` (WebP gerados) |
-| `DESIGN.md` | Especificação: paleta, tipografia, grid, camadas de cada ato, regimes responsivos e o registro de decisões (D1–D25) |
+| `site/` | O site publicável: `index.html`, `css/` (arquivos-fonte legíveis: um por seção + `fonts.css`, `tokens.css`, `motion.css`; `css/build/` = gerado), `js/` (`config.js`, `menu.js`, `nav.js`, `reserva.js`, `motion/` com `core.js` e um arquivo por seção, `vendor/`), `assets/` (WebP gerados, `fonts/` com as fontes auto-hospedadas) |
+| `fonts-src/` | WOFF2 originais da Archivo e da Space Grotesk (subconjunto latin da Google Fonts) e as licenças OFL; `npm run fonts` gera `site/assets/fonts/` |
+| `DEPLOY.md` | Como publicar: cabeçalhos de cache por tipo de arquivo, compressão, exemplos Netlify/Vercel/GitHub Pages |
+| `DESIGN.md` | Especificação: paleta, tipografia, grid, camadas de cada ato, regimes responsivos, motion, desempenho e o registro de decisões (D1–D50) |
 | `CLIENTE.md` | Dados do restaurante (endereço, horário, telefone, preço). Única fonte de texto factual do site |
 | `assets.md` | Inventário de imagens, mapeamento slot → arquivo e pendências |
 | `design/` | **Referência visual apenas** (mockup, recortes por seção, plates originais). Nunca carregada pelo site |
@@ -24,21 +27,27 @@ mockup em quatro "atos" + rodapé. HTML/CSS/JS estático, sem framework nem buil
 
 ## Como rodar
 
-Requisitos: Node 18+ e, para regerar os assets, Python 3 com Pillow (`py` no Windows).
+Requisitos: Node 18+ e, para regerar os assets, Python 3 com Pillow (`py` no Windows); para
+regerar as fontes, `fonttools` e `brotli` (`py -m pip install fonttools brotli`).
 
 ```sh
 npm install                 # Playwright (testes), GSAP e Lenis (fonte de site/js/vendor)
 npx playwright install chromium
 
 npm run serve               # site em http://localhost:4173 (PORT=4391 npm run serve para outra porta)
+npm run build               # CSS de produção: crítico inline no index.html + css/build/ (rode depois de mexer em css/*.css)
+npm run build:dev           # volta o index.html a um <link> por arquivo-fonte (depurar CSS); rode build antes do commit
 npm run assets              # regera site/assets/*.webp a partir de design/plates
+npm run fonts               # regera site/assets/fonts/ e css/fonts.css a partir de fonts-src/
 npm run shots               # screenshots em 1440 e 390 → screenshots/
-npm run audit               # 12 telas + texto 200 %, movimento reduzido/tema claro, fontes bloqueadas, CLS
+npm run audit               # confere o build + 12 telas, texto 200 %, movimento reduzido/tema claro, fontes bloqueadas, CLS
 npm run test:nav            # menu, teclado, trilho de atos, ⏮ ⏭ ⏸
 npm run test:form           # validação e mensagem do formulário de reserva
 npm run test:motion         # motion: base (modos, Lenis, âncoras, data-*, sem JS, file://) + os 4 atos (quadros, vídeo, custo; no ACT IV, o formulário durante a animação) + final (menu, player, rodapé, loops, ⏸, reduced, limpeza, página inteira)
+npm run test:otimizacao     # otimização × commit anterior: pixels (estático e motion), estilos, CSS crítico, fontes, imagens, D29
 npm run vendor              # copia os builds de GSAP/Lenis de node_modules para site/js/vendor
-npm run lh                  # Lighthouse mobile, 3 execuções, mediana
+npm run lh                  # Lighthouse mobile, 3 execuções, mediana (-- --runs 5)
+npm run bundle              # peso de cada arquivo entregue (cru, gzip, brotli), por momento do carregamento
 ```
 
 O site também abre por duplo clique em `site/index.html` (`file://`): todo o JS é script clássico.
@@ -60,6 +69,18 @@ Em resumo:
 - **Responsivo por orientação**: retrato usa a composição vertical, paisagem a do mockup.
   Alvos de toque de 44 px.
 - **Tudo é texto HTML real**; cores, fontes e espaçamentos só por variáveis de `tokens.css`.
+
+## Fontes
+
+Auto-hospedadas em `site/assets/fonts/` (D45), sem pedido à Google Fonts. As duas são da
+**SIL Open Font License 1.1**, que permite uso comercial, auto-hospedagem e subconjuntos. Nenhuma
+declara "Reserved Font Name", então a versão cortada mantém o nome. O texto de cada licença vai
+junto das fontes (`site/assets/fonts/OFL-*.txt`) e também está em `fonts-src/`.
+
+| Fonte | Versão (Google Fonts) | Arquivo | Licença |
+|---|---|---|---|
+| [Archivo](https://github.com/Omnibus-Type/Archivo) (Omnibus-Type) | v25 | `archivo-latin.<hash>.woff2` | SIL OFL 1.1, © 2020 The Archivo Project Authors |
+| [Space Grotesk](https://github.com/floriankarsten/space-grotesk) (Florian Karsten) | v22 | `space-grotesk-latin.<hash>.woff2` | SIL OFL 1.1, © 2020 The Space Grotesk Project Authors |
 
 ## Bibliotecas de terceiros
 

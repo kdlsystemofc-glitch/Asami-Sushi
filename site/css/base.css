@@ -101,55 +101,23 @@ a, button, input, select, label { -webkit-tap-highlight-color: transparent; }
 /* Card de reserva: 8 colunas centralizadas (3–10). "4–11" deixaria o card fora do centro;
    o mockup e o DESIGN.md pedem centralizado. */
 .col-card { grid-column: 1 / -1; }
-/* Rodapé */
-.col-1-5 { grid-column: 1 / -1; }
-.col-6-8 { grid-column: 1 / -1; }
-.col-9-12 { grid-column: 1 / -1; }
 
 @media (min-width: 48rem) {
   .col-label { grid-column: 1 / span 4; }
   .col-card { grid-column: 3 / span 8; }
-  .col-1-5 { grid-column: 1 / span 5; }
-  .col-6-8 { grid-column: 6 / span 3; }
-  .col-9-12 { grid-column: 9 / span 4; }
 }
 
 /* ── Papéis tipográficos (§2) ──────────────────────────── */
-.t-wordmark {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-variation-settings: "wdth" 125;
-  font-size: var(--fs-wordmark);
-  letter-spacing: var(--ls-wordmark);
-  line-height: var(--lh-wordmark);
-}
-
-.t-display,
-.t-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-variation-settings: "wdth" 112;
-}
-.t-display { font-size: var(--fs-display); letter-spacing: var(--ls-display); line-height: var(--lh-display); }
-.t-title   { font-size: var(--fs-title);   letter-spacing: var(--ls-title);   line-height: var(--lh-title); }
-
-.t-eyebrow,
-.t-hud,
+/* Os utilitários .t-wordmark/.t-display/.t-title/.t-eyebrow/.t-hud/.t-value e .col-1-5/6-8/9-12
+   saíram na etapa de otimização (D49): nenhum elemento os usava — cada seção aplica os tokens
+   direto. O papel "wordmark" do §2 (700, wdth 125) nunca chegou à tela: o hero usa 500/100. */
 .t-label {
   font-family: var(--font-body);
   font-weight: 500;
-}
-.t-eyebrow { font-size: var(--fs-eyebrow); letter-spacing: var(--ls-eyebrow); line-height: var(--lh-eyebrow); }
-.t-hud     { font-size: var(--fs-hud);     letter-spacing: var(--ls-hud);     line-height: var(--lh-hud);     color: var(--text-mid); }
-.t-label   { font-size: var(--fs-label);   letter-spacing: var(--ls-label);   line-height: var(--lh-label);   color: var(--text-dim); }
-
-.t-value {
-  font-family: var(--font-body);
-  font-size: var(--fs-value);
-  letter-spacing: var(--ls-value);
-  line-height: var(--lh-value);
-  color: var(--text-hi);
-  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  line-height: var(--lh-label);
+  color: var(--text-dim);
 }
 
 /* ── Rótulo de ato (ACT I–IV) ──────────────────────────── */

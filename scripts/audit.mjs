@@ -210,11 +210,12 @@ async function rodar(tela, tipo, modo = "normal") {
     reducedMotion: modo === "reduzido-claro" ? "reduce" : "no-preference",
     colorScheme: modo === "reduzido-claro" ? "light" : "dark",
   });
-  if (modo === "sem-fontes") await ctx.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+  // sem as fontes (auto-hospedadas desde D45): o layout tem de aguentar os fallbacks de base.css
+  if (modo === "sem-fontes") await ctx.route(/\/assets\/fonts\/.*\.woff2$/, (r) => r.abort());
   await ctx.route(/wa\.me|google\.com\/maps/, (r) => r.abort());
   const page = await ctx.newPage();
   const erros = [];
-  page.on("console", (m) => { if (m.type() === "error" && !/fonts\.(googleapis|gstatic)/.test(m.text()) && !(modo === "sem-fontes" && /ERR_FAILED/.test(m.text()))) erros.push(m.text()); });
+  page.on("console", (m) => { if (m.type() === "error" && !(modo === "sem-fontes" && /ERR_FAILED/.test(m.text()))) erros.push(m.text()); });
   page.on("pageerror", (e) => erros.push(e.message));
   page.on("request", (r) => requests.add(r.url()));
   // Texto a 200 % = "tamanho da fonte do navegador" 32px: rem e media queries em rem acompanham.
@@ -277,7 +278,7 @@ async function rodar(tela, tipo, modo = "normal") {
 async function cls(tela) {
   const [w, h] = tela.split("x").map(Number);
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });
-  await ctx.route(/fonts\.gstatic\.com/, async (r) => { await new Promise((ok) => setTimeout(ok, 1500)); r.continue(); });
+  await ctx.route(/\/assets\/fonts\/.*\.woff2$/, async (r) => { await new Promise((ok) => setTimeout(ok, 1500)); r.continue(); });
   const page = await ctx.newPage();
   await page.addInitScript(() => {
     window.__cls = 0;

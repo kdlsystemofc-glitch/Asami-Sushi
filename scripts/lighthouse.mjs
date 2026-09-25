@@ -14,7 +14,7 @@ const RUNS = Number(arg("runs", 3));
 const OUT = arg("out", "screenshots/lighthouse/mobile");
 
 const ROOT = resolve(arg("root", "site")); // --root: outra cópia do site (ex.: um commit antigo, para comparar)
-const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".webp": "image/webp", ".svg": "image/svg+xml" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2" };
 const server = createServer(async (req, res) => {
   let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
   if (p.endsWith("/")) p += "index.html";

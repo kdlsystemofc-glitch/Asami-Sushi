@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D44). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D50). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -121,7 +121,7 @@ corte **estendido**.
 > geração de imagem, não uma fonte real — nenhum desses textos vai para o site. A copy
 > reescrita está em §4/02 (D6); o `RODÍZIO` do título leva I normal.
 
-### Candidatas Google Fonts
+### Famílias (auto-hospedadas desde a etapa de otimização, D45)
 
 | Papel | Fonte | Por quê | Eixos/pesos |
 |---|---|---|---|
@@ -132,11 +132,11 @@ Suplentes, se Archivo ficar larga demais no corpo: **Schibsted Grotesk** ou **Ch
 o cliente quiser os números ainda mais "instrumento": **JetBrains Mono** só para os
 dígitos do formulário (terceira família — usar com parcimônia).
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
-```
+As duas saem de `site/assets/fonts/`, geradas por `npm run fonts` a partir dos WOFF2 "latin" que
+a Google Fonts servia: nenhum pedido a `fonts.googleapis.com` (§9, D45). **O que está na tela usa
+Archivo 400–500 × `wdth` 92–100 e Space Grotesk 400–500; o arquivo cobre só isso** (e até o
+padrão da fonte). Outro peso ou largura exige ampliar a faixa em `scripts/build_fonts.py`; fora
+dela, o navegador prende o valor na borda sem avisar.
 
 ### Escala tipográfica
 
@@ -1120,8 +1120,8 @@ acima. Não há geração de cenário, prato ou salão que não exista.
 
 ### Plates (`design/plates/` → `site/assets/`)
 
-Mapeamento completo e pesos em **`assets.md`**. Todos em WebP 800/1600 px, fundo preto,
-`mix-blend-mode: screen`, sem recorte.
+Mapeamento completo e pesos em **`assets.md`**. Todos em WebP 600–1600 px (só as larguras que
+algum `srcset` usa, qualidade 70: D48), fundo preto, `mix-blend-mode: screen`, sem recorte.
 
 | Asset | Para quê | Status |
 |---|---|---|
@@ -1146,7 +1146,7 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II, D37–D39 no motion do ACT III, D40 no motion do ACT IV e D41–D44 na etapa final. Cada uma
+inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II, D37–D39 no motion do ACT III, D40 no motion do ACT IV e D41–D44 na etapa final e D45–D50 na otimização. Cada uma
 vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
@@ -1213,6 +1213,12 @@ o efeito que já foi aplicado nas seções acima.
 | **D42** ✅ | **Reduced = só fades:** em `prefers-reduced-motion: reduce`, só `opacity` e `visibility` transicionam (200 ms); antes o reset fazia toda propriedade animar. | §5 Coerência global, `reset.css` |
 | **D43** ✅ | **Menu por `visibility` + `opacity`:** sempre em `display: grid`; `visibility: hidden` só depois do fade de saída (200 ms); abertura em 320 ms com os itens em sequência; a acessibilidade (JS) é instantânea e independente da animação. | §5 Menu, player e rodapé |
 | **D44** ✅ | **Âncora na abertura:** com `#…` na URL, o motion só é pedido depois que a rolagem até a âncora termina (complementa a D33). | §5.0, §5 Coerência global |
+| **D45** ✅ | **Fontes auto-hospedadas:** Archivo e Space Grotesk em `site/assets/fonts/` (SIL OFL 1.1). O subconjunto de glifos é o "latin" da Google; os eixos só vão até o que o site usa, mais o padrão da fonte; hash no nome; `swap`; `preload` das duas, por script. Em `file://`, fontes embutidas num CSS só desse caso. Nenhum pedido à Google Fonts. | §2, §9 |
+| **D46** ✅ | **Build de CSS:** fontes legíveis em `css/*.css`, gerado por `npm run build`. O minificador é conservador (só comentários e espaços). `--check` no `audit`. Arquivos gerados com hash, em `css/build/`. | §9, `scripts/build.mjs` |
+| **D47** ✅ | **CSS crítico inline:** dois `<style>` (fonts…hero; nav + motion) com o `<link>` das seções inserido por script entre eles. A cascata fica igual, a pintura não espera o CSS das seções, e numa âncora ou ao voltar ele recebe `blocking="render"`. | §9 |
+| **D48** ✅ | **Imagens:** `sizes` = largura de layout real em cada regime; o mesmo `sizes` em camadas do mesmo arquivo; larguras 600/800/1200/1600 onde usadas; WebP q70. A fumaça central do hero é o LCP: `fetchpriority="high"` + `preload`. | §9, assets.md |
+| **D49** ✅ | **CSS não usado removido:** utilitários `.t-*` (menos `.t-label`) e `.col-1-5/6-8/9-12` de `base.css`. | §9 |
+| **D50** ✅ | **Entrega:** política de cache por tipo de arquivo em `DEPLOY.md` (hash → 1 ano `immutable`; HTML e JS → revalidar; imagens → 7 dias). A hospedagem não foi escolhida. `npm run bundle` confere os pesos. | §9, DEPLOY.md |
 
 ---
 
@@ -1244,3 +1250,108 @@ existir um PDF.
 **8.5 — CNPJ e razão social.** Não constam no CLIENTE.md. O rodapé fica sem eles; se forem
 exigidos, entram como uma quarta linha na coluna do endereço, sem mudar o layout.
 
+---
+
+## 9. Desempenho e entrega (etapa de otimização, 25/09/2026)
+
+Nada visual, nenhum timing e nenhum comportamento mudou. `scripts/test-otimizacao.mjs` compara
+com o commit anterior (`5563fa9`), com a tolerância de sempre (canal > 24, no máximo 0,5 % dos
+pixels):
+- cada seção do estático aprovado e do estado final do motion, e o menu aberto, em 1440, 1024, 768
+  e 390;
+- os estilos computados de todos os elementos.
+
+Números antes/depois em `otimizacao-baseline.md`. Publicação e cache em `DEPLOY.md`.
+
+**Fontes (D45).**
+- **Origem:** Archivo e Space Grotesk saem de `site/assets/fonts/`; `@font-face` gerado em
+  `css/fonts.css`, com `font-display: swap` e o `unicode-range` "latin" da Google.
+- **Arquivos:**
+  - glifos: o mesmo subconjunto que a Google servia;
+  - eixos cortados, só até o padrão de cada fonte (mudar o padrão re-arredonda as larguras dos
+    glifos);
+  - hash no nome.
+- **Tamanho:** Archivo 88 → 37 KB; Space Grotesk 22 → 21 KB.
+- **Preload:** das duas, com `crossorigin`. As duas aparecem acima da dobra: wordmark e títulos na
+  Archivo, HUD na Space Grotesk. O `preload` é inserido por um script no topo do `<head>`, e não
+  escrito no HTML, porque em `file://` ele falharia.
+- **`file://` (duplo clique no `index.html`):** o Chrome bloqueia fonte de arquivo local (CORS,
+  origem "null"). Só nesse caso entra `css/build/fontes-file.<hash>.css`, com as duas fontes
+  embutidas em `data:` e `blocking="render"`.
+  - Ele é declarado depois do `@font-face` normal, que por isso nem é pedido.
+  - O http(s) nunca baixa esse arquivo.
+  - Resultado: `file://` desenha igual ao http (0,000 %), sem erro no console.
+- **Fallbacks com métricas:** os de `base.css` não mudaram. CLS no carregamento: 0.
+- **Licença:** SIL OFL 1.1, sem "Reserved Font Name" (README).
+
+**CSS (D46–D47).**
+- **Fontes legíveis e build:** os arquivos-fonte continuam em `css/*.css`. `npm run build` gera o
+  que o `index.html` carrega, entre os marcadores `<!-- build:css -->` e
+  `/*build:motion-css*/`. `npm run build:dev` volta a um `<link>` por arquivo. `npm run audit`
+  começa por `build --check`, que falha se o gerado não bater com as fontes.
+- **Minificador próprio e conservador:** tira só comentários e espaços, e deixa os valores de
+  propriedades customizadas como estão. O lightningcss foi testado e descartado: ele apaga
+  fallbacks como `overflow-x: hidden` antes de `clip`, mesmo mirando Safari 15.
+- **Ordem na página (a cascata é a mesma de antes):**
+
+  | Posição | Conteúdo | Como carrega |
+  |---|---|---|
+  | 1 | `<style>`: fonts, tokens, reset, base, header, hero | inline |
+  | 2 | `<link>`: rodizio, sanctum, reserve, footer, em `css/build/secoes.<hash>.css` | inserido por script nesse ponto; não bloqueia a pintura |
+  | 3 | `<style>`: nav, motion | inline |
+
+  - O menu, o trilho, o player e o véu de entrada são fixos, por isso ficam no crítico.
+  - Um `<link>` criado por script ocupa o mesmo lugar na ordem do documento.
+  - Sem JS: `<noscript>` com o mesmo `<link>`.
+- **Âncora e voltar:** com `#…` na URL, ou voltando/recarregando uma página rolada, o `<link>`
+  das seções ganha `blocking="render"`: a seção na tela nunca pinta sem estilo (testado em
+  `#ato-4` e `#rodape`).
+- **Crítico = a 1ª tela inteira:** com o CSS das seções bloqueado, a 1ª tela é idêntica à completa
+  (0,000 %) nas 4 larguras.
+- **CSS de motion das seções:** 4 arquivos viraram 1 (`css/build/motion-secoes.<hash>.css`),
+  pedido depois do `load` como antes (D29).
+- **Peso:** HTML + CSS da página, 12 pedidos e 29,6 KB em gzip → 2 pedidos e 20,1 KB.
+
+**Imagens (D48).**
+- **`sizes`:** descreve a largura de layout que o CSS dá a cada imagem em cada regime (paisagem
+  ≥ 48rem com proporção ≥ 1 × retrato), conferida no teste em 6 telas/densidades: o candidato
+  escolhido é sempre o menor que cobre o exibido.
+  - Camadas que dividem o arquivo (3 fumaças do hero, 3 vapores, 3 névoas de chão) levam o `sizes`
+    da maior; assim o navegador baixa um arquivo só.
+  - Os reflexos das tábuas ganharam o mesmo `srcset` das tábuas. Antes baixavam sempre a 800,
+    mesmo quando a tábua usava a 1600.
+- **Larguras:** entraram 600 (vapor, nigiri e tábuas no celular) e 1200 (telas 2× e 3×). Cada
+  plate só tem as larguras que algum `srcset` usa.
+- **Qualidade 70 (era 82):** no pior plate, 0,26 % dos pixels mudam mais de 24 níveis; média de
+  ~2 níveis.
+- **LCP = a fumaça central do hero (não o nigiri):**
+  - `fetchpriority="high"` nas 3 camadas, que são o mesmo arquivo;
+  - `preload` com `imagesrcset`/`imagesizes` idênticos aos do `<img>`;
+  - nigiri com `preload` e `high`, como antes;
+  - nada acima da dobra é `lazy` (testado nas 4 larguras).
+- **Efeito colateral aceito:** o `sizes` antigo das fumaças subestimava o retrato (dizia 70vw e
+  100vw; o CSS desenha 130 % e 220 % da tela). Com o valor certo, a fumaça no retrato vem de um
+  arquivo maior e fica um pouco mais nítida. Pior diferença: o hero em 768, com 0,40 % dos pixels,
+  dentro do limite.
+- **Total de imagem por aparelho, página inteira:**
+
+  | Tela | Antes | Depois |
+  |---|---|---|
+  | 1440 @1× | 266 KB | 162 KB |
+  | 1440 @2× | 498 KB | 271 KB |
+  | 390 @3× | 467 KB | 249 KB |
+  | 412 @1,75× (perfil do Lighthouse) | 239 KB | 162 KB |
+
+**CSS não usado (D49).** Saíram de `base.css` utilitários que nenhum elemento usava:
+- `.t-wordmark`, `.t-display`, `.t-title`, `.t-eyebrow`, `.t-hud`, `.t-value`;
+- `.col-1-5`, `.col-6-8`, `.col-9-12`.
+
+Cada seção aplica os tokens do §2 direto. O papel "wordmark 700/`wdth` 125" nunca chegou à tela:
+o hero usa 500/100. O resto do CSS é usado; `lenis-smooth` é posto pela biblioteca.
+
+**JS (D50).**
+- **Motion:** GSAP, Lenis e motion continuam só depois do `load` (D29, testado).
+- **Peso:** `npm run bundle` lista o peso de cada arquivo entregue, cru/gzip/brotli, pelo momento em
+  que é pedido.
+  - JS total: 75,5 KB em gzip, sem mudança; nada foi minificado.
+  - Antes do `load`, só 6,5 KB de JS de interface.

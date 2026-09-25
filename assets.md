@@ -34,29 +34,38 @@ Todos em WebP q82, Lanczos. Nos plates de fundo preto, um *black point* leve (0�
 garante que o `screen` não revele a borda do retângulo sobre `--ink-900`. Nenhum recorte,
 nenhum canal alpha.
 
-| Arquivo | Dimensão | Peso |
+WebP qualidade 70 (era 82 até a etapa de otimização, D48). Larguras só onde algum `srcset` usa:
+
+| Arquivo | Larguras (px) | Peso por largura |
 |---|---|---|
-| `plate-smoke-hero-800.webp` / `-1600.webp` | 800×447 / 1600×893 | 18 / 46 KB |
-| `plate-smoke-thin-800.webp` / `-1600.webp` | 800×1433 / 1600×2867 | 32 / 70 KB |
-| `plate-smoke-floor-800.webp` / `-1600.webp` | 800×447 / 1600×893 | 8 / 22 KB |
-| `plate-nigiri-800.webp` / `-1600.webp` | 800×597 / 1600×1195 | 26 / 65 KB |
-| `plate-board-left-800.webp` / `-1600.webp` | 800×597 / 1600×1195 | 41 / 113 KB |
-| `plate-board-right-800.webp` / `-1600.webp` | 800×597 / 1600×1195 | 30 / 79 KB |
-| `plate-room-800.webp` / `-1600.webp` | 800×447 / 1600×893 | 25 / 66 KB (sem black point, sem screen) |
-| `logo-asami-150.webp` | 150×150 | 5 KB (tamanho nativo, sem upscale; só favicon) |
+| `plate-smoke-hero-*.webp` | 800 / 1200 / 1600 | 12 / 21 / 31 KB |
+| `plate-smoke-thin-*.webp` | 600 / 800 / 1200 / 1600 | 16 / 23 / 37 / 53 KB |
+| `plate-smoke-floor-*.webp` | 800 / 1200 / 1600 | 6 / 11 / 16 KB |
+| `plate-nigiri-*.webp` | 600 / 800 / 1200 / 1600 | 12 / 19 / 35 / 48 KB |
+| `plate-board-left-*.webp` | 600 / 800 / 1200 / 1600 | 17 / 29 / 61 / 81 KB |
+| `plate-board-right-*.webp` | 600 / 800 / 1200 / 1600 | 13 / 21 / 41 / 56 KB |
+| `plate-room-1600.webp` | 1600 (fundo em CSS, sem srcset) | 46 KB (sem black point, sem screen) |
+| `logo-asami-150.webp` | 150 | 5 KB (tamanho nativo, sem upscale; só favicon) |
 
 > **A variante 1600 é upscale.** As origens têm 768–1376 px de largura. Para fumaça em
 > `screen` isso não se nota; para nigiri e tábuas, a 1600 fica um pouco mais mole. Se
 > houver plates em resolução maior, é só trocar a origem e rodar `npm run assets`.
 
-Uso padrão:
+Uso padrão: o `sizes` descreve a largura de layout que o CSS dá à imagem em cada regime
+(paisagem ≥ 48rem × retrato), medida pelo `test-otimizacao.mjs`. Camadas que usam o mesmo
+arquivo levam o mesmo `sizes`, o da maior; assim o navegador baixa um arquivo só.
 ```html
 <img class="plate" src="assets/plate-nigiri-800.webp"
-     srcset="assets/plate-nigiri-800.webp 800w, assets/plate-nigiri-1600.webp 1600w"
-     sizes="(min-width: 48rem) 40vw, 80vw" alt="" loading="lazy" decoding="async">
+     srcset="assets/plate-nigiri-600.webp 600w, assets/plate-nigiri-800.webp 800w,
+             assets/plate-nigiri-1200.webp 1200w, assets/plate-nigiri-1600.webp 1600w"
+     sizes="(min-width: 48rem) and (min-aspect-ratio: 1/1) 33.5vw, (min-aspect-ratio: 1/2) 38vh, 76vw"
+     alt="" decoding="async">
 ```
-Plates são decorativos → `alt=""`. O hero usa `loading="eager"` + `fetchpriority="high"`
-no nigiri.
+Plates são decorativos → `alt=""`. Na 1ª tela, sem `lazy`:
+- **Fumaça do hero:** é o LCP. Tem `fetchpriority="high"` e `preload`.
+- **Nigiri:** tem `fetchpriority="high"` e `preload`.
+
+Abaixo da dobra, `loading="lazy"`.
 
 ## 3. Mapeamento slot → arquivo
 

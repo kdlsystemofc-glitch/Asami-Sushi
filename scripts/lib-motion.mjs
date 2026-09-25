@@ -8,7 +8,7 @@ import { dirname, extname, join, normalize, resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { tmpdir } from "node:os";
 
-const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".webp": "image/webp" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".webp": "image/webp", ".woff2": "font/woff2" };
 
 export async function servir(raiz) {
   const ROOT = resolve(raiz);

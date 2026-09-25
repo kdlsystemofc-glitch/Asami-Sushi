@@ -35,7 +35,7 @@
   --place-warm: #E9D5C6; /* SÃO BERNARDO DO CAMPO // CENTRO (§4/03 camada 7) */
 
   /* ── §2 Famílias ──────────────────────────────────────── */
-  /* Fallbacks com métricas ajustadas (base.css): se a Google Fonts falhar ou demorar, o texto
+  /* Fallbacks com métricas ajustadas (base.css): se a fonte falhar ou demorar, o texto
      ocupa quase o mesmo espaço e a troca não empurra o layout. */
   --font-display: "Archivo", "Archivo Fallback", "Archivo Fallback Helvetica", system-ui, sans-serif;
   --font-body: "Space Grotesk", "Space Grotesk Fallback", "Space Grotesk Fallback Helvetica", system-ui, sans-serif;
