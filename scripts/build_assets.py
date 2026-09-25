@@ -13,6 +13,10 @@
 #   BLACK_POINT vira 0, para que mix-blend-mode: screen nao deixe a borda do
 #   retangulo aparecer sobre --ink-900. Nada de recorte / alpha.
 # - O logo (150 px) e so convertido, sem upscale.
+# - Icones (D54), todos do mesmo logo real, sem mexer na arte: favicon.ico (16/32/48),
+#   apple-touch-icon (180) e icon-192 (manifest). 180 e 192 sao upscale de 1,2-1,3x
+#   (a origem tem 150 px); 512 nao e gerado: seria 3,4x. Com um logo em alta, trocar
+#   LOGO e rodar de novo.
 from pathlib import Path
 from PIL import Image
 
@@ -69,6 +73,14 @@ def main():
     dst = OUT / f"logo-asami-{logo.width}.webp"
     logo.save(dst, "WEBP", quality=90, method=6)
     print(f"{dst.name:28} {logo.width}x{logo.height}  {dst.stat().st_size // 1024} KB")
+
+    icones = OUT / "icons"
+    icones.mkdir(exist_ok=True)
+    logo.save(icones / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    for nome, lado in (("apple-touch-icon.png", 180), ("icon-192.png", 192)):
+        logo.resize((lado, lado), Image.LANCZOS).save(icones / nome, optimize=True)
+    for f in sorted(icones.iterdir()):
+        print(f"icons/{f.name:22} {f.stat().st_size // 1024} KB")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ Especificação derivada de `design/mockup-full.png` (768 × 1376 px) e das fati
 `design/secoes/`. **O mockup é referência visual apenas.** Nenhum pixel dele entra no
 site: tudo vira HTML/CSS/SVG, foto real tratada ou *plate* gerado.
 
-> **Status:** todas as dúvidas da §7 foram decididas (D1–D50). As tabelas abaixo já refletem as
+> **Status:** todas as dúvidas da §7 foram decididas (D1–D56). As tabelas abaixo já refletem as
 > decisões. O que sobrou de genuinamente pendente está isolado na **§8**.
 
 ---
@@ -1146,7 +1146,7 @@ os reflexos, todo o cromo do wordmark, todas as linhas de callout e a água do A
 ## 7. Decisões (dúvidas resolvidas)
 
 As dúvidas levantadas estão **todas fechadas**: D1–D19 na análise do mockup, D20–D23 no
-inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II, D37–D39 no motion do ACT III, D40 no motion do ACT IV e D41–D44 na etapa final e D45–D50 na otimização. Cada uma
+inventário de plates, D24–D25 na construção dos atos, D26–D30 na base de motion e D31–D33 no motion do hero, D34–D36 no motion do ACT II, D37–D39 no motion do ACT III, D40 no motion do ACT IV e D41–D44 na etapa final, D45–D50 na otimização e D51–D56 no SEO local. Cada uma
 vira uma regra, com
 o efeito que já foi aplicado nas seções acima.
 
@@ -1219,6 +1219,12 @@ o efeito que já foi aplicado nas seções acima.
 | **D48** ✅ | **Imagens:** `sizes` = largura de layout real em cada regime; o mesmo `sizes` em camadas do mesmo arquivo; larguras 600/800/1200/1600 onde usadas; WebP q70. A fumaça central do hero é o LCP: `fetchpriority="high"` + `preload`. | §9, assets.md |
 | **D49** ✅ | **CSS não usado removido:** utilitários `.t-*` (menos `.t-label`) e `.col-1-5/6-8/9-12` de `base.css`. | §9 |
 | **D50** ✅ | **Entrega:** política de cache por tipo de arquivo em `DEPLOY.md` (hash → 1 ano `immutable`; HTML e JS → revalidar; imagens → 7 dias). A hospedagem não foi escolhida. `npm run bundle` confere os pesos. | §9, DEPLOY.md |
+| **D51** ✅ | **Título e descrição:** "Asami Sushi São Bernardo — Rodízio japonês no Centro" (52) e uma descrição de 139 caracteres, só com dados do CLIENTE.md; iguais nas tags Open Graph. `lang="pt-BR"` e `theme-color` = `--ink-900` já estavam certos. | §10 |
+| **D52** ✅ | **Domínio num lugar só:** `seo.config.json` → `npm run build`. Sem domínio, tudo o que exige URL absoluta sai comentado, com o placeholder `https://dominio-a-definir.invalid/` (TLD reservado, nunca é um endereço real). Nenhum domínio inventado. | §10 |
+| **D53** ✅ | **Prévia ao compartilhar:** `og:type=website` (não existe o tipo OG "restaurant"), `og:locale=pt_BR`, `twitter:card=summary_large_image`. `og:image` = o hero aprovado renderizado em 1200×630, sem o texto pequeno; o wordmark vira pixel só nessa imagem, que não aparece no site. | §10 |
+| **D54** ✅ | **Ícones do logo real (150 px):** `favicon.ico` 16/32/48, `apple-touch-icon` 180 e 192 para o manifest (upscale de 1,2–1,3×). O 512 não é gerado (seria 3,4×) e pede o logo em alta. `site.webmanifest` com `display: browser`. | §10 |
+| **D55** ✅ | **JSON-LD `Restaurant`**, só com o que o CLIENTE.md diz. Horário: só `closes 23:00`. Ficam de fora `hasMenu`, `sameAs` e a nota do Google, que as diretrizes do Google não aceitam marcada pelo próprio site. `hasMap` = o link do rodapé. | §10 |
+| **D56** ✅ | **robots.txt** libera tudo; **sitemap.xml** com a raiz. Semântica conferida: um `<h1>`, `<h2>` em ordem e plates com `alt=""` + `aria-hidden` (faltava no nigiri). | §10 |
 
 ---
 
@@ -1355,3 +1361,105 @@ o hero usa 500/100. O resto do CSS é usado; `lenis-smooth` é posto pela biblio
   que é pedido.
   - JS total: 75,5 KB em gzip, sem mudança; nada foi minificado.
   - Antes do `load`, só 6,5 KB de JS de interface.
+
+---
+
+## 10. SEO local e metadados (etapa "seo", 25/09/2026)
+
+Nada visual nem de motion mudou: `test-otimizacao.mjs`, pixels e estilos, continua passando.
+Teste desta etapa: `scripts/test-seo.mjs`, todo local e sem serviço externo.
+- **Open Graph:** lido do HTML pelo `open-graph-scraper`.
+- **JSON-LD:** `jsonld.expand` para a sintaxe; tipagem do vocabulário do schema.org com
+  `schema-dts` + `tsc`, com controles negativos: propriedade inventada e tipo errado têm de falhar.
+- **Fidelidade ao CLIENTE.md:** conferida campo a campo.
+
+**`<head>` (D51).**
+- **Título:** "Asami Sushi São Bernardo — Rodízio japonês no Centro" (52 caracteres). Traz nome,
+  bairro e especialidade e não repete só o wordmark.
+- **Descrição (139 caracteres):** "Restaurante japonês no Centro de São Bernardo do Campo: rodízio e
+  à la carte, bebidas e sobremesas em clima familiar. R$ 80–160 por pessoa."
+- **Já estavam certos:** `lang="pt-BR"` e `theme-color` `#040507` (`--ink-900`).
+- **Fonte única:** título e descrição vêm de `TITULO`/`DESCRICAO` em `scripts/seo.mjs`, e o teste
+  confere que o `<head>` e o Open Graph batem.
+
+**Domínio (D52): o que falta preencher na publicação.** Um campo só: `"dominio"` em
+`seo.config.json`, no formato `https://www.exemplo.com.br/` (com `/` no fim). Depois,
+`npm run build`. O build gera e o teste confere:
+
+| Onde | O que entra com o domínio | Hoje (sem domínio) |
+|---|---|---|
+| `index.html` | `<link rel="canonical">` | comentado, com o placeholder |
+| `index.html` | `og:url` | comentado |
+| `index.html` | `og:image` (URL absoluta de `assets/og-asami.jpg`) + `og:image:type/width/height/alt` | comentado |
+| `index.html`, JSON-LD | `"url"` e `"image"` | fora do JSON-LD, com comentário |
+| `sitemap.xml` | `<loc>` da raiz | `https://dominio-a-definir.invalid/`, marcado em comentário |
+| `robots.txt` | `Sitemap: <domínio>sitemap.xml` | linha comentada |
+
+- **Por que comentado e não um domínio de mentira:** uma `canonical` apontando para outro domínio
+  derruba a nota de SEO do Lighthouse e confunde o Google.
+- **Placeholder:** usa o TLD reservado `.invalid` (RFC 2606), que nunca vira endereço real.
+- **Teste:** o modo com domínio foi rodado com `https://www.example.com/` (reservado) e desfeito.
+
+**Prévia ao compartilhar (D53).**
+- **Tags:** `og:type` `website` (o Open Graph não tem tipo "restaurant"; o antigo
+  `restaurant.restaurant` era só do Facebook), `og:locale` `pt_BR`, `og:site_name`,
+  `og:title` = título, `og:description` = descrição e `twitter:card` `summary_large_image`. O
+  Twitter/X lê título, descrição e imagem do Open Graph.
+- **Imagem:** `assets/og-asami.jpg`, 1200×630, JPEG de 72 KB (o WhatsApp recusa acima de ~300 KB).
+  Gerada por `npm run og`:
+  - é o hero aprovado, renderizado numa tela de 1200×630 em pose estática;
+  - sem o cabeçalho, o rótulo do ato, o HUD e o player, que numa miniatura viram texto ilegível;
+  - ficam o nigiri, a fumaça e o wordmark.
+- **Exceção à regra "nenhum texto dentro de imagem":** vale só para essa prévia, que é uma imagem
+  por natureza e não aparece no site.
+
+**Ícones (D54).**
+- **Origem:** o favicon atual é o logo real (`IMAGENS/`, 150 px) e continua.
+- **Gerados por `npm run assets`, sem mexer na arte:**
+  - `favicon.ico` com 16, 32 e 48 px;
+  - `apple-touch-icon.png` 180 px;
+  - `icon-192.png` para o manifest.
+- **Upscale:** 180 e 192 são 1,2–1,3× maiores que a origem.
+- **Sem o 512:** seria 3,4× (borrado). Com um logo em alta resolução, é só trocar `LOGO` em
+  `build_assets.py`, gerar o 512 e acrescentá-lo ao manifest.
+- **`site.webmanifest`:** nome, nome curto, `lang`, cores `--ink-900` e ícones.
+  - `display: browser`: adicionado à tela inicial, abre como um favorito, com a barra do
+    navegador, igual ao site.
+  - Sem o 512, o Chrome não oferece "instalar app", só "adicionar à tela inicial".
+
+**Dados estruturados (D55).** Um `Restaurant` em JSON-LD, só com o CLIENTE.md:
+
+| Campo | Valor |
+|---|---|
+| `name`, `description` | a frase do "Visão geral" |
+| `address` | rua, bairro, cidade, UF, CEP, país |
+| `telephone` | +55 11 2669-7175 |
+| `servesCuisine` | Japonesa |
+| `priceRange` | R$ 80–160, já exibido no site |
+| `hasMap` | o mesmo link do rodapé |
+| `openingHoursSpecification` | só `closes: 23:00` |
+
+Ficaram de fora:
+- **Dias e hora de abertura:** o CLIENTE.md não informa (§8.2). O placeholder está comentado no
+  HTML.
+- **`hasMenu` e `sameAs` (Instagram):** não há link real (§8.3, §8.4); placeholders comentados.
+- **Nota 4,3 / 3.091 avaliações:** o Google não aceita marcar avaliações de terceiros no próprio
+  site ("self-serving reviews").
+
+**robots.txt, sitemap e semântica (D56).**
+- **robots.txt:** `User-agent: *` / `Allow: /`.
+- **sitemap.xml:** só a raiz.
+- **Títulos:** um `<h1>` ("Asami Sushi São Bernardo": o wordmark mais o resto em
+  `visually-hidden`), depois os `<h2>` ACT I–IV e o "Endereço" do rodapé, sem pular nível.
+- **Imagens:** as 14 são plates decorativos, com `alt=""` e `aria-hidden`. Faltava o
+  `aria-hidden` no nigiri, que já tinha `alt=""` e por isso já saía da árvore de acessibilidade.
+- **"Pular para o conteúdo":** é o 1º Tab e fica visível. Enter + Tab caem dentro do `<main>`,
+  com e sem motion.
+
+**Lighthouse mobile (mediana de 5), depois do SEO.**
+- **Notas:** desempenho 98, acessibilidade 100, boas práticas 100, **SEO 100**.
+- **Métricas:** FCP 1,0 s · LCP 2,3 s · TBT 52 ms · CLS 0 · SI 2,2 s; nada caiu em relação à
+  otimização (98).
+- **Auditorias de SEO:** todas passam, inclusive `robots-txt` (agora existe).
+- **Dados estruturados:** é uma verificação manual no Lighthouse; aqui é coberta pelo
+  `test-seo.mjs`.

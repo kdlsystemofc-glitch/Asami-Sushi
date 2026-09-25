@@ -18,6 +18,7 @@
 import { readFileSync, writeFileSync, readdirSync, unlinkSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
+import { lerDominio, blocoHead, robots, sitemap } from "./seo.mjs";
 
 const SITE = resolve("site");
 const CSS = (n) => readFileSync(`${SITE}/css/${n}.css`, "utf8");
@@ -99,6 +100,10 @@ const preloads = fontes.map((f) =>
 
 let blocoCss, listaMotion;
 const gerados = {}; // arquivo → conteúdo
+// SEO (D51–D56): bloco do <head>, robots.txt e sitemap.xml, a partir de seo.config.json
+const dominio = lerDominio();
+gerados["robots.txt"] = robots(dominio);
+gerados["sitemap.xml"] = sitemap(dominio);
 if (modo === "dev") {
   blocoCss = [preloads, ...[...GRUPOS.antes, ...GRUPOS.secoes, ...GRUPOS.depois]
     .map((n) => `  <link rel="stylesheet" href="css/${n}.css">`)].join("\n");
@@ -148,6 +153,13 @@ const a = html.indexOf(INICIO), b = html.indexOf(FIM);
 if (a < 0 || b < 0) throw new Error("marcadores <!-- build:css --> não encontrados no index.html");
 let novo = `${html.slice(0, a)}${INICIO}\n${blocoCss}\n  ${html.slice(b)}`;
 novo = novo.replace(/\/\*build:motion-css\*\/.*?\/\*\/build:motion-css\*\//, `/*build:motion-css*/${listaMotion}/*/build:motion-css*/`);
+const SEO_INICIO = "<!-- build:seo — gerado por scripts/seo.mjs (seo.config.json); não editar até /build:seo -->";
+const SEO_FIM = "<!-- /build:seo -->";
+const sa = novo.indexOf(SEO_INICIO), sb = novo.indexOf(SEO_FIM);
+if (sa < 0 || sb < 0) throw new Error("marcadores <!-- build:seo --> não encontrados no index.html");
+novo = `${novo.slice(0, sa)}${SEO_INICIO}
+${blocoHead(dominio)}
+  ${novo.slice(sb)}`;
 
 mkdirSync(`${SITE}/css/build`, { recursive: true });
 const velhos = readdirSync(`${SITE}/css/build`).filter((f) => /\.[0-9a-f]{8}\.css$/.test(f)).map((f) => `css/build/${f}`);

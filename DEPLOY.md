@@ -4,6 +4,12 @@ O site é estático: publique a pasta **`site/`** como está. Antes de cada comm
 está em modo de produção: `npm run build` gera o que o `index.html` carrega, e `npm run audit`
 falha se isso estiver desatualizado. Não há etapa de build na hospedagem.
 
+**Ao definir o domínio:** preencha `"dominio"` em `seo.config.json` (ex.:
+`"https://www.exemplo.com.br/"`), rode `npm run build` e `npm run test:seo`, e faça o commit.
+Isso ativa canonical, `og:url`, `og:image`, `url`/`image` do JSON-LD, o `<loc>` do `sitemap.xml` e
+a linha `Sitemap` do `robots.txt` (lista completa: DESIGN.md §10). Sem o domínio, a prévia do link
+sai sem imagem: redes sociais e mensageiros só aceitam `og:image` com URL absoluta.
+
 A hospedagem ainda não foi escolhida. Os exemplos abaixo cobrem Netlify, Vercel e GitHub Pages;
 nenhum arquivo de configuração deles foi criado no repositório.
 
